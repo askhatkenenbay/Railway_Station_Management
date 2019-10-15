@@ -1,0 +1,125 @@
+Create database in your station execution queries below in order given (if you need)
+
+
+CREATE SCHEMA IF NOT EXISTS `railway` ;
+USE `railway` ;
+
+CREATE TABLE IF NOT EXISTS `railway`.`individual` (
+  `ID` INT NOT NULL,
+  `FName` VARCHAR(45) NOT NULL,
+  `LName` VARCHAR(45) NOT NULL,
+  `email` VARCHAR(45) NOT NULL,
+  `login` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(45) NOT NULL,
+  `activation` VARCHAR(45) NULL,
+  `remember` VARCHAR(45) NULL,
+  `reset` VARCHAR(45) NULL,
+  `activated` TINYINT NOT NULL,
+  PRIMARY KEY (`ID`));
+
+CREATE TABLE IF NOT EXISTS `railway`.`employee` (
+  `payment_per_hour` INT NULL,
+  `type` VARCHAR(45) NULL,
+  `start_time` VARCHAR(45) NULL,
+  `end_time` VARCHAR(45) NULL,
+  `working_days` VARCHAR(45) NULL,
+  `individual_ID` INT NOT NULL,
+  INDEX `fk_employee_individual1_idx` (`individual_ID` ASC) VISIBLE,
+  PRIMARY KEY (`individual_ID`),
+  CONSTRAINT `fk_employee_individual1`
+    FOREIGN KEY (`individual_ID`)
+    REFERENCES `railway`.`individual` (`ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+CREATE TABLE IF NOT EXISTS `railway`.`ticket` (
+  `place` VARCHAR(45) NOT NULL,
+  `carriage_number` INT NOT NULL,
+  `from` VARCHAR(45) NOT NULL,
+  `to` VARCHAR(45) NOT NULL,
+  `price` DOUBLE NOT NULL,
+  `seat_type` VARCHAR(45) NOT NULL,
+  `date` VARCHAR(45) NOT NULL,
+  `document_id` VARCHAR(45) NOT NULL,
+  `document_type` VARCHAR(45) NOT NULL,
+  `FName` VARCHAR(45) NOT NULL,
+  `LName` VARCHAR(45) NOT NULL,
+  `destination` VARCHAR(45) NOT NULL,
+  `destination_time` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`place`, `carriage_number`, `date`));
+
+CREATE TABLE IF NOT EXISTS railway.passenger (
+  individual_ID INT NOT NULL,
+  ticket_place VARCHAR(45) NULL,
+  ticket_carriage_number INT NULL,
+  ticket_date VARCHAR(45) NULL,
+  INDEX fk_passenger_individual2_idx (individual_ID ASC) VISIBLE,
+  INDEX fk_passenger_ticket2_idx (ticket_place ASC, ticket_carriage_number ASC, ticket_date ASC) VISIBLE,
+  PRIMARY KEY (individual_ID),
+  CONSTRAINT fk_passenger_individual2
+    FOREIGN KEY (individual_ID)
+    REFERENCES railway.individual (ID)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT fk_passenger_ticket2
+    FOREIGN KEY (ticket_place , ticket_carriage_number , ticket_date)
+    REFERENCES railway.ticket (place , carriage_number , date)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+CREATE TABLE IF NOT EXISTS `railway`.`developer` (
+  `api_token` INT NOT NULL,
+  PRIMARY KEY (`api_token`));
+
+CREATE TABLE IF NOT EXISTS `railway`.`station` (
+  `city` VARCHAR(45) NOT NULL,
+  `name` VARCHAR(45) NOT NULL,
+  `coordinates` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`city`, `name`, `coordinates`));
+
+CREATE TABLE IF NOT EXISTS `railway`.`Train` (
+  `ID` INT NOT NULL,
+  `arrival_time` VARCHAR(45) NOT NULL,
+  `departure_time` VARCHAR(45) NOT NULL,
+  `capacity_carriage` VARCHAR(45) NOT NULL,
+  `number_carriage` VARCHAR(45) NOT NULL,
+  `type_carriage` VARCHAR(45) NOT NULL,
+  `origin` VARCHAR(45) NOT NULL,
+  `destination` VARCHAR(45) NOT NULL,
+  `destination_arrival_time` VARCHAR(45) NOT NULL,
+  `week_days` VARCHAR(45) NOT NULL,
+  `ticket_place` VARCHAR(45) NOT NULL,
+  `ticket_carriage_number` INT NOT NULL,
+  `ticket_date` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`ID`, `ticket_place`, `ticket_carriage_number`, `ticket_date`),
+  INDEX `fk_Train_ticket1_idx` (`ticket_place` ASC, `ticket_carriage_number` ASC, `ticket_date` ASC) VISIBLE,
+  CONSTRAINT `fk_Train_ticket1`
+    FOREIGN KEY (`ticket_place` , `ticket_carriage_number` , `ticket_date`)
+    REFERENCES `railway`.`ticket` (`place` , `carriage_number` , `date`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+CREATE TABLE IF NOT EXISTS `railway`.`Train_has_station` (
+  `Train_ID` INT NOT NULL,
+  `station_city` VARCHAR(45) NOT NULL,
+  `station_name` VARCHAR(45) NOT NULL,
+  `station_coordinates` VARCHAR(45) NOT NULL,
+  `departure_time` VARCHAR(45) NOT NULL,
+  `arrival_time` VARCHAR(45) NOT NULL,
+  `order` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`Train_ID`, `station_city`, `station_name`, `station_coordinates`),
+  INDEX `fk_Train_has_station_station1_idx` (`station_city` ASC, `station_name` ASC, `station_coordinates` ASC) VISIBLE,
+  INDEX `fk_Train_has_station_Train_idx` (`Train_ID` ASC) VISIBLE,
+  CONSTRAINT `fk_Train_has_station_Train`
+    FOREIGN KEY (`Train_ID`)
+    REFERENCES `railway`.`Train` (`ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Train_has_station_station1`
+    FOREIGN KEY (`station_city` , `station_name` , `station_coordinates`)
+    REFERENCES `railway`.`station` (`city` , `name` , `coordinates`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+
+
