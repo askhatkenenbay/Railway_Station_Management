@@ -23,7 +23,7 @@ public class PassengerService {
         password = Encryptor.encrypInput(password);
 
         BaseDao baseDao = new BaseDaoImpl();
-        if(baseDao.registerPassenger(fname, lname, email, login, password)){
+        if(baseDao.registerIndividual(fname, lname, email, login, password)){
             return Response.ok().build();
         }else{
             return Response.status(Response.Status.FORBIDDEN).build();

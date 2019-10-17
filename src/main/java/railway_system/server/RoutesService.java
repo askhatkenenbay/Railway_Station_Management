@@ -68,11 +68,8 @@ public class RoutesService {
         String date = String.valueOf(year) + '-' + String.valueOf(month) + '-' + String.valueOf(day);
         int train_id = Integer.parseInt(id);
         ArrayList<Ticket> tickets = new BaseDaoImpl().getAllTickets(date, train_id);
-        if(tickets == null){
-            return Response.ok().build();
-        }
-        Ticket[] arr = tickets.toArray(new Ticket[tickets.size()]);
 
+        Ticket[] arr = tickets.toArray(new Ticket[tickets.size()]);
         String json = gson.toJson(arr, Ticket[].class);
         return Response.ok(json).build();
     }

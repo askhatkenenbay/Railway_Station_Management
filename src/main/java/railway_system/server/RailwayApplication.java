@@ -15,6 +15,9 @@ public class RailwayApplication extends Application {
     public RailwayApplication() {
         singletons.add(new RoutesService());
         singletons.add(new StationService());
+        singletons.add(new AuthorizationService());
+        singletons.add(new PassengerService());
+        singletons.add(new AuthenticationFilter());
     }
     
     @Override

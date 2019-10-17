@@ -16,6 +16,7 @@ public class BaseDaoImpl implements BaseDao {
     private static final String SELECT_ALL_FROM_TRAIN = "SELECT * FROM train";
     private static final String SELECT_TICKET_BY_ID_AND_DATE = "select * from ticket where date=? and Train_ID=?";
     private static final String SELECT_BY_USERNAME_AND_PASSWORD_FROM_INDIVIDUAL = "select login,password from individual where login=? and password=?";
+    private static final String INSERT_INTO_INDIVIDUAL ="Insert into individual(FName,LName,email,login,password) values (?,?,?,?,?)";
     private static final String STATION_CITY = "city";
     private static final String STATION_NAME = "name";
     private static final String STATION_ID = "station_id";
@@ -99,12 +100,13 @@ public class BaseDaoImpl implements BaseDao {
         PreparedStatement preparedStatement = null;
         try{
             connection = ConnectionPool.INSTANCE.getConnection();
+            resultList = new ArrayList<>();
             preparedStatement = connection.prepareStatement(SELECT_TICKET_BY_ID_AND_DATE);
-            preparedStatement.setDate(1, Date.valueOf(date));
+            preparedStatement.setString(1, date);
             preparedStatement.setInt(2,train_id);
             ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()){
-                boolean isAvailable = (resultSet.getInt("passenger_individual_ID")!=0) ? false:true;
+                boolean isAvailable = resultSet.getInt("passenger_individual_ID") == 0;
                 resultList.add(new Ticket(resultSet.getInt("Train_ID"),resultSet.getInt("place"),
                         resultSet.getInt("carriage_number"),resultSet.getDouble("price"),
                         resultSet.getString("seat_type"),resultSet.getString("date"),isAvailable));
@@ -123,9 +125,12 @@ public class BaseDaoImpl implements BaseDao {
     public boolean authenticated(String username, String password) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
+        System.out.println(username + ":" + password);
         try{
             connection = ConnectionPool.INSTANCE.getConnection();
             preparedStatement = connection.prepareStatement(SELECT_BY_USERNAME_AND_PASSWORD_FROM_INDIVIDUAL);
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, password);
             return preparedStatement.executeQuery().next();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -137,7 +142,20 @@ public class BaseDaoImpl implements BaseDao {
     }
 
     @Override
-    public boolean registerPassenger(String fname, String lname, String email, String login, String password) {
-        return false;
+    public boolean registerIndividual(String fname, String lname, String email, String login, String password) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try{
+            connection = ConnectionPool.INSTANCE.getConnection();
+            preparedStatement = connection.prepareStatement(SELECT_BY_USERNAME_AND_PASSWORD_FROM_INDIVIDUAL);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            close(preparedStatement);
+            close(connection);
+        }
+        return true;
     }
 }
