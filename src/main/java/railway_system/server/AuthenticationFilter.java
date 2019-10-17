@@ -22,9 +22,12 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     private static final String REALM = "example";
     private static final String AUTHENTICATION_SCHEME = "Bearer";
 
+    public AuthenticationFilter(){
+        super();
+    };
+
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
-
         // Get the Authorization header from the request
         String authorizationHeader =
                 requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
@@ -47,7 +50,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         } catch (Exception e) {
             abortWithUnauthorized(requestContext);
         }
-
+        System.out.println(user_id);
         final SecurityContext currentSecurityContext = requestContext.getSecurityContext();
         int finalUser_id = user_id;
         requestContext.setSecurityContext(new SecurityContext() {

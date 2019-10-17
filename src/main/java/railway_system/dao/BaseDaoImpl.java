@@ -15,10 +15,13 @@ public class BaseDaoImpl implements BaseDao {
     private static final String SELECT_TRAIN_TO_ID = "SELECT * from train WHERE destination_id=?";
     private static final String SELECT_ALL_FROM_TRAIN = "SELECT * FROM train";
     private static final String SELECT_TICKET_BY_ID_AND_DATE = "select * from ticket where date=? and Train_ID=?";
+    private static final String SELECT_TICKET_BY_USER_ID = "select Train_ID,place,carriage_number,price,seat_type,date,passenger_individual_ID from ticket where passenger_individual_ID=?";
     private static final String SELECT_BY_USERNAME_AND_PASSWORD_FROM_INDIVIDUAL = "select login,password from individual where login=? and password=?";
     private static final String INSERT_INTO_INDIVIDUAL = "Insert into individual(FName,LName,email,login,password) values (?,?,?,?,?)";
     private static final String UPDATE_INDIVIDUAL_LOGIN = "UPDATE individual set remember=? where login=?";
-    private static final String COUNT_BY_REMEMBER_IN_INDIVIDUAL = "select count(*) from individual where remember=?";
+    private static final String COUNT_BY_REMEMBER_IN_INDIVIDUAL = "select ID from individual where remember=?";
+    private static final String SELECT_FROM_TICKET = "select passenger_individual_ID from ticket where passenger_individual_ID=? and Train_ID=? and carriage_number=? and place=? and date=?";
+    private static final String UPDATE_TICKET = "UPDATE ticket SET passenger_individual_ID=?  where passenger_individual_ID=? and Train_ID=? and carriage_number=? and place=? and date=?";
     private static final String STATION_CITY = "city";
     private static final String STATION_NAME = "name";
     private static final String STATION_ID = "station_id";
@@ -27,11 +30,12 @@ public class BaseDaoImpl implements BaseDao {
         Connection connection = null;
         ArrayList<Station> resultList = null;
         PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
         try {
             connection = ConnectionPool.INSTANCE.getConnection();
             resultList = new ArrayList<>();
             preparedStatement = connection.prepareStatement(SELECT_CITY_NAME_ID_FROM_STATION);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 resultList.add(new Station(resultSet.getString(STATION_CITY),
                         resultSet.getString(STATION_NAME), resultSet.getInt(STATION_ID)));
@@ -41,19 +45,103 @@ public class BaseDaoImpl implements BaseDao {
         } finally {
             close(preparedStatement);
             close(connection);
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return resultList;
+    }
+
+    @Override
+    public boolean buyTicket(int user_id, int train_id, int wagon_number, int place, String date) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try{
+            connection = ConnectionPool.INSTANCE.getConnection();
+            preparedStatement = connection.prepareStatement(SELECT_FROM_TICKET);
+            preparedStatement.setInt(1,user_id);
+            preparedStatement.setInt(2,train_id);
+            preparedStatement.setInt(3,wagon_number);
+            preparedStatement.setInt(4,place);
+            preparedStatement.setString(5,date);
+            resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                return false;
+            }else{
+                preparedStatement = connection.prepareStatement(UPDATE_TICKET);
+                preparedStatement.setInt(1,user_id);
+                preparedStatement.setInt(2,user_id);
+                preparedStatement.setInt(3,train_id);
+                preparedStatement.setInt(4,wagon_number);
+                preparedStatement.setInt(5,place);
+                preparedStatement.setString(6,date);
+                preparedStatement.executeUpdate();
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(preparedStatement);
+            close(connection);
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public ArrayList<Ticket> getTicketsOfUser(int user_id) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ArrayList<Ticket> result = null;
+        ResultSet resultSet = null;
+        try{
+            connection = ConnectionPool.INSTANCE.getConnection();
+            result = new ArrayList<>();
+            preparedStatement = connection.prepareStatement(SELECT_TICKET_BY_USER_ID);
+            preparedStatement.setInt(1,user_id);
+            resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                result.add(new Ticket(resultSet.getInt("Train_ID"), resultSet.getInt("place"),
+                        resultSet.getInt("carriage_number"), resultSet.getDouble("price"),
+                        resultSet.getString("seat_type"), resultSet.getString("date"), resultSet.getInt("passenger_individual_ID") == 0));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(preparedStatement);
+            close(connection);
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
     }
 
     @Override
     public int checkToken(String token) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
         try {
             connection = ConnectionPool.INSTANCE.getConnection();
             preparedStatement = connection.prepareStatement(COUNT_BY_REMEMBER_IN_INDIVIDUAL);
             preparedStatement.setString(1, token);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
             resultSet.next();
             return resultSet.getInt(1);
         } catch (SQLException e) {
@@ -61,6 +149,13 @@ public class BaseDaoImpl implements BaseDao {
         } finally {
             close(preparedStatement);
             close(connection);
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return -1;
     }
@@ -88,6 +183,7 @@ public class BaseDaoImpl implements BaseDao {
         Connection connection = null;
         ArrayList<Train> resultList = null;
         PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
         try {
             connection = ConnectionPool.INSTANCE.getConnection();
             resultList = new ArrayList<>();
@@ -104,7 +200,7 @@ public class BaseDaoImpl implements BaseDao {
             } else {
                 preparedStatement = connection.prepareStatement(SELECT_ALL_FROM_TRAIN);
             }
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 if (resultSet.getString("week_days").contains(String.valueOf(weekDay))) {
                     resultList.add(new Train(resultSet.getInt("ID"), resultSet.getString("arrival_time"),
@@ -119,6 +215,13 @@ public class BaseDaoImpl implements BaseDao {
         } finally {
             close(preparedStatement);
             close(connection);
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return resultList;
     }
@@ -128,24 +231,31 @@ public class BaseDaoImpl implements BaseDao {
         Connection connection = null;
         ArrayList<Ticket> resultList = null;
         PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
         try {
             connection = ConnectionPool.INSTANCE.getConnection();
             resultList = new ArrayList<>();
             preparedStatement = connection.prepareStatement(SELECT_TICKET_BY_ID_AND_DATE);
-            preparedStatement.setDate(1, Date.valueOf(date));
-            preparedStatement.setInt(2, train_id);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            preparedStatement.setString(1, date);
+            preparedStatement.setInt(2,train_id);
+            resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                boolean isAvailable = resultSet.getInt("passenger_individual_ID") == 0;
                 resultList.add(new Ticket(resultSet.getInt("Train_ID"), resultSet.getInt("place"),
                         resultSet.getInt("carriage_number"), resultSet.getDouble("price"),
-                        resultSet.getString("seat_type"), resultSet.getString("date"), isAvailable));
+                        resultSet.getString("seat_type"), resultSet.getString("date"), resultSet.getInt("passenger_individual_ID") == 0));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             close(preparedStatement);
             close(connection);
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return resultList;
     }
@@ -157,6 +267,8 @@ public class BaseDaoImpl implements BaseDao {
         try {
             connection = ConnectionPool.INSTANCE.getConnection();
             preparedStatement = connection.prepareStatement(SELECT_BY_USERNAME_AND_PASSWORD_FROM_INDIVIDUAL);
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, password);
             return preparedStatement.executeQuery().next();
         } catch (SQLException e) {
             e.printStackTrace();

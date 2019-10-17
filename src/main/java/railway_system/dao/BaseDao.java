@@ -30,6 +30,10 @@ public interface BaseDao {
 
     public ArrayList<Station> getAllStations();
 
+    public boolean buyTicket(int user_id, int train_id, int wagon_number, int place, String date);
+
+    public ArrayList<Ticket> getTicketsOfUser(int user_id);
+
     default void close(Statement statement) {
         try {
             if (statement != null) {
