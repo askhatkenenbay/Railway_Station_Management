@@ -11,6 +11,12 @@
       <change afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/PassengerService.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/Secured.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/railway_system/entity/Ticket.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/railway_system/entity/Train.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/railway_system/entity/User.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/AuthorizationService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/Encryptor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/dao/BaseDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/dao/BaseDao.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/dao/BaseDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/dao/BaseDaoImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/server/AuthorizationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/AuthorizationService.java" afterDir="false" />
