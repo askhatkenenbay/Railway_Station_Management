@@ -10,4 +10,6 @@ public class BaseDaoImpl implements BaseDao {
 
     }
 
+    public ArrayList<>
+
 }
