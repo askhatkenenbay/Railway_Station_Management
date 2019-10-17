@@ -1,18 +1,16 @@
 import railway_system.connection.ConnectionPool;
 import railway_system.connection.ConnectionPoolException;
+import railway_system.dao.BaseDaoImpl;
+import railway_system.entity.Station;
 
 import java.sql.Connection;
+import java.util.List;
 
 public class main {
     public static void main(String[] args){
-        Connection connection = ConnectionPool.INSTANCE.getConnection();
-        if(connection!=null){
-            System.out.println("asd");
-        }
-        try {
-            ConnectionPool.INSTANCE.releaseConnection(connection);
-        } catch (ConnectionPoolException e) {
-            e.printStackTrace();
+        List<Station> asd = new BaseDaoImpl().getAllStations();
+        for(Station curr : asd){
+            System.out.println(curr);
         }
     }
 }

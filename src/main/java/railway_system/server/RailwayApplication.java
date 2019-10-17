@@ -13,9 +13,8 @@ public class RailwayApplication extends Application {
     private Set<Class<?>> empty = new HashSet<Class<?>>();
     
     public RailwayApplication() {
-
-        singletons.add(new ListItemsService());
         singletons.add(new RoutesService());
+        singletons.add(new StationService());
     }
     
     @Override
