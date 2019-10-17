@@ -7,15 +7,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="46b5dbea-92a9-4726-9f11-d8b13bc818fc" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/railway_system/entity/Train.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/dao/BaseDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/dao/BaseDao.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/dao/BaseDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/dao/BaseDaoImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/server/RailwayApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/RailwayApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/server/RoutesService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/RoutesService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/server/StationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/StationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/database.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/database.properties" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
