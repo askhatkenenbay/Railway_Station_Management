@@ -3,14 +3,16 @@ package railway_system.dao;
 
 import railway_system.connection.ConnectionPool;
 import railway_system.connection.ConnectionPoolException;
+import railway_system.entity.Station;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 public interface BaseDao {
     //write method signatures here to access
-
+    ArrayList<Station> getAllStations();
     default void close(Statement statement) {
         try {
             if (statement != null) {
