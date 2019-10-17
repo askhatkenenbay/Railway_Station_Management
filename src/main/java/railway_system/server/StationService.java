@@ -9,6 +9,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 @Path("/station")
 public class StationService {
@@ -22,11 +23,9 @@ public class StationService {
         //return all stations
         Gson gson = new Gson();
         ArrayList<Station> stations = new BaseDaoImpl().getAllStations();
-        String json = gson.toJson(stations, ArrayList<>.class);
+        Station[] arr = stations.toArray(new Station[stations.size()]);
 
-
-
-
-        return Response.ok().build();
+        String json = gson.toJson(arr, Station[].class);
+        return Response.ok(json).build();
     }
 }
