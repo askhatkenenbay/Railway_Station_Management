@@ -15,12 +15,18 @@ import java.util.ArrayList;
 
 public interface BaseDao {
     //write method signatures here to access
+
+    public int checkToken(String token);//must return user_id, else = -1
+    public void setToken(String username, String token);
+
     public ArrayList<Train> getAllTrains(char weekDay, int from_id, int to_id);
 
     //return all tickets for a given date and a given train
     public ArrayList<Ticket> getAllTickets(String date, int train_id);
 
     public boolean authenticated(String username, String password);
+
+    public boolean registerPassenger(String fname, String lname, String email, String login, String password);
 
     public ArrayList<Station> getAllStations();
 
