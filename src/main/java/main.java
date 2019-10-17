@@ -10,7 +10,6 @@ import java.util.List;
 
 public class main {
     public static void main(String[] args){
-        System.out.println(Encryptor.encrypInput("qwerty"));
-        System.out.println(new BaseDaoImpl().checkToken("token2"));
+        System.out.println(new BaseDaoImpl().buyTicket(5,5,5,5,"11-11-11"));
     }
 }

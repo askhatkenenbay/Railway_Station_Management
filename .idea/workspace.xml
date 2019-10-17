@@ -70,7 +70,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Tomcat Server.Tomcat 8.5.45">
+  <component name="RunManager" selected="Application.main">
     <configuration name="main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="main" />
       <module name="dynamictodolist" />
@@ -175,6 +175,7 @@
       <workItem from="1571234300542" duration="3433000" />
       <workItem from="1571286996529" duration="4296000" />
       <workItem from="1571300890381" duration="3593000" />
+      <workItem from="1571323784676" duration="833000" />
     </task>
     <servers />
   </component>
