@@ -3,13 +3,11 @@ package railway_system.server;
 
 import com.google.gson.Gson;
 import railway_system.dao.BaseDaoImpl;
+import railway_system.entity.Ticket;
 import railway_system.entity.Train;
 
 import javax.json.bind.Jsonb;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -51,13 +49,21 @@ public class RoutesService {
         Train[] arr = stations.toArray(new Train[stations.size()]);
 
         String json = gson.toJson(arr, Train[].class);
-        return Response.ok().build();
+        return Response.ok(json).build();
 
     }
 
     @GET
     @Path("/{id: [0-9]+}/tickets")
-    public Response getTicket(@QueryParam("day") int day, @QueryParam("month") int month, @QueryParam("year") int year){
+    public Response getTicket(@QueryParam("day") int day, @QueryParam("month") int month, @QueryParam("year") int year, @PathParam("id") String id){
+        Gson gson = new Gson();
+        String date = String.valueOf(year) + '-' + String.valueOf(month) + '-' + String.valueOf(day);
+        int train_id = Integer.parseInt(id);
+
+        ArrayList<Ticket> tickets = new BaseDaoImpl().getAllTickets(date, train_id);
+        Ticket[] arr = tickets.toArray(new Ticket[tickets.size()]);
+
+        String json = gson.toJson(arr, Ticket[].class);
         return Response.ok().build();
     }
 
