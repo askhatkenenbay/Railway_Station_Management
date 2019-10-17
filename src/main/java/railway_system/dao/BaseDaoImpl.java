@@ -111,6 +111,7 @@ public class BaseDaoImpl implements BaseDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            System.out.println("here");
         } finally{
             close(preparedStatement);
             close(connection);
