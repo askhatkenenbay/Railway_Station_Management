@@ -49,7 +49,7 @@ public class RoutesService {
         Train[] arr = stations.toArray(new Train[stations.size()]);
 
         String json = gson.toJson(arr, Train[].class);
-        return Response.ok().build();
+        return Response.ok(json).build();
 
     }
 
