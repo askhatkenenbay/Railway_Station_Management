@@ -7,15 +7,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="46b5dbea-92a9-4726-9f11-d8b13bc818fc" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/AuthenticationFilter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/PassengerService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/Secured.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/railway_system/entity/Ticket.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/railway_system/entity/Train.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/railway_system/entity/User.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/AuthenticationFilter.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/AuthorizationService.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/Encryptor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/PassengerService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/Secured.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/dao/BaseDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/dao/BaseDao.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/dao/BaseDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/dao/BaseDaoImpl.java" afterDir="false" />

@@ -26,7 +26,7 @@ public interface BaseDao {
 
     public boolean authenticated(String username, String password);
 
-    public boolean registerPassenger(String fname, String lname, String email, String login, String password);
+    public boolean registerIndividual(String fname, String lname, String email, String login, String password);
 
     public ArrayList<Station> getAllStations();
 
