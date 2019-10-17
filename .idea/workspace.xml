@@ -10,7 +10,6 @@
       <change afterPath="$PROJECT_DIR$/src/main/java/railway_system/entity/Ticket.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/railway_system/entity/Train.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/railway_system/entity/User.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/PassengerService.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/Secured.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main.java" afterDir="false" />
@@ -19,8 +18,10 @@
       <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/server/AuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/AuthenticationFilter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/server/AuthorizationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/AuthorizationService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/server/Encryptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/Encryptor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/server/PassengerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/PassengerService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/server/RailwayApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/RailwayApplication.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/server/RoutesService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/RoutesService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/database.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/database.properties" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

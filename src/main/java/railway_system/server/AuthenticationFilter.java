@@ -50,6 +50,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         } catch (Exception e) {
             abortWithUnauthorized(requestContext);
         }
+        System.out.println(user_id);
         final SecurityContext currentSecurityContext = requestContext.getSecurityContext();
         int finalUser_id = user_id;
         requestContext.setSecurityContext(new SecurityContext() {

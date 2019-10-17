@@ -7,6 +7,7 @@ import railway_system.entity.Ticket;
 import railway_system.entity.Train;
 
 import javax.json.bind.Jsonb;
+import javax.json.bind.annotation.JsonbNumberFormat;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
@@ -76,12 +77,20 @@ public class RoutesService {
 
     @POST
     @Secured
-    @Path("/{id: [0-9]+}/tickets")
-    public Response buyTicket(@Context SecurityContext securityContext){
+        @Path("/{id: [0-9]+}/tickets")
+        public Response buyTicket(@Context SecurityContext securityContext, @FormParam("wagon_number") int wagon_number, @FormParam("place") int place, @FormParam("day") int day, @FormParam("month") int month, @FormParam("year") int year, @PathParam("id") String id){
+        int train_id = Integer.parseInt(id);
+        Gson gson = new Gson();
+        String date = String.valueOf(year) + '-' + String.valueOf(month) + '-' + String.valueOf(day);
         Principal principal = securityContext.getUserPrincipal();
         int user_id = Integer.parseInt(principal.getName());
         System.out.println(user_id);
-        return Response.ok().build();
+        if (new BaseDaoImpl().buyTicket(user_id, train_id, wagon_number, place, date)) {
+            return Response.ok().build();
+        }else{
+            return Response.ok(Response.Status.FORBIDDEN).build();
+        }
+
 
     }
 

@@ -10,11 +10,7 @@ import java.util.List;
 
 public class main {
     public static void main(String[] args){
-        List<Train> asd = new BaseDaoImpl().getAllTrains('S',0,5);
-
-        for(Train curr : asd){
-            System.out.println(curr);
-        }
         System.out.println(Encryptor.encrypInput("qwerty"));
+        System.out.println(new BaseDaoImpl().checkToken("token2"));
     }
 }
