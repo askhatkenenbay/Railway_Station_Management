@@ -42,7 +42,10 @@ public class AuthorizationService {
         byte[] bytes = new byte[20];
         random.nextBytes(bytes);
         Base64.Encoder encoder = Base64.getUrlEncoder().withoutPadding();
-        return encoder.encodeToString(bytes);
+        BaseDao baseDao = new BaseDaoImpl();
+        String token = encoder.encodeToString(bytes);
+        baseDao.setToken(username, token);
+        return token;
     }
 
 

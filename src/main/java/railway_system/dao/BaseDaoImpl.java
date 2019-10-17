@@ -44,6 +44,11 @@ public class BaseDaoImpl implements BaseDao {
     }
 
     @Override
+    public void setToken(String username, String token) {
+
+    }
+
+    @Override
     public ArrayList<Train> getAllTrains(char weekDay, int from_id, int to_id) {
         Connection connection = null;
         ArrayList<Train> resultList = null;
@@ -90,6 +95,11 @@ public class BaseDaoImpl implements BaseDao {
 
     @Override
     public boolean authenticated(String username, String password) {
+        return false;
+    }
+
+    @Override
+    public boolean registerPassenger(String fname, String lname, String email, String login, String password) {
         return false;
     }
 }

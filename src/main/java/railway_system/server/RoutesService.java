@@ -8,18 +8,26 @@ import railway_system.entity.Train;
 
 import javax.json.bind.Jsonb;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
+import java.security.Principal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+
 @Path("/routes")
 public class RoutesService {
+    @Context
+    SecurityContext securityContext;
+
     public RoutesService(){
 
     }
+
 
     @GET
     public Response getAll(@QueryParam("day") int day, @QueryParam("month") int month, @QueryParam("year") int year, @QueryParam("from") int from_id, @QueryParam("to") int to_id) throws ParseException {
@@ -68,8 +76,12 @@ public class RoutesService {
     }
 
     @POST
+    @Secured
     @Path("/{id: [0-9]+}/tickets")
-    public Response buyTicket(){
+    public Response buyTicket(@Context SecurityContext securityContext){
+        Principal principal = securityContext.getUserPrincipal();
+        int user_id = Integer.parseInt(principal.getName());
+        System.out.println(user_id);
         return Response.ok().build();
 
     }
