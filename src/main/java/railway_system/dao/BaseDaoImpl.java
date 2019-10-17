@@ -94,7 +94,7 @@ public class BaseDaoImpl implements BaseDao {
             preparedStatement.setInt(2,train_id);
             ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()){
-                boolean isAvailable = (resultSet.getInt("passenger_individual_ID")!=0) ? false:true;
+                boolean isAvailable = resultSet.getInt("passenger_individual_ID") == 0;
                 resultList.add(new Ticket(resultSet.getInt("Train_ID"),resultSet.getInt("place"),
                         resultSet.getInt("carriage_number"),resultSet.getDouble("price"),
                         resultSet.getString("seat_type"),resultSet.getString("date"),isAvailable));
