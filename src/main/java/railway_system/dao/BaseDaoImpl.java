@@ -190,6 +190,16 @@ public class BaseDaoImpl implements BaseDao {
     }
 
     @Override
+    public boolean checkAgent(int user_id) {
+        return false;
+    }
+
+    @Override
+    public boolean createTicket(int place, int carriage_number, double price, String seat_type, String date, int train_id) {
+        return false;
+    }
+
+    @Override
     public ArrayList<Train> getAllTrains(char weekDay, int from_id, int to_id) {
         Connection connection = null;
         ArrayList<Train> resultList = null;

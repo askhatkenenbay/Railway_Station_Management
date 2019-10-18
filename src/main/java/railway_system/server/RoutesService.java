@@ -2,6 +2,7 @@ package railway_system.server;
 
 
 import com.google.gson.Gson;
+import railway_system.dao.BaseDao;
 import railway_system.dao.BaseDaoImpl;
 import railway_system.entity.Ticket;
 import railway_system.entity.Train;
@@ -32,10 +33,17 @@ public class RoutesService {
 
 
     @GET
-    public Response getAll(@QueryParam("day") int day, @QueryParam("month") int month, @QueryParam("year") int year, @QueryParam("from") int from_id, @QueryParam("to") int to_id) throws ParseException {
+    public Response getAll(@QueryParam("day") int day, @QueryParam("month") int month, @QueryParam("year") int year,
+                           @QueryParam("from") int from_id, @QueryParam("to") int to_id){
         Gson gson = new Gson();
         String dateString = String.valueOf(day) + '/' + String.valueOf(month) + '/' + String.valueOf(year);
-        Date date = new SimpleDateFormat("dd/M/yyyy").parse(dateString);
+        Date date = null;
+        try {
+            date = new SimpleDateFormat("dd/M/yyyy").parse(dateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return Response.serverError().build();
+        }
         Calendar c = Calendar.getInstance();
         c.setTime(date);
         int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
@@ -65,7 +73,8 @@ public class RoutesService {
 
     @GET
     @Path("/{id: [0-9]+}/tickets")
-    public Response getTicket(@QueryParam("day") int day, @QueryParam("month") int month, @QueryParam("year") int year, @PathParam("id") String id){
+    public Response getTicket(@QueryParam("day") int day, @QueryParam("month") int month, @QueryParam("year") int year,
+                              @PathParam("id") String id){
         Gson gson = new Gson();
         String date = String.valueOf(year) + '-' + String.valueOf(month) + '-' + String.valueOf(day);
         int train_id = Integer.parseInt(id);
@@ -80,7 +89,9 @@ public class RoutesService {
     @Secured
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Path("/{id: [0-9]+}/tickets")
-    public Response buyTicket(@Context SecurityContext securityContext, @FormParam("wagon_number") int wagon_number, @FormParam("place") int place, @FormParam("day") int day, @FormParam("month") int month, @FormParam("year") int year, @PathParam("id") String id){
+    public Response buyTicket(@Context SecurityContext securityContext, @FormParam("wagon_number") int wagon_number,
+                              @FormParam("place") int place, @FormParam("day") int day, @FormParam("month") int month,
+                              @FormParam("year") int year, @PathParam("id") String id){
         int train_id = Integer.parseInt(id);
         Gson gson = new Gson();
         String date = String.valueOf(year) + '-' + String.valueOf(month) + '-' + String.valueOf(day);
@@ -91,8 +102,28 @@ public class RoutesService {
         }else{
             return Response.ok(Response.Status.FORBIDDEN).build();
         }
+    }
 
-
+    @POST
+    @Secured
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Path("/{id: [0-9]+}/create-ticket")
+    public Response createTicket(@Context SecurityContext securityContext, @FormParam("wagon_number") int wagon_number, @FormParam("place") int place,
+                                 @FormParam("day") int day, @FormParam("month") int month, @FormParam("price") double price, @FormParam("seat_type") String seat_type,
+                                 @FormParam("year") int year, @PathParam("id") String id){
+        int train_id = Integer.parseInt(id);
+        BaseDao baseDao = new BaseDaoImpl();
+        String date = String.valueOf(year) + '-' + String.valueOf(month) + '-' + String.valueOf(day);
+        Principal principal = securityContext.getUserPrincipal();
+        int user_id = Integer.parseInt(principal.getName());
+        if(!baseDao.checkAgent(user_id)){
+            return Response.ok(Response.Status.FORBIDDEN).build();
+        }
+        if(baseDao.createTicket(place, wagon_number, price, seat_type, date, train_id)) {
+            return Response.ok().build();
+        }else{
+            return Response.ok(Response.Status.FORBIDDEN).build();
+        }
     }
 
 }

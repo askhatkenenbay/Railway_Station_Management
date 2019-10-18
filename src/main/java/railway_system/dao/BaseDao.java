@@ -19,6 +19,10 @@ public interface BaseDao {
     public int checkToken(String token);//must return user_id, else = -1
     public void setToken(String username, String token);
 
+    public boolean checkAgent(int user_id);
+
+    public boolean createTicket(int place, int carriage_number, double price, String seat_type, String date, int train_id);
+
     public ArrayList<Train> getAllTrains(char weekDay, int from_id, int to_id);
 
     public Station getStationById(int station_id);
