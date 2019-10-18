@@ -20,8 +20,10 @@ public class BaseDaoImpl implements BaseDao {
     private static final String INSERT_INTO_INDIVIDUAL = "Insert into individual(FName,LName,email,login,password) values (?,?,?,?,?)";
     private static final String UPDATE_INDIVIDUAL_LOGIN = "UPDATE individual set remember=? where login=?";
     private static final String COUNT_BY_REMEMBER_IN_INDIVIDUAL = "select ID from individual where remember=?";
-    private static final String SELECT_FROM_TICKET = "select passenger_individual_ID from ticket where passenger_individual_ID=? and Train_ID=? and carriage_number=? and place=? and date=?";
-    private static final String UPDATE_TICKET = "UPDATE ticket SET passenger_individual_ID=?  where passenger_individual_ID=? and Train_ID=? and carriage_number=? and place=? and date=?";
+    private static final String SELECT_FROM_TICKET = "select passenger_individual_ID from ticket where Train_ID=? and carriage_number=? and place=? and date=?";
+    private static final String TURN_OFF_FOREIGN_KEY = "SET foreign_key_checks = ?";
+    private static final String UPDATE_TICKET = "UPDATE ticket SET passenger_individual_ID=? where Train_ID=? and carriage_number=? and place=? and date=?";
+    private static final String SELECT_STATION_BY_ID = "SELECT * from station where station_id=?";
     private static final String STATION_CITY = "city";
     private static final String STATION_NAME = "name";
     private static final String STATION_ID = "station_id";
@@ -60,33 +62,42 @@ public class BaseDaoImpl implements BaseDao {
     public boolean buyTicket(int user_id, int train_id, int wagon_number, int place, String date) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
+        PreparedStatement checkerControl = null;
         ResultSet resultSet = null;
         try{
             connection = ConnectionPool.INSTANCE.getConnection();
             preparedStatement = connection.prepareStatement(SELECT_FROM_TICKET);
-            preparedStatement.setInt(1,user_id);
-            preparedStatement.setInt(2,train_id);
-            preparedStatement.setInt(3,wagon_number);
-            preparedStatement.setInt(4,place);
-            preparedStatement.setString(5,date);
+            preparedStatement.setInt(1,train_id);
+            preparedStatement.setInt(2,wagon_number);
+            preparedStatement.setInt(3,place);
+            preparedStatement.setString(4,date);
             resultSet = preparedStatement.executeQuery();
-            if(resultSet.next()){
+            resultSet.next();
+            if(resultSet.getInt("passenger_individual_ID") != 0){
                 return false;
             }else{
+                checkerControl = connection.prepareStatement(TURN_OFF_FOREIGN_KEY);
+                checkerControl.setInt(1, 0);
+                checkerControl.executeUpdate();
+
                 preparedStatement = connection.prepareStatement(UPDATE_TICKET);
                 preparedStatement.setInt(1,user_id);
-                preparedStatement.setInt(2,user_id);
-                preparedStatement.setInt(3,train_id);
-                preparedStatement.setInt(4,wagon_number);
-                preparedStatement.setInt(5,place);
-                preparedStatement.setString(6,date);
+                preparedStatement.setInt(2,train_id);
+                preparedStatement.setInt(3,wagon_number);
+                preparedStatement.setInt(4,place);
+                preparedStatement.setString(5,date);
                 preparedStatement.executeUpdate();
+
+                checkerControl = connection.prepareStatement(TURN_OFF_FOREIGN_KEY);
+                checkerControl.setInt(1, 1);
+                checkerControl.executeUpdate();
                 return true;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             close(preparedStatement);
+            close(checkerControl);
             close(connection);
             try {
                 if (resultSet != null) {
@@ -224,6 +235,35 @@ public class BaseDaoImpl implements BaseDao {
             }
         }
         return resultList;
+    }
+
+    @Override
+    public Station getStationById(int station_id) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        Station result = null;
+        try {
+            connection = ConnectionPool.INSTANCE.getConnection();
+            preparedStatement = connection.prepareStatement(SELECT_STATION_BY_ID);
+            preparedStatement.setInt(1,station_id);
+            resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            result = new Station(resultSet.getString("city"), resultSet.getString("name"), station_id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(preparedStatement);
+            close(connection);
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
     }
 
     @Override

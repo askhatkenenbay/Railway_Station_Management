@@ -17,18 +17,19 @@ public class AuthorizationService {
 
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Produces(MediaType.APPLICATION_JSON)
     public Response authenticateUser(@FormParam("username") String username, @FormParam("password") String password){
         try{
             authenticate(username, password);
 
             String token = issueToken(username);
-
-            return Response.ok(token).build();
+            String json = "{ token: '" + token + "' }";
+            return Response.ok(json).build();
         }catch (Exception e){
             return Response.status(Response.Status.FORBIDDEN).build();
         }
     }
+
+
     private void authenticate(String username, String password) throws Exception{
         BaseDao baseDao = new BaseDaoImpl();
         if(!baseDao.authenticated(username, Encryptor.encrypInput(password))){

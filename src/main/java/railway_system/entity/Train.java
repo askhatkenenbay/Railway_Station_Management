@@ -1,10 +1,15 @@
 package railway_system.entity;
 
+import railway_system.dao.BaseDao;
+import railway_system.dao.BaseDaoImpl;
+
 public class Train {
     private int id;
     private String arrival_time;
     private String departure_time;
     private int origin_id;
+    private String origin_city;
+    private String destination_city;
     private int destination_id;
     private int carriage_capacity;
     private int carriage_amount;
@@ -12,19 +17,39 @@ public class Train {
     private int arrival_day;
     private String weekDays;
 
+    public String getOrigin_city() {
+        return origin_city;
+    }
+
+    public void setOrigin_city(String origin_city) {
+        this.origin_city = origin_city;
+    }
+
+    public String getDestination_city() {
+        return destination_city;
+    }
+
+    public void setDestination_city(String destination_city) {
+        this.destination_city = destination_city;
+    }
+
     public Train(int id, String arrival_time, String departure_time, int carriage_capacity, int carriage_amount,
                  String carriage_type, String weekDays, int destination_id, int origin_id, int arrival_day) {
+        BaseDao baseDao = new BaseDaoImpl();
         this.id = id;
         this.arrival_day = arrival_day;
         this.departure_time = departure_time;
         this.arrival_time = arrival_time;
         this.origin_id = origin_id;
+        this.origin_city = baseDao.getStationById(origin_id).getCity();
         this.destination_id = destination_id;
+        this.destination_city = baseDao.getStationById(destination_id).getCity();
         this.carriage_capacity = carriage_capacity;
         this.carriage_amount = carriage_amount;
         this.carriage_type = carriage_type;
         this.weekDays = weekDays;
     }
+
 
     public int getId() {
         return id;

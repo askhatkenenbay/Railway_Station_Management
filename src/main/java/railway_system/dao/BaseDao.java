@@ -21,6 +21,8 @@ public interface BaseDao {
 
     public ArrayList<Train> getAllTrains(char weekDay, int from_id, int to_id);
 
+    public Station getStationById(int station_id);
+
     //return all tickets for a given date and a given train
     public ArrayList<Ticket> getAllTickets(String date, int train_id);
 
