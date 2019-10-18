@@ -24,6 +24,8 @@ public class BaseDaoImpl implements BaseDao {
     private static final String TURN_OFF_FOREIGN_KEY = "SET foreign_key_checks = ?";
     private static final String UPDATE_TICKET = "UPDATE ticket SET passenger_individual_ID=? where Train_ID=? and carriage_number=? and place=? and date=?";
     private static final String SELECT_STATION_BY_ID = "SELECT * from station where station_id=?";
+    private static final String INSERT_TICKET = "INSERT INTO ticket(place,carriage_number,price,seat_type,date,Train_ID) values (?,?,?,?,?,?)";
+    private static final String INDIVIDUAL_TYPE = "select type from individual where ID=?";
     private static final String STATION_CITY = "city";
     private static final String STATION_NAME = "name";
     private static final String STATION_ID = "station_id";
@@ -141,6 +143,66 @@ public class BaseDaoImpl implements BaseDao {
             }
         }
         return result;
+    }
+
+    @Override
+    public boolean checkAgent(int user_id) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try{
+            connection = ConnectionPool.INSTANCE.getConnection();
+            preparedStatement = connection.prepareStatement(INDIVIDUAL_TYPE);
+            preparedStatement.setInt(1,user_id);
+            resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            return resultSet.getInt("type")==1;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(preparedStatement);
+            close(connection);
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean createTicket(int place, int carriage_number, double price, String seat_type, String date, int train_id) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        PreparedStatement checkerControl = null;
+        try{
+            connection = ConnectionPool.INSTANCE.getConnection();
+            preparedStatement = connection.prepareStatement(INSERT_TICKET);
+            preparedStatement.setInt(1,place);
+            preparedStatement.setInt(2,carriage_number);
+            preparedStatement.setDouble(3,price);
+            preparedStatement.setString(4,seat_type);
+            preparedStatement.setString(5,date);
+            preparedStatement.setInt(6,train_id);
+            checkerControl = connection.prepareStatement(TURN_OFF_FOREIGN_KEY);
+            checkerControl.setInt(1, 0);
+            checkerControl.executeUpdate();
+            preparedStatement.executeUpdate();
+            checkerControl = connection.prepareStatement(TURN_OFF_FOREIGN_KEY);
+            checkerControl.setInt(1, 1);
+            checkerControl.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(preparedStatement);
+            close(checkerControl);
+            close(connection);
+        }
+        return false;
     }
 
     @Override

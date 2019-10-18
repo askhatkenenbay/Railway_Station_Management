@@ -10,6 +10,7 @@ import java.util.List;
 
 public class main {
     public static void main(String[] args){
-        System.out.println(new BaseDaoImpl().buyTicket(5,5,5,5,"11-11-11"));
+        System.out.println(new BaseDaoImpl().checkAgent(8));
+        System.out.println("done fine");
     }
 }

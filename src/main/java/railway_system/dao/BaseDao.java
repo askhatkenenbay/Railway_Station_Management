@@ -36,6 +36,10 @@ public interface BaseDao {
 
     public ArrayList<Ticket> getTicketsOfUser(int user_id);
 
+    public boolean checkAgent(int user_id);
+
+    public boolean createTicket(int place, int carriage_number, double price, String seat_type, String date, int train_id);
+
     default void close(Statement statement) {
         try {
             if (statement != null) {
