@@ -22,7 +22,7 @@ public class AuthorizationService {
             authenticate(username, password);
 
             String token = issueToken(username);
-            String json = "{ token: '" + token + "' }";
+            String json = "{ \"token\": \"" + token + "\" }";
             return Response.ok(json).build();
         }catch (Exception e){
             return Response.status(Response.Status.FORBIDDEN).build();

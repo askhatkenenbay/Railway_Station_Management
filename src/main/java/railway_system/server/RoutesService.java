@@ -49,7 +49,7 @@ public class RoutesService {
         int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
         char weekDay = 'M';
         if (dayOfWeek == 1){
-            weekDay = 'V';
+            weekDay = 'U';
         }else if(dayOfWeek == 2){
             weekDay = 'M';
         }else if(dayOfWeek == 3){
@@ -98,7 +98,7 @@ public class RoutesService {
         Principal principal = securityContext.getUserPrincipal();
         int user_id = Integer.parseInt(principal.getName());
         if (new BaseDaoImpl().buyTicket(user_id, train_id, wagon_number, place, date)) {
-            return Response.ok().build();
+            return Response.ok(Response.Status.ACCEPTED).build();
         }else{
             return Response.ok(Response.Status.FORBIDDEN).build();
         }
@@ -120,7 +120,7 @@ public class RoutesService {
             return Response.ok(Response.Status.FORBIDDEN).build();
         }
         if(baseDao.createTicket(place, wagon_number, price, seat_type, date, train_id)) {
-            return Response.ok().build();
+            return Response.ok(Response.Status.ACCEPTED).build();
         }else{
             return Response.ok(Response.Status.FORBIDDEN).build();
         }

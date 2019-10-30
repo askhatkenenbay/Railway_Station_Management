@@ -29,7 +29,7 @@ public class PassengerService {
 
         BaseDao baseDao = new BaseDaoImpl();
         if(baseDao.registerIndividual(fname, lname, email, login, password)){
-            return Response.ok().build();
+            return Response.ok(Response.Status.ACCEPTED).build();
         }else{
             return Response.status(Response.Status.FORBIDDEN).build();
         }

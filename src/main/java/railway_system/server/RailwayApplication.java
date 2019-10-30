@@ -7,6 +7,7 @@ import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
 
+
 @ApplicationPath("/services")
 public class RailwayApplication extends Application {
     private Set<Object> singletons = new HashSet<Object>();
@@ -18,6 +19,7 @@ public class RailwayApplication extends Application {
         singletons.add(new AuthorizationService());
         singletons.add(new PassengerService());
         singletons.add(new AuthenticationFilter());
+        singletons.add(new CorsFilter());
     }
     
     @Override
