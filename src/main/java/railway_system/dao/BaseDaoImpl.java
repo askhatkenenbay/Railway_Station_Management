@@ -26,7 +26,7 @@ public class BaseDaoImpl implements BaseDao {
     private static final String SELECT_STATION_BY_ID = "SELECT * from station where station_id=?";
     private static final String INSERT_TICKET = "INSERT INTO ticket(place,carriage_number,price,seat_type,date,Train_ID) values (?,?,?,?,?,?)";
     private static final String INDIVIDUAL_TYPE = "select type from individual where ID=?";
-    private static final String DELETE_TICKET = "Delete from ticket where ";
+    private static final String DELETE_TICKET = "Delete from ticket where place=? and carriage_number=? and Train_ID=? and date=?";
     private static final String STATION_CITY = "city";
     private static final String STATION_NAME = "name";
     private static final String STATION_ID = "station_id";
@@ -212,14 +212,18 @@ public class BaseDaoImpl implements BaseDao {
         PreparedStatement preparedStatement = null;
         try {
             connection = ConnectionPool.INSTANCE.getConnection();
-            preparedStatement = connection.prepareStatement();
-
+            preparedStatement = connection.prepareStatement(DELETE_TICKET);
+            preparedStatement.setInt(1,place);
+            preparedStatement.setInt(2,wagon_num);
+            preparedStatement.setInt(3,train_id);
+            preparedStatement.setString(4,date);
+            preparedStatement.execute();
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             close(preparedStatement);
             close(connection);
-
         }
         return true;
     }
