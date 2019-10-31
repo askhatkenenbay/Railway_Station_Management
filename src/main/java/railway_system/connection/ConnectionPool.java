@@ -12,8 +12,6 @@ public enum ConnectionPool {
     private BlockingQueue<ProxyConnection> connectionQueue;
     private BlockingQueue<ProxyConnection> givenAwayConQueue;
 
-    private String driver;
-    private String url;
     private String user;
     private String password;
     private int poolSize;
@@ -32,8 +30,8 @@ public enum ConnectionPool {
     ConnectionPool() {
         //register driver
         DBResourceManager instance = DBResourceManager.getInstance();
-        driver = instance.getString(DB_DRIVER);
-        url = instance.getString(DB_URL);
+        String driver = instance.getString(DB_DRIVER);
+        String url = instance.getString(DB_URL);
         user = instance.getString(DB_USER);
         password = instance.getString(DB_PASSWORD);
         try {
@@ -89,10 +87,10 @@ public enum ConnectionPool {
      * @return Connection from ConnectionPool
      */
     public Connection getConnection() {
-        Connection connection = null;
+        ProxyConnection connection = null;
         try {
             connection = connectionQueue.remove();
-            givenAwayConQueue.add((ProxyConnection) connection);
+            givenAwayConQueue.add(connection);
         } catch (Exception e) {
             e.printStackTrace();
         }
