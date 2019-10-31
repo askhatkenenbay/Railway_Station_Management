@@ -126,4 +126,24 @@ public class RoutesService {
         }
     }
 
+    @DELETE
+    @Secured
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Path("/{train_id: [0-9]+}/{place: [0-9]+}/delete-ticket")
+    public Response deleteTicket(@Context SecurityContext securityContext, @FormParam("wagon_number") int wagon_number,
+                                 @FormParam("day") int day, @FormParam("month") int month, @FormParam("year") int year, @PathParam("train_id") String id, @PathParam("place") String place){
+        int train_id = Integer.parseInt(id);
+        int  place_num = Integer.parseInt(place);
+
+        BaseDao baseDao = new BaseDaoImpl();
+        String date = String.valueOf(year) + '-' + String.valueOf(month) + '-' + String.valueOf(day);
+        Principal principal = securityContext.getUserPrincipal();
+
+        if(baseDao.deleteTicket(place_num, wagon_number, date, train_id)) {
+            return Response.ok(Response.Status.ACCEPTED).build();
+        }else{
+            return Response.ok(Response.Status.FORBIDDEN).build();
+        }
+    }
+
 }
