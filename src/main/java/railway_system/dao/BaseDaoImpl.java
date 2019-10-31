@@ -27,6 +27,7 @@ public class BaseDaoImpl implements BaseDao {
     private static final String INSERT_TICKET = "INSERT INTO ticket(place,carriage_number,price,seat_type,date,Train_ID) values (?,?,?,?,?,?)";
     private static final String INDIVIDUAL_TYPE = "select type from individual where ID=?";
     private static final String DELETE_TICKET = "Delete from ticket where place=? and carriage_number=? and Train_ID=? and date=?";
+    private static final String GET_USER_TYPE = "SELECT type FROM individual where ID=?";
     private static final String STATION_CITY = "city";
     private static final String STATION_NAME = "name";
     private static final String STATION_ID = "station_id";
@@ -228,6 +229,36 @@ public class BaseDaoImpl implements BaseDao {
         return true;
     }
 
+
+    @Override
+    public int getTypeOfUser(int user_id) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try{
+            connection = ConnectionPool.INSTANCE.getConnection();
+            preparedStatement = connection.prepareStatement(GET_USER_TYPE);
+            preparedStatement.setInt(1,user_id);
+            resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                return resultSet.getInt("type");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(preparedStatement);
+            close(connection);
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        //mistake or no such user_id
+        return -1;
+    }
 
     @Override
     public int checkToken(String token) {
