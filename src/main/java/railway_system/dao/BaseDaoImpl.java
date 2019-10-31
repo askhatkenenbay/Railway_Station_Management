@@ -26,6 +26,7 @@ public class BaseDaoImpl implements BaseDao {
     private static final String SELECT_STATION_BY_ID = "SELECT * from station where station_id=?";
     private static final String INSERT_TICKET = "INSERT INTO ticket(place,carriage_number,price,seat_type,date,Train_ID) values (?,?,?,?,?,?)";
     private static final String INDIVIDUAL_TYPE = "select type from individual where ID=?";
+    private static final String DELETE_TICKET = "Delete from ticket where ";
     private static final String STATION_CITY = "city";
     private static final String STATION_NAME = "name";
     private static final String STATION_ID = "station_id";
@@ -204,6 +205,25 @@ public class BaseDaoImpl implements BaseDao {
         }
         return false;
     }
+
+    @Override
+    public boolean deleteTicket(int place, int wagon_num, String date, int train_id) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = ConnectionPool.INSTANCE.getConnection();
+            preparedStatement = connection.prepareStatement();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(preparedStatement);
+            close(connection);
+
+        }
+        return true;
+    }
+
 
     @Override
     public int checkToken(String token) {
