@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 public interface BaseDao {
     //write method signatures here to access
+    public int getTypeOfUser(int user_id);
 
     public int checkToken(String token);//must return user_id, else = -1
     public void setToken(String username, String token);
