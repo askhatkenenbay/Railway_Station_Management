@@ -2,7 +2,6 @@ package railway_system.connection;
 
 public class ConnectionPoolException extends Exception {
     public ConnectionPoolException() {
-        System.out.println("Problems with Connection Pool");
     }
 
     public ConnectionPoolException(String message) {
