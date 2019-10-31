@@ -26,7 +26,7 @@ public class BaseDaoImpl implements BaseDao {
     private static final String SELECT_STATION_BY_ID = "SELECT * from station where station_id=?";
     private static final String INSERT_TICKET = "INSERT INTO ticket(place,carriage_number,price,seat_type,date,Train_ID) values (?,?,?,?,?,?)";
     private static final String INDIVIDUAL_TYPE = "select type from individual where ID=?";
-    private static final String DELETE_TICKET = "Delete from ticket where place=? and carriage_number=? and Train_ID=? and date=?";
+    private static final String DELETE_TICKET = "Delete from ticket where passenger_individual_ID=? and place=? and carriage_number=? and date=? and Train_ID=?";
     private static final String GET_USER_TYPE = "SELECT type FROM individual where ID=?";
     private static final String STATION_CITY = "city";
     private static final String STATION_NAME = "name";
@@ -208,16 +208,17 @@ public class BaseDaoImpl implements BaseDao {
     }
 
     @Override
-    public boolean deleteTicket(int place, int wagon_num, String date, int train_id) {
+    public boolean deleteTicket(int user_id, int place, int wagon_num, String date, int train_id) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-        try {
+        try{
             connection = ConnectionPool.INSTANCE.getConnection();
             preparedStatement = connection.prepareStatement(DELETE_TICKET);
-            preparedStatement.setInt(1,place);
-            preparedStatement.setInt(2,wagon_num);
-            preparedStatement.setInt(3,train_id);
+            preparedStatement.setInt(1,user_id);
+            preparedStatement.setInt(2,place);
+            preparedStatement.setInt(3,wagon_num);
             preparedStatement.setString(4,date);
+            preparedStatement.setInt(5,train_id);
             preparedStatement.execute();
             return true;
         } catch (SQLException e) {
@@ -226,7 +227,7 @@ public class BaseDaoImpl implements BaseDao {
             close(preparedStatement);
             close(connection);
         }
-        return true;
+        return false;
     }
 
 
@@ -321,7 +322,7 @@ public class BaseDaoImpl implements BaseDao {
             } else if (from_id != 0 && to_id == 0) {
                 preparedStatement = connection.prepareStatement(SELECT_TRAIN_FROM_ID);
                 preparedStatement.setInt(1, from_id);
-            } else if (from_id != 0 && to_id != 0) {
+            } else if (from_id != 0) {
                 preparedStatement = connection.prepareStatement(SELECT_TRAIN_FROM_ID_AND_TO_ID);
                 preparedStatement.setInt(1, from_id);
                 preparedStatement.setInt(2, to_id);

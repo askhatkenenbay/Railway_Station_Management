@@ -6,15 +6,10 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="46b5dbea-92a9-4726-9f11-d8b13bc818fc" name="Default Changelist" comment="">
-<<<<<<< HEAD
+    <list default="true" id="46b5dbea-92a9-4726-9f11-d8b13bc818fc" name="Default Changelist" comment="some warnings removed">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/dao/BaseDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/dao/BaseDao.java" afterDir="false" />
-=======
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/dao/BaseDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/dao/BaseDaoImpl.java" afterDir="false" />
->>>>>>> 4c3fb6fb5c030130e7bf1f1c64201a62a8ac2f76
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -83,7 +78,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Tomcat Server.Tomcat 8.5.45">
+  <component name="RunManager" selected="Application.main">
     <configuration name="main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="main" />
       <module name="dynamictodolist" />
@@ -194,14 +189,27 @@
       <workItem from="1571377346702" duration="12229000" />
       <workItem from="1571377346702" duration="9351000" />
       <workItem from="1571393369735" duration="2246000" />
-<<<<<<< HEAD
       <workItem from="1572441133250" duration="5278000" />
       <workItem from="1572496807859" duration="7355000" />
-=======
       <workItem from="1572441133250" duration="3161000" />
       <workItem from="1572520618225" duration="2693000" />
->>>>>>> 4c3fb6fb5c030130e7bf1f1c64201a62a8ac2f76
+      <workItem from="1572550339558" duration="1066000" />
     </task>
+    <task id="LOCAL-00001" summary="getUserTypeById added">
+      <created>1572549592976</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1572549592976</updated>
+    </task>
+    <task id="LOCAL-00002" summary="some warnings removed">
+      <created>1572550891361</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1572550891361</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -222,6 +230,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="idea" />
-    <option name="LAST_COMMIT_MESSAGE" value="idea" />
+    <MESSAGE value="getUserTypeById added" />
+    <MESSAGE value="some warnings removed" />
+    <option name="LAST_COMMIT_MESSAGE" value="some warnings removed" />
   </component>
 </project>

@@ -41,7 +41,8 @@ public interface BaseDao {
 
     boolean createTicket(int place, int carriage_number, double price, String seat_type, String date, int train_id);
 
-    boolean deleteTicket(int place, int wagon_num, String date, int train_id);
+    boolean deleteTicket(int user_id, int place, int wagon_num, String date, int train_id);
+
 
     default void close(Statement statement) {
         try {
