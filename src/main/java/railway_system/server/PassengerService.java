@@ -1,6 +1,7 @@
 package railway_system.server;
 
 import com.google.gson.Gson;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import railway_system.dao.BaseDao;
 import railway_system.dao.BaseDaoImpl;
 import railway_system.entity.Ticket;
@@ -14,6 +15,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 
 @Path("/passenger")
+@CrossOrigin(origins = "http://localhost:3000")
 public class PassengerService {
     @Context
     SecurityContext securityContext;
@@ -53,6 +55,7 @@ public class PassengerService {
     @GET
     @Path("/type")
     @Secured
+
     public Response getType(@Context SecurityContext securityContext){
         Gson gson = new Gson();
         BaseDao baseDao = new BaseDaoImpl();

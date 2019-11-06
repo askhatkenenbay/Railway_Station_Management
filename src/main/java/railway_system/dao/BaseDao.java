@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
 public interface BaseDao {
     //write method signatures here to access
@@ -19,6 +20,15 @@ public interface BaseDao {
 
     int checkToken(String token);//must return user_id, else = -1
     void setToken(String username, String token);
+
+    //create Train from list
+    void createTrain(List<Integer> listOfTrains, List<String> arriveTime, List<String> departureTime, int trainType, String weekdays);
+
+    //buy ticket for someone
+    void buyTicket(int trainID, int fromId, int toId, String date, int userID, String fname, String lname, String docType, String docId);
+
+    //but ticket for myself
+    void buyTicket(int trainID, int fromId, int toId, String date, int userID);
 
     ArrayList<Train> getAllTrains(char weekDay, int from_id, int to_id);
 
