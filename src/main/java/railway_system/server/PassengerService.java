@@ -49,4 +49,22 @@ public class PassengerService {
         String json = gson.toJson(arr, Ticket[].class);
         return Response.ok(json).build();
     }
+
+    @GET
+    @Path("/type")
+    @Secured
+    public Response getType(@Context SecurityContext securityContext){
+        Gson gson = new Gson();
+        BaseDao baseDao = new BaseDaoImpl();
+        Principal principal = securityContext.getUserPrincipal();
+        int user_id = Integer.parseInt(principal.getName());
+        int type = baseDao.getTypeOfUser(user_id);
+
+        if(type == -1){
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        String json = "{ \"type\": " + type + " }";
+        return Response.ok(json).build();
+
+    }
 }

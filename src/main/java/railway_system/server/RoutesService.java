@@ -138,8 +138,8 @@ public class RoutesService {
         BaseDao baseDao = new BaseDaoImpl();
         String date = String.valueOf(year) + '-' + String.valueOf(month) + '-' + String.valueOf(day);
         Principal principal = securityContext.getUserPrincipal();
-
-        if(baseDao.deleteTicket(place_num, wagon_number, date, train_id)) {
+        int user_id = Integer.parseInt(principal.getName());
+        if(baseDao.deleteTicket(user_id, place_num, wagon_number, date, train_id)) {
             return Response.ok(Response.Status.ACCEPTED).build();
         }else{
             return Response.ok(Response.Status.FORBIDDEN).build();
