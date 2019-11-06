@@ -14,6 +14,7 @@
           <element id="module-output" name="dynamictodolist" />
         </element>
         <element id="directory" name="lib">
+          <element id="library" level="project" name="Maven: com.itextpdf:itextpdf:5.5.10" />
           <element id="library" level="project" name="Maven: org.glassfish.jersey.bundles:jaxrs-ri:2.26" />
           <element id="library" level="project" name="Maven: org.glassfish.jersey.inject:jersey-hk2:2.27" />
           <element id="library" level="project" name="Maven: org.glassfish.hk2:hk2-locator:2.5.0-b42" />

@@ -7,6 +7,7 @@ import railway_system.entity.Train;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class BaseDaoImpl implements BaseDao {
     private static final String SELECT_CITY_NAME_ID_FROM_STATION = "SELECT city,name,station_id from station";
@@ -41,11 +42,11 @@ public class BaseDaoImpl implements BaseDao {
             connection = ConnectionPool.INSTANCE.getConnection();
             resultList = new ArrayList<>();
             preparedStatement = connection.prepareStatement(SELECT_CITY_NAME_ID_FROM_STATION);
-            resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();/*
             while (resultSet.next()) {
                 resultList.add(new Station(resultSet.getString(STATION_CITY),
                         resultSet.getString(STATION_NAME), resultSet.getInt(STATION_ID)));
-            }
+            }*/
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -308,6 +309,21 @@ public class BaseDaoImpl implements BaseDao {
     }
 
     @Override
+    public void createTrain( int trainType, String weekdays, int trainId,List<Integer> listOfTrains, List<String> arriveTime, List<String> departureTime) {
+
+    }
+
+    @Override
+    public void buyTicket(int trainID, int fromId, int toId, String date, int userID, String fname, String lname, String docType, String docId) {
+
+    }
+
+    @Override
+    public void buyTicket(int trainID, int fromId, int toId, String date, int userID) {
+
+    }
+
+    @Override
     public ArrayList<Train> getAllTrains(char weekDay, int from_id, int to_id) {
         Connection connection = null;
         ArrayList<Train> resultList = null;
@@ -329,7 +345,7 @@ public class BaseDaoImpl implements BaseDao {
             } else {
                 preparedStatement = connection.prepareStatement(SELECT_ALL_FROM_TRAIN);
             }
-            resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();/*
             while (resultSet.next()) {
                 if (resultSet.getString("week_days").contains(String.valueOf(weekDay))) {
                     resultList.add(new Train(resultSet.getInt("ID"), resultSet.getString("arrival_time"),
@@ -338,7 +354,7 @@ public class BaseDaoImpl implements BaseDao {
                             resultSet.getString("week_days"), resultSet.getInt("destination_id"),
                             resultSet.getInt("origin_id"), resultSet.getInt("arrival_day")));
                 }
-            }
+            }*/
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -367,7 +383,7 @@ public class BaseDaoImpl implements BaseDao {
             preparedStatement.setInt(1,station_id);
             resultSet = preparedStatement.executeQuery();
             resultSet.next();
-            result = new Station(resultSet.getString("city"), resultSet.getString("name"), station_id);
+            //result = new Station(resultSet.getString("city"), resultSet.getString("name"), station_id);
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

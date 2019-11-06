@@ -22,7 +22,7 @@ public interface BaseDao {
     void setToken(String username, String token);
 
     //create Train from list
-    void createTrain(List<Integer> listOfTrains, List<String> arriveTime, List<String> departureTime, int trainType, String weekdays);
+    void createTrain( int trainType, String weekdays, int trainId,List<Integer> listOfTrains, List<String> arriveTime, List<String> departureTime);
 
     //buy ticket for someone
     void buyTicket(int trainID, int fromId, int toId, String date, int userID, String fname, String lname, String docType, String docId);

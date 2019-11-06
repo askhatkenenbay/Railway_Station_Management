@@ -1,6 +1,5 @@
 package railway_system.entity;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,9 +9,10 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Train {
-    private int id;
-    private String companyName;
-    private String weekDays;
-    private int trainTypeId;
+public class TrainType {
+    private int Id;
+    private String name;
+    private int wagonAmount;
+    private int wagonCapacity;
+    private int price;
 }
