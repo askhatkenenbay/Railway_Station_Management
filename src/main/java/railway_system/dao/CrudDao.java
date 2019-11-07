@@ -20,7 +20,7 @@ public interface CrudDao {
     void createIndividual(Individual individual) throws DaoException;
     void createEmployee(Employee employee) throws DaoException;
     //buy ticket for someone
-    void createTicket(int trainID, int fromId, int toId, String date, int userID, String fname, String lname, String docType, String docId);
+    void createTicket(Ticket ticket);
 
 
     default void close(Statement statement) {

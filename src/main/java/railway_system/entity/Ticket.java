@@ -11,12 +11,13 @@ import lombok.ToString;
 @ToString
 public class Ticket {
     private int ticketId;
-    private int traindId;
+    private int trainId;
     private int stationIdFrom;
     private int stationIdTo;
     private int individualId;
     private String firstName;
     private String secondName;
     private String documentType;
-    private int documentId;
+    private String documentId;
+
 }
