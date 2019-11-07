@@ -6,25 +6,17 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="46b5dbea-92a9-4726-9f11-d8b13bc818fc" name="Default Changelist" comment="deleteTicket-Updated">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_itextpdf_itextpdf_5_5_10.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_projectlombok_lombok_1_18_10.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/railway_system/dao/CrudDao.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/railway_system/dao/CrudDaoImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/railway_system/entity/Employee.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/railway_system/entity/Individual.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/railway_system/entity/TrainType.java" afterDir="false" />
+    <list default="true" id="46b5dbea-92a9-4726-9f11-d8b13bc818fc" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_itextpdf_io_7_0_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_itextpdf_kernel_7_0_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_itextpdf_layout_7_0_2.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/artifacts/dynamictodolist_war_exploded.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/dynamictodolist_war_exploded.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dynamictodolist.iml" beforeDir="false" afterPath="$PROJECT_DIR$/dynamictodolist.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/dao/BaseDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/dao/BaseDao.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/dao/BaseDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/dao/BaseDaoImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/entity/Station.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/entity/Station.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/entity/Ticket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/entity/Ticket.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/entity/Train.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/entity/Train.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/database.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/database.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/dao/CrudDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/dao/CrudDaoImpl.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -217,6 +209,7 @@
       <workItem from="1572550339558" duration="1066000" />
       <workItem from="1572582709575" duration="1989000" />
       <workItem from="1573060464505" duration="503000" />
+      <workItem from="1573125156495" duration="8569000" />
     </task>
     <task id="LOCAL-00001" summary="getUserTypeById added">
       <created>1572549592976</created>
@@ -232,7 +225,14 @@
       <option name="project" value="LOCAL" />
       <updated>1572550891361</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="deleteTicket-Updated">
+      <created>1573077062317</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1573077062362</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -255,6 +255,7 @@
     <MESSAGE value="idea" />
     <MESSAGE value="getUserTypeById added" />
     <MESSAGE value="some warnings removed" />
-    <option name="LAST_COMMIT_MESSAGE" value="some warnings removed" />
+    <MESSAGE value="deleteTicket-Updated" />
+    <option name="LAST_COMMIT_MESSAGE" value="deleteTicket-Updated" />
   </component>
 </project>

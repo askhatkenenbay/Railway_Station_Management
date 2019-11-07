@@ -126,12 +126,12 @@ public class BaseDaoImpl implements BaseDao {
             result = new ArrayList<>();
             preparedStatement = connection.prepareStatement(SELECT_TICKET_BY_USER_ID);
             preparedStatement.setInt(1,user_id);
-            resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();/*
             while(resultSet.next()){
                 result.add(new Ticket(resultSet.getInt("Train_ID"), resultSet.getInt("place"),
                         resultSet.getInt("carriage_number"), resultSet.getDouble("price"),
                         resultSet.getString("seat_type"), resultSet.getString("date"), resultSet.getInt("passenger_individual_ID") == 0));
-            }
+            }*/
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -412,12 +412,12 @@ public class BaseDaoImpl implements BaseDao {
             preparedStatement = connection.prepareStatement(SELECT_TICKET_BY_ID_AND_DATE);
             preparedStatement.setString(1, date);
             preparedStatement.setInt(2,train_id);
-            resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();/*
             while (resultSet.next()) {
                 resultList.add(new Ticket(resultSet.getInt("Train_ID"), resultSet.getInt("place"),
                         resultSet.getInt("carriage_number"), resultSet.getDouble("price"),
                         resultSet.getString("seat_type"), resultSet.getString("date"), resultSet.getInt("passenger_individual_ID") == 0));
-            }
+            }*/
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
