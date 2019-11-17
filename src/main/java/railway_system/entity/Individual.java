@@ -9,15 +9,15 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Ticket {
-    private int ticketId;
-    private int trainId;
-    private int stationIdFrom;
-    private int stationIdTo;
-    private int individualId;
+public class Individual {
+    private int id;
     private String firstName;
     private String secondName;
-    private String documentType;
-    private String documentId;
-
+    private String email;
+    private String login;
+    private String password;
+    private String activation;
+    private String remember;
+    private String reset;
+    private int activated;
 }
