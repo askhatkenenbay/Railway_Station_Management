@@ -3,15 +3,12 @@ package railway_system.server;
 
 import com.google.gson.Gson;
 import javafx.util.Pair;
-import railway_system.dao.BaseDao;
-import railway_system.dao.BaseDaoImpl;
-import railway_system.dao.MainDao;
+import railway_system.dao.*;
 import railway_system.entity.Seat;
 import railway_system.entity.Ticket;
 import railway_system.entity.Train;
 import railway_system.entity.TrainInstance;
 import railway_system.entity.TrainLeg;
-
 import javax.json.bind.Jsonb;
 import javax.json.bind.annotation.JsonbNumberFormat;
 import javax.ws.rs.*;
@@ -34,6 +31,13 @@ public class RoutesService {
 
     public RoutesService(){
 
+    }
+
+    @POST
+    @Secured
+    public Response createTrainLine(@FormParam("train-type-id") int type_id,
+                                    @FormParam("weekdays") String weekdays, @FormParam("company-name") String company_name){
+        return Response.ok().build();
     }
 
     @GET
@@ -69,7 +73,7 @@ public class RoutesService {
 
         ArrayList<TrainInstance> trains = new ArrayList<>();
         for(Pair<TrainLeg, TrainLeg> legs : result){
-            trains.add( new TrainInstance(legs.getKey(), legs.getValue()));
+            trains.add( new TrainInstance(legs.getKey(), legs.getValue(), c));
         }
 
         TrainInstance[] arr = trains.toArray(new TrainInstance[trains.size()]);
@@ -97,18 +101,29 @@ public class RoutesService {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Path("/{id: [0-9]+}/tickets")
     public Response buyTicket(@Context SecurityContext securityContext, @FormParam("wagon_number") int wagon_number,
-                              @FormParam("place") int place, @FormParam("day") int day, @FormParam("month") int month,
-                              @FormParam("year") int year, @PathParam("id") String id){
+                              @FormParam("place") int place, @FormParam("init-date") String init_date, @FormParam("departure-datetime") String departure_datetime,
+                              @FormParam("arrival-datetime") String arrival_datetime, @PathParam("id") String id,
+                              @FormParam("from-order") int from_order, @FormParam("to-order") int to_order,
+                              @FormParam("from") int from_id, @FormParam("to") int to_id,
+                              @FormParam("first-name") String first_name, @FormParam("last-name") String last_name,
+                              @FormParam("document-type") String doctype, @FormParam("document-id") String doc_id){
+
+        MainDao mainDao = new MainDaoImpl();
         int train_id = Integer.parseInt(id);
         Gson gson = new Gson();
-        String date = String.valueOf(year) + '-' + String.valueOf(month) + '-' + String.valueOf(day);
         Principal principal = securityContext.getUserPrincipal();
         int user_id = Integer.parseInt(principal.getName());
-        if (new BaseDaoImpl().buyTicket(user_id, train_id, wagon_number, place, date)) {
-            return Response.ok(Response.Status.ACCEPTED).build();
-        }else{
+
+        if(!mainDao.checkIfAvailable(init_date, place, wagon_number, from_order, to_order, train_id)){
             return Response.ok(Response.Status.FORBIDDEN).build();
         }
+
+        Ticket ticket = new Ticket(0, train_id, from_id, to_id, user_id, first_name, last_name, doctype, doc_id, false, arrival_datetime, departure_datetime);
+        CrudDao crudDao = new CrudDaoImpl();
+        int ticket_id = crudDao.createTicket(ticket);
+
+        mainDao.updateSeatInstances(init_date, place, wagon_number, from_order, to_order, train_id, ticket_id);
+        return Response.ok().build();
     }
 
     @POST

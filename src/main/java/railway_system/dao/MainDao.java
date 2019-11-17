@@ -41,7 +41,17 @@ public interface MainDao {
     //return all seats of the given train_leg and on the given date
     ArrayList<Seat> getSeats(String date, int train_id, int fromOrder, int toOrder);
 
+
     Boolean refundTicket(int user_id, int train_id, int ticketId);
+
+    //check if train_id between from_order and to_order are null
+    boolean checkIfAvailable(String date, int seat_number, int wagon_number, int from_order, int to_order, int train_id);
+
+    //change seat instance ticket id between from_order and to_order
+    void updateSeatInstances(String date, int seat_num, int wagon_num, int from_order, int to_order, int train_id, int ticket_id);
+
+    boolean authenticated(String username, String password);
+
 
 
 }

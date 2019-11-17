@@ -40,6 +40,7 @@ public class CrudDaoImpl implements CrudDao {
     private static final String SELECT_WAGON_AMOUNT_CAPACITY = "select wagon_amount,wagon_capacity from train_type,train where train.id=? and train.train_type_id=train_type.id;";
     private static final String SELECT_TRAINID_AND_ORDER_BY_TRAINID = "select train_id, `order` from train_leg where train_id=?";
     private static final String READ_PDF_FILE = "SELECT pdf_file FROM ticket";
+    private static final String UPDATE_INDIVIDUAL_LOGIN = "UPDATE individual set remember=? where login=?";
     @Override
     public void createTrainType(TrainType trainType) throws DaoException {
         Connection connection = null;
@@ -232,9 +233,27 @@ public class CrudDaoImpl implements CrudDao {
         }
     }
 
+    @Override
+    public void setToken(String username, String token) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = ConnectionPool.INSTANCE.getConnection();
+            preparedStatement = connection.prepareStatement(UPDATE_INDIVIDUAL_LOGIN);
+            preparedStatement.setString(1, token);
+            preparedStatement.setString(2, username);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(preparedStatement);
+            close(connection);
+        }
+    }
+
 
     @Override
-    public void createTicket(Ticket ticket) {
+    public int createTicket(Ticket ticket) {
         try (Connection connection = ConnectionPool.INSTANCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(CREATE_TICKET)) {
             createPdfFile(ticket);
@@ -252,6 +271,7 @@ public class CrudDaoImpl implements CrudDao {
         } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
+        return 0;
     }
 
     public void readPdfFile(){
