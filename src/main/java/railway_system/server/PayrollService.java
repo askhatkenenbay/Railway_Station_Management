@@ -3,6 +3,7 @@ package railway_system.server;
 import railway_system.dao.CrudDao;
 import railway_system.dao.CrudDaoImpl;
 import railway_system.dao.MainDao;
+import railway_system.dao.MainDaoImpl;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
@@ -25,7 +26,7 @@ public class PayrollService {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Path("/make-payroll")
     public Response makePayroll(@Context SecurityContext securityContext, @FormParam("employee-id") int employeeId){
-        MainDao mainDao = new MainDooImpl();
+        MainDao mainDao = new MainDaoImpl();
         Principal principal = securityContext.getUserPrincipal();
         int user_id = Integer.parseInt(principal.getName());
         if(!mainDao.checkManager(user_id)){
