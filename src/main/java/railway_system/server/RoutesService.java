@@ -2,10 +2,14 @@ package railway_system.server;
 
 
 import com.google.gson.Gson;
+import javafx.util.Pair;
 import railway_system.dao.BaseDao;
 import railway_system.dao.BaseDaoImpl;
+import railway_system.dao.MainDao;
 import railway_system.entity.Ticket;
 import railway_system.entity.Train;
+import railway_system.entity.TrainInstance;
+import railway_system.entity.TrainLeg;
 
 import javax.json.bind.Jsonb;
 import javax.json.bind.annotation.JsonbNumberFormat;
@@ -31,7 +35,6 @@ public class RoutesService {
 
     }
 
-
     @GET
     public Response getAll(@QueryParam("day") int day, @QueryParam("month") int month, @QueryParam("year") int year,
                            @QueryParam("from") int from_id, @QueryParam("to") int to_id){
@@ -46,29 +49,32 @@ public class RoutesService {
         }
         Calendar c = Calendar.getInstance();
         c.setTime(date);
-        int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
-        char weekDay = 'M';
-        if (dayOfWeek == 1){
-            weekDay = 'U';
-        }else if(dayOfWeek == 2){
-            weekDay = 'M';
-        }else if(dayOfWeek == 3){
-            weekDay = 'T';
-        }else if(dayOfWeek == 4){
-            weekDay = 'W';
-        }else if(dayOfWeek == 5){
-            weekDay = 'R';
-        }else if(dayOfWeek == 6){
-            weekDay = 'F';
-        }else if(dayOfWeek == 7){
-            weekDay = 'S';
+        int dayOfWeek = c.get(Calendar.DAY_OF_WEEK) - 1;
+        MainDao mainDao = new MainDaoImpl();
+        ArrayList<Pair<TrainLeg, TrainLeg>> result = null;
+
+        if(from_id == 0  && to_id == 0){
+            result = mainDao.getTrains(dayOfWeek);
         }
-        ArrayList<Train> stations = new BaseDaoImpl().getAllTrains(weekDay, from_id, to_id);
-        Train[] arr = stations.toArray(new Train[stations.size()]);
+        else if(from_id == 0 && to_id != 0){
+            result = mainDao.getTrainsTo(dayOfWeek, to_id);
+        }
+        else if(from_id != 0 && to_id == 0){
+            result = mainDao.getTrainsFrom(dayOfWeek, from_id);
+        }
+        else{
+            result = mainDao.getTrainsFromTo(dayOfWeek, from_id, to_id);
+        }
 
-        String json = gson.toJson(arr, Train[].class);
+        ArrayList<TrainInstance> trains = new ArrayList<>();
+        for(Pair<TrainLeg, TrainLeg> legs : result){
+            trains.add( new TrainInstance(legs.getKey(), legs.getValue()));
+        }
+
+        TrainInstance[] arr = trains.toArray(new TrainInstance[trains.size()]);
+
+        String json = gson.toJson(arr, TrainInstance[].class);
         return Response.ok(json).build();
-
     }
 
     @GET
