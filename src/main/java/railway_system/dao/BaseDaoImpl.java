@@ -1,6 +1,7 @@
 package railway_system.dao;
 
 import railway_system.connection.ConnectionPool;
+import railway_system.entity.Seat;
 import railway_system.entity.Station;
 import railway_system.entity.Ticket;
 import railway_system.entity.Train;
@@ -369,6 +370,11 @@ public class BaseDaoImpl implements BaseDao {
             }
         }
         return resultList;
+    }
+
+    @Override
+    public ArrayList<Seat> getAllSeats(String date, int train_id, int fromOrder, int toOrder) {
+        return null;
     }
 
     @Override

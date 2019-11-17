@@ -1,6 +1,7 @@
 package railway_system.dao;
 
 import javafx.util.Pair;
+import railway_system.entity.Seat;
 import railway_system.entity.Train;
 import railway_system.entity.TrainInstance;
 import railway_system.entity.TrainLeg;
@@ -30,5 +31,11 @@ public interface MainDao {
     //where train_leg1.order < train_leg2.order and train_leg2.order is max and train_leg1 is min
     //and train_leg1.train_id == train_leg2.train_id and Train(train_leg1.train_id).weekdays like "%weekDay%"
     ArrayList<Pair<TrainLeg, TrainLeg>> getTrains(char weekDay);
+
+    //return all seats of the given train_leg and on the given date
+    ArrayList<Seat> getSeats(String date, int train_id, int fromOrder, int toOrder);
+
+    Boolean refundTicket(int user_id, int train_id, int ticketId);
+
 
 }

@@ -3,6 +3,7 @@ package railway_system.dao;
 
 import railway_system.connection.ConnectionPool;
 import railway_system.connection.ConnectionPoolException;
+import railway_system.entity.Seat;
 import railway_system.entity.Ticket;
 import railway_system.entity.Station;
 import railway_system.entity.Train;
@@ -31,6 +32,8 @@ public interface BaseDao {
     void buyTicket(int trainID, int fromId, int toId, String date, int userID);
 
     ArrayList<Train> getAllTrains(char weekDay, int from_id, int to_id);
+
+    ArrayList<Seat> getAllSeats(String date, int train_id, int fromOrder, int toOrder);
 
     Station getStationById(int station_id);
 
