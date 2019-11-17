@@ -37,5 +37,6 @@ public interface MainDao {
 
     Boolean refundTicket(int user_id, int train_id, int ticketId);
 
-
+    //return true if user_id is manager
+    Boolean checkManager(int user_id);
 }

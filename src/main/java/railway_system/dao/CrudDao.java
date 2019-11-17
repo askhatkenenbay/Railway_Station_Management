@@ -21,7 +21,7 @@ public interface CrudDao {
     void createEmployee(Employee employee) throws DaoException;
     //buy ticket for someone
     void createTicket(Ticket ticket);
-
+    void createPaycheck(int employeeId, String date);
 
     default void close(Statement statement) {
         try {

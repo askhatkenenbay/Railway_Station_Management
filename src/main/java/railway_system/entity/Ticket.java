@@ -19,5 +19,6 @@ public class Ticket {
     private String secondName;
     private String documentType;
     private String documentId;
+    private boolean waitingRefund;
 
 }
