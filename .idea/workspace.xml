@@ -7,9 +7,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="46b5dbea-92a9-4726-9f11-d8b13bc818fc" name="Default Changelist" comment="">
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/dao/MainDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/dao/MainDao.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/entity/TrainInstance.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/entity/TrainInstance.java" afterDir="false" />
+=======
+      <change afterPath="$PROJECT_DIR$/src/main/java/railway_system/entity/Seat.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/dao/BaseDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/dao/BaseDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/dao/BaseDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/dao/BaseDaoImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/dao/MainDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/dao/MainDao.java" afterDir="false" />
+>>>>>>> 2230fa6ea0ebf4912b9b2c2cdd403de6653884e1
       <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/server/RoutesService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/RoutesService.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -204,7 +213,12 @@
       <workItem from="1572582709575" duration="1989000" />
       <workItem from="1573060464505" duration="997000" />
       <workItem from="1573190402449" duration="81000" />
+<<<<<<< HEAD
       <workItem from="1573998635571" duration="7222000" />
+=======
+      <workItem from="1573998635571" duration="3314000" />
+      <workItem from="1574003055577" duration="4549000" />
+>>>>>>> 2230fa6ea0ebf4912b9b2c2cdd403de6653884e1
     </task>
     <task id="LOCAL-00001" summary="getUserTypeById added">
       <created>1572549592976</created>

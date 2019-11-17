@@ -6,6 +6,7 @@ import javafx.util.Pair;
 import railway_system.dao.BaseDao;
 import railway_system.dao.BaseDaoImpl;
 import railway_system.dao.MainDao;
+import railway_system.entity.Seat;
 import railway_system.entity.Ticket;
 import railway_system.entity.Train;
 import railway_system.entity.TrainInstance;
@@ -79,15 +80,15 @@ public class RoutesService {
 
     @GET
     @Path("/{id: [0-9]+}/tickets")
-    public Response getTicket(@QueryParam("day") int day, @QueryParam("month") int month, @QueryParam("year") int year,
-                              @PathParam("id") String id){
+    public Response getSeats(@QueryParam("day") int day, @QueryParam("month") int month, @QueryParam("year") int year,
+                              @PathParam("id") String id, @QueryParam("fromOrder") int fromOrder, @QueryParam("toOrder") int toOrder){
         Gson gson = new Gson();
         String date = String.valueOf(year) + '-' + String.valueOf(month) + '-' + String.valueOf(day);
         int train_id = Integer.parseInt(id);
-        ArrayList<Ticket> tickets = new BaseDaoImpl().getAllTickets(date, train_id);
+        ArrayList<Seat> seats = new MainDaoImpl().getSeats(date, train_id, fromOrder, toOrder);
 
-        Ticket[] arr = tickets.toArray(new Ticket[tickets.size()]);
-        String json = gson.toJson(arr, Ticket[].class);
+        Seat[] arr = seats.toArray(new Seat[seats.size()]);
+        String json = gson.toJson(arr, Seat[].class);
         return Response.ok(json).build();
     }
 
@@ -136,16 +137,14 @@ public class RoutesService {
     @Secured
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Path("/{train_id: [0-9]+}/{place: [0-9]+}/delete-ticket")
-    public Response deleteTicket(@Context SecurityContext securityContext, @FormParam("wagon_number") int wagon_number,
-                                 @FormParam("day") int day, @FormParam("month") int month, @FormParam("year") int year, @PathParam("train_id") String id, @PathParam("place") String place){
-        int train_id = Integer.parseInt(id);
-        int  place_num = Integer.parseInt(place);
+    public Response refundTicket(@Context SecurityContext securityContext, @FormParam("ticketId") int ticketId, @PathParam("train_id") String trainId){
+        int train_id = Integer.parseInt(trainId);
 
-        BaseDao baseDao = new BaseDaoImpl();
-        String date = String.valueOf(year) + '-' + String.valueOf(month) + '-' + String.valueOf(day);
+        MainDao mainDao = new MainDaoImpl();
         Principal principal = securityContext.getUserPrincipal();
         int user_id = Integer.parseInt(principal.getName());
-        if(baseDao.deleteTicket(user_id, place_num, wagon_number, date, train_id)) {
+
+        if(mainDao.refundTicket(user_id, train_id, ticketId)) {
             return Response.ok(Response.Status.ACCEPTED).build();
         }else{
             return Response.ok(Response.Status.FORBIDDEN).build();

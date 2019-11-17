@@ -2,6 +2,7 @@ package railway_system.dao;
 
 import javafx.util.Pair;
 import railway_system.entity.Station;
+import railway_system.entity.Seat;
 import railway_system.entity.Train;
 import railway_system.entity.TrainInstance;
 import railway_system.entity.TrainLeg;
@@ -35,6 +36,12 @@ public interface MainDao {
     //get Station by ID
     public Station getStation(int id);
 
+
+
+    //return all seats of the given train_leg and on the given date
+    ArrayList<Seat> getSeats(String date, int train_id, int fromOrder, int toOrder);
+
+    Boolean refundTicket(int user_id, int train_id, int ticketId);
 
 
 }
