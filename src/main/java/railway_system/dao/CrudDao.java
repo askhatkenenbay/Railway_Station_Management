@@ -25,7 +25,7 @@ public interface CrudDao {
     //buy ticket for someone
     //return ticket id
     int createTicket(Ticket ticket);
-
+    void createPaycheck(int employeeId, String date);
 
     default void close(Statement statement) {
         try {

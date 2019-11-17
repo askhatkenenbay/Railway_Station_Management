@@ -1,12 +1,17 @@
 package railway_system.dao;
 
 import javafx.util.Pair;
+import railway_system.connection.ConnectionPool;
+import railway_system.connection.ConnectionPoolException;
 import railway_system.entity.Station;
 import railway_system.entity.Seat;
 import railway_system.entity.Train;
 import railway_system.entity.TrainInstance;
 import railway_system.entity.TrainLeg;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 public interface MainDao {
@@ -54,4 +59,26 @@ public interface MainDao {
 
 
 
+    //return true if user_id is manager
+    Boolean checkManager(int user_id);
+
+    default void close(Statement statement) {
+        try {
+            if (statement != null) {
+                statement.close();
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    default void close(Connection connection) {
+        if (connection != null) {
+            try {
+                ConnectionPool.INSTANCE.releaseConnection(connection);
+            } catch (ConnectionPoolException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
