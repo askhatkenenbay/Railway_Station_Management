@@ -7,6 +7,7 @@ import railway_system.entity.*;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 public interface CrudDao {
@@ -19,8 +20,11 @@ public interface CrudDao {
     void createSeats(int traindId);
     void createIndividual(Individual individual) throws DaoException;
     void createEmployee(Employee employee) throws DaoException;
+    void setToken(String username, String token);
+    ArrayList<Station> getAllStations();
     //buy ticket for someone
-    void createTicket(Ticket ticket);
+    //return ticket id
+    int createTicket(Ticket ticket);
     void createPaycheck(int employeeId, String date);
 
     default void close(Statement statement) {

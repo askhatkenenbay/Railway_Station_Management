@@ -15,4 +15,5 @@ public class TrainLeg {
     int station_id;
     String arrival_time;
     String departure_time;
+    int arrival_day;
 }
