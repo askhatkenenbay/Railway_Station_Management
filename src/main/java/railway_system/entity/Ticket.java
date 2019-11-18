@@ -19,5 +19,8 @@ public class Ticket {
     private String secondName;
     private String documentType;
     private String documentId;
+    private boolean waitingRefund;
+    private String arrival_datetime;
+    private String departure_datetime;
 
 }

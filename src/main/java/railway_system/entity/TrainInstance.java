@@ -5,6 +5,11 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import railway_system.dao.MainDao;
+import railway_system.dao.MainDaoImpl;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 @Getter
 @Setter
@@ -19,16 +24,27 @@ public class TrainInstance {
     private int to_order;
     private String departure_time;
     private String arrival_time;
-    public TrainInstance(TrainLeg from, TrainLeg to){
+    private String initial_date;
+    public TrainInstance(TrainLeg from, TrainLeg to, Calendar c){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         this.id = from.train_id;
         this.from_id = from.station_id;
         this.to_id = to.station_id;
-        this.departure_time = from.departure_time;
-        this.arrival_time = to.arrival_time;
+        this.departure_time =  sdf.format(c.getTime()) + " " + from.departure_time;
+
         this.from_order = from.order;
         this.to_order = to.order;
 
-        MainDao mainDao = new MainDaoIml();
+        c.add(Calendar.DATE, -from.arrival_day);
+        this.initial_date = sdf.format(c.getTime());
+
+        c.add(Calendar.DATE, to.arrival_day);  // number of days to add
+        this.arrival_time = sdf.format(c.getTime()) + " " + to.arrival_time;
+
+
+
+
+        MainDao mainDao = new MainDaoImpl();
         this.from = mainDao.getStation(this.from_id).getCity();
         this.to = mainDao.getStation(this.to_id).getCity();
     }

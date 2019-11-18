@@ -9,11 +9,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class TrainLeg {
-    int train_id;
-    int order;
-    int station_id;
-    String arrival_time;
-    String departure_time;
-    int arrival_day;
+public class Paycheck {
+    private String date;
+    private int employeeId;
 }

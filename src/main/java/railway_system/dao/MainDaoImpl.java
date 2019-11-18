@@ -6,6 +6,7 @@ import railway_system.entity.Seat;
 import railway_system.entity.Station;
 import railway_system.entity.TrainLeg;
 
+import java.util.ArrayList;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -182,7 +183,27 @@ public class MainDaoImpl implements MainDao{
     }
 
     @Override
-    public Boolean refundTicket(int user_id, int train_id, int ticketId) {
-        return null;
+    public boolean refundTicket(int user_id, int train_id, int ticketId) {
+        return false;
+    }
+
+    @Override
+    public boolean checkIfAvailable(String date, int seat_number, int wagon_number, int from_order, int to_order, int train_id) {
+        return false;
+    }
+
+    @Override
+    public void updateSeatInstances(String date, int seat_num, int wagon_num, int from_order, int to_order, int train_id, int ticket_id) {
+
+    }
+
+    @Override
+    public boolean authenticated(String username, String password) {
+        return false;
+    }
+
+    @Override
+    public boolean checkManager(int user_id) {
+        return false;
     }
 }
