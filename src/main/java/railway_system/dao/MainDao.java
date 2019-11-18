@@ -47,7 +47,7 @@ public interface MainDao {
     ArrayList<Seat> getSeats(String date, int train_id, int fromOrder, int toOrder);
 
 
-    Boolean refundTicket(int user_id, int train_id, int ticketId);
+    boolean refundTicket(int user_id, int train_id, int ticketId);
 
     //check if train_id between from_order and to_order are null
     boolean checkIfAvailable(String date, int seat_number, int wagon_number, int from_order, int to_order, int train_id);
@@ -60,7 +60,7 @@ public interface MainDao {
 
 
     //return true if user_id is manager
-    Boolean checkManager(int user_id);
+    boolean checkManager(int user_id);
 
     default void close(Statement statement) {
         try {

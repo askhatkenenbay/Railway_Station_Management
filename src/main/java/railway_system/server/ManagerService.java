@@ -17,9 +17,9 @@ import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-@Path("/payroll")
-public class PayrollService {
-    public PayrollService(){}
+@Path("/manager")
+public class ManagerService {
+    public ManagerService(){}
 
     @POST
     @Secured
@@ -32,11 +32,26 @@ public class PayrollService {
         if(!mainDao.checkManager(user_id)){
             return Response.ok(Response.Status.FORBIDDEN).build();
         }
-        CrudDao crudDao = new CrudDaoImpl();
 
+        CrudDao crudDao = new CrudDaoImpl();
         String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         crudDao.createPaycheck(employeeId, date);
         return Response.ok(Response.Status.ACCEPTED).build();
-
     }
+
+    @POST
+    @Secured
+    @Path("/cancel-route")
+    public Response cancelRoute(@Context SecurityContext securityContext, @FormParam("train-id") int trainId){
+        MainDao mainDao = new MainDaoImpl();
+        Principal principal = securityContext.getUserPrincipal();
+        int user_id = Integer.parseInt(principal.getName());
+        if(!mainDao.checkManager(user_id)){
+            return Response.ok(Response.Status.FORBIDDEN).build();
+        }
+        CrudDao crudDao = new CrudDaoImpl();
+        crudDao.cancelRoute(trainId);
+        return Response.ok(Response.Status.ACCEPTED).build();
+    }
+
 }
