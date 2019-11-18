@@ -25,8 +25,16 @@ public interface CrudDao {
     //buy ticket for someone
     //return ticket id
     int createTicket(Ticket ticket);
-    void createPaycheck(int employeeId, String date);
-    void cancelRoute(int trainId);
+    //create a paycheck for employeeId paycheck.amount = employee.salary
+    boolean createPaycheck(int employeeId, String date);
+    //deactivate train
+    boolean cancelTrainLine(int trainId);
+    //activate train
+    boolean reopenTrainLine(int trainId);
+    //return train id
+    int createTrainLine(String companyName, int typeId);
+    //create weekday for a new train line
+    boolean createWeekdays(int trainId, int weekId);
 
     default void close(Statement statement) {
         try {

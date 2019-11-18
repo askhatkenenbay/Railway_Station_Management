@@ -26,8 +26,8 @@ import java.util.Date;
 
 @Path("/routes")
 public class RoutesService {
-    @Context
-    SecurityContext securityContext;
+        @Context
+        SecurityContext securityContext;
 
     public RoutesService(){
 
