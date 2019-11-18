@@ -32,14 +32,6 @@ public class RoutesService {
     public RoutesService(){
 
     }
-
-    @POST
-    @Secured
-    public Response createTrainLine(@FormParam("train-type-id") int type_id,
-                                    @FormParam("weekdays") String weekdays, @FormParam("company-name") String company_name){
-        return Response.ok().build();
-    }
-
     @GET
     public Response getAll(@QueryParam("day") int day, @QueryParam("month") int month, @QueryParam("year") int year,
                            @QueryParam("from") int from_id, @QueryParam("to") int to_id){
