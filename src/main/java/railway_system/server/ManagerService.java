@@ -1,6 +1,8 @@
 package railway_system.server;
 
+import com.google.gson.Gson;
 import railway_system.dao.*;
+import railway_system.entity.Employee;
 import railway_system.entity.TrainLeg;
 
 import javax.mail.*;
@@ -8,10 +10,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -19,6 +18,7 @@ import javax.ws.rs.core.SecurityContext;
 import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 
 @Path("/manager")
@@ -28,14 +28,21 @@ public class ManagerService {
 
     public ManagerService(){}
 
-    @POST
-    @Secured
-    @Path("/make-payroll")
-    public Response makePayroll(@Context SecurityContext securityContext, @FormParam("employee-id") int employeeId){
+    boolean checkIsManager(SecurityContext securityContext){
         MainDao mainDao = new MainDaoImpl();
         Principal principal = securityContext.getUserPrincipal();
         int user_id = Integer.parseInt(principal.getName());
         if(!mainDao.checkManager(user_id)){
+            return false;
+        }
+        return true;
+    }
+
+    @POST
+    @Secured
+    @Path("/make-payroll")
+    public Response makePayroll(@Context SecurityContext securityContext, @FormParam("employee-id") int employeeId){
+        if(!checkIsManager(securityContext)){
             return Response.ok(Response.Status.FORBIDDEN).build();
         }
 
@@ -54,10 +61,7 @@ public class ManagerService {
     @Path("/create-train-line")
     public Response createTrainLine(@Context SecurityContext securityContext, @FormParam("train-type-id") int type_id,
                                     @FormParam("weekdays") String weekdays, @FormParam("company-name") String company_name){
-        MainDao mainDao = new MainDaoImpl();
-        Principal principal = securityContext.getUserPrincipal();
-        int user_id = Integer.parseInt(principal.getName());
-        if(!mainDao.checkManager(user_id)){
+        if(!checkIsManager(securityContext)){
             return Response.ok(Response.Status.FORBIDDEN).build();
         }
 
@@ -78,10 +82,7 @@ public class ManagerService {
     public Response createTrainLeg(@Context SecurityContext securityContext, @FormParam("train-id") int train_id, @FormParam("order") int order,
                                    @FormParam("station_id") int station_id, @FormParam("arrival-time") String arrival_time,
                                    @FormParam("departure_time") String departure_time, @FormParam("arrival_day") int arrival_day){
-        MainDao mainDao = new MainDaoImpl();
-        Principal principal = securityContext.getUserPrincipal();
-        int user_id = Integer.parseInt(principal.getName());
-        if(!mainDao.checkManager(user_id)){
+        if(!checkIsManager(securityContext)){
             return Response.ok(Response.Status.FORBIDDEN).build();
         }
 
@@ -100,10 +101,7 @@ public class ManagerService {
     @Secured
     @Path("/cancel-train-line")
     public Response cancelTrainLine(@Context SecurityContext securityContext, @FormParam("train-id") int trainId){
-        MainDao mainDao = new MainDaoImpl();
-        Principal principal = securityContext.getUserPrincipal();
-        int user_id = Integer.parseInt(principal.getName());
-        if(!mainDao.checkManager(user_id)){
+        if(!checkIsManager(securityContext)){
             return Response.ok(Response.Status.FORBIDDEN).build();
         }
 
@@ -149,10 +147,7 @@ public class ManagerService {
     @Secured
     @Path("/reopen-train-line")
     public Response reopenTrainLine(@Context SecurityContext securityContext, @FormParam("train-id") int trainId){
-        MainDao mainDao = new MainDaoImpl();
-        Principal principal = securityContext.getUserPrincipal();
-        int user_id = Integer.parseInt(principal.getName());
-        if(!mainDao.checkManager(user_id)){
+        if(!checkIsManager(securityContext)){
             return Response.ok(Response.Status.FORBIDDEN).build();
         }
 
@@ -165,7 +160,18 @@ public class ManagerService {
     }
 
 
-
-
+    @GET
+    @Secured
+    @Path("/employees")
+    public Response getEmployees(@Context SecurityContext securityContext){
+        if(!checkIsManager(securityContext)){
+            return Response.ok(Response.Status.FORBIDDEN).build();
+        }
+        Gson gson = new Gson();
+        List<Employee> employees = new CrudDaoImpl().readAllEmployees();
+        Employee[] arr =  employees.toArray(new Employee[employees.size()]);
+        String json = gson.toJson(arr, Employee[].class);
+        return Response.ok(json).build();
+    }
 
 }

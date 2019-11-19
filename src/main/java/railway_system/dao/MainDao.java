@@ -3,11 +3,7 @@ package railway_system.dao;
 import javafx.util.Pair;
 import railway_system.connection.ConnectionPool;
 import railway_system.connection.ConnectionPoolException;
-import railway_system.entity.Station;
-import railway_system.entity.Seat;
-import railway_system.entity.Train;
-import railway_system.entity.TrainInstance;
-import railway_system.entity.TrainLeg;
+import railway_system.entity.*;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -39,20 +35,9 @@ public interface MainDao extends CloseDao{
     //and train_leg1.train_id == train_leg2.train_id and Train(train_leg1.train_id).weekdays like "%weekDay%"
     ArrayList<Pair<TrainLeg, TrainLeg>> getTrains(int weekDay);
 
-
-
-
-
-<<<<<<< HEAD
     //return Seat, set available to 1, if ticketId of every seat fromOrder to toOrder is null
     Seat getSeat(int wagon_num, int seat_num, String date, int train_id, int fromOrder, int toOrder);
-=======
-    //return all seats of the given train_leg and on the given date
-    List<Seat> getSeatsInstance(String date, int train_id, int fromOrder, int toOrder);
->>>>>>> 6c05274c257e004658125d94981de32a4d2dec2a
 
-
-    boolean refundTicket(int individual_id, int train_id, int ticketId);
 
     //check if train_id between from_order and to_order are null
     boolean checkIfAvailable(String date, int seat_number, int wagon_number, int from_order, int to_order, int train_id);
@@ -69,30 +54,12 @@ public interface MainDao extends CloseDao{
     //return true if user_id is manager
     boolean checkManager(int user_id);
 
-<<<<<<< HEAD
     //return true if user if agent
     boolean checkAgent(int user_id);
 
-    default void close(Statement statement) {
-        try {
-            if (statement != null) {
-                statement.close();
-            }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-    }
+    //check if Tickets.individual_id = user_id
+    boolean isBelongTo(int user_id, int ticket_id);
 
-    default void close(Connection connection) {
-        if (connection != null) {
-            try {
-                ConnectionPool.INSTANCE.releaseConnection(connection);
-            } catch (ConnectionPoolException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-=======
-
->>>>>>> 6c05274c257e004658125d94981de32a4d2dec2a
+    //read all tickets where waiting_refund = 1;
+    List<Ticket> readWaitingTickets();
 }

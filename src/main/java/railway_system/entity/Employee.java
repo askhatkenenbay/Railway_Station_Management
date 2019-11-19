@@ -10,11 +10,11 @@ import lombok.ToString;
 @Setter
 @ToString
 public class Employee {
-    private int paymentForHour;
+    private int Salary;
     private String type;
-    private String workStartTime;
-    private String workEndTime;
-    private String workDays;
+    private String workSince;
     private int id;
     private int individualId;
+    private String firstName;
+    private String lastName;
 }

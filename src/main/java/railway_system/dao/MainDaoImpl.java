@@ -4,6 +4,7 @@ import javafx.util.Pair;
 import railway_system.connection.ConnectionPool;
 import railway_system.entity.Seat;
 import railway_system.entity.Station;
+import railway_system.entity.Ticket;
 import railway_system.entity.TrainLeg;
 
 import java.util.ArrayList;
@@ -47,8 +48,7 @@ public class MainDaoImpl implements MainDao{
             "from train_leg T1, train_leg T2, week_day W1 where T1.train_id = T2.train_id\n" +
             "and W1.train_id = T1.train_id and T1.station_id = ? and T2.station_id = ? and\n" +
             "T1.`order` < T2.`order` and W1.weekId = ?";
-    private static final String REFUND_TICKET = "UPDATE Ticket set waiting_refund = 1 where individual_id = ? and\n" +
-            "train_id = ? and id = ?";
+
     private static final String AUTHENTICATE_INDIVIDUAL = "select * from individual where login=? and password=?";
     private static final String IS_MANAGER = "select * from employee where individual_id=? and type='manager'";
     @Override
@@ -180,34 +180,8 @@ public class MainDaoImpl implements MainDao{
 
 
     @Override
-<<<<<<< HEAD
     public Seat getSeat(int wagon_num, int seat_num, String date, int train_id, int fromOrder, int toOrder) {
-=======
-    public List<Seat> getSeatsInstance(String date, int train_id, int fromOrder, int toOrder) {
-
->>>>>>> 6c05274c257e004658125d94981de32a4d2dec2a
         return null;
-    }
-
-    @Override
-    public boolean refundTicket(int individual_id, int train_id, int ticketId) {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        try{
-            connection = ConnectionPool.INSTANCE.getConnection();
-            preparedStatement = connection.prepareStatement(REFUND_TICKET);
-            preparedStatement.setInt(1,individual_id);
-            preparedStatement.setInt(2,train_id);
-            preparedStatement.setInt(3,ticketId);
-            preparedStatement.executeUpdate();
-            return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            close(preparedStatement);
-            close(connection);
-        }
-        return false;
     }
 
     @Override
@@ -240,6 +214,11 @@ public class MainDaoImpl implements MainDao{
     }
 
     @Override
+    public boolean checkIsActiveTrain(int train_id) {
+        return false;
+    }
+
+    @Override
     public boolean checkManager(int user_id) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -260,5 +239,15 @@ public class MainDaoImpl implements MainDao{
     @Override
     public boolean checkAgent(int user_id) {
         return false;
+    }
+
+    @Override
+    public boolean isBelongTo(int user_id, int ticket_id) {
+        return false;
+    }
+
+    @Override
+    public List<Ticket> readWaitingTickets() {
+        return null;
     }
 }

@@ -121,46 +121,4 @@ public class RoutesService {
         mainDao.updateSeatInstances(init_date, place, wagon_number, from_order, to_order, train_id, ticket_id);
         return Response.ok().build();
     }
-
-    @POST
-    @Secured
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Path("/{id: [0-9]+}/create-ticket")
-    public Response createTicket(@Context SecurityContext securityContext, @FormParam("wagon_number") int wagon_number, @FormParam("place") int place,
-                                 @FormParam("day") int day, @FormParam("month") int month, @FormParam("price") double price, @FormParam("seat_type") String seat_type,
-                                 @FormParam("year") int year, @PathParam("id") String id){
-        int train_id = Integer.parseInt(id);
-        BaseDao baseDao = new BaseDaoImpl();
-        String date = String.valueOf(year) + '-' + String.valueOf(month) + '-' + String.valueOf(day);
-        Principal principal = securityContext.getUserPrincipal();
-        int user_id = Integer.parseInt(principal.getName());
-        if(!baseDao.checkAgent(user_id)){
-            return Response.ok(Response.Status.FORBIDDEN).build();
-        }
-        if(baseDao.createTicket(place, wagon_number, price, seat_type, date, train_id)) {
-            return Response.ok(Response.Status.ACCEPTED).build();
-        }else{
-            return Response.ok(Response.Status.FORBIDDEN).build();
-        }
-    }
-
-    @POST
-    @Secured
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Path("/{train-id: [0-9]+}/{place: [0-9]+}/delete-ticket")
-    public Response refundTicket(@Context SecurityContext securityContext, @FormParam("ticket-id") int ticketId,
-                                 @PathParam("train-id") String trainId){
-        int train_id = Integer.parseInt(trainId);
-
-        MainDao mainDao = new MainDaoImpl();
-        Principal principal = securityContext.getUserPrincipal();
-        int user_id = Integer.parseInt(principal.getName());
-
-        if(mainDao.refundTicket(user_id, train_id, ticketId)) {
-            return Response.ok(Response.Status.ACCEPTED).build();
-        }else{
-            return Response.ok(Response.Status.FORBIDDEN).build();
-        }
-    }
-
 }

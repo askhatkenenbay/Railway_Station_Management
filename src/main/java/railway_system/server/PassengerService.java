@@ -60,7 +60,6 @@ public class PassengerService {
     @GET
     @Path("/type")
     @Secured
-
     public Response getType(@Context SecurityContext securityContext){
         Gson gson = new Gson();
         MainDao mainDao = new MainDaoImpl();
@@ -77,5 +76,23 @@ public class PassengerService {
         String json = "{ \"type\": \"" + type + "\" }";
         return Response.ok(json).build();
 
+    }
+
+    @POST
+    @Secured
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Path("/refund-request")
+    public Response requestRefund(@Context SecurityContext securityContext, @FormParam("ticket-id") int ticketId){
+
+        CrudDao crudDao = new CrudDaoImpl();
+        MainDao mainDao = new MainDaoImpl();
+        Principal principal = securityContext.getUserPrincipal();
+        int user_id = Integer.parseInt(principal.getName());
+
+        if(mainDao.isBelongTo(user_id, ticketId) && crudDao.updateTicketRefund(ticketId, 1)) {
+            return Response.ok(Response.Status.ACCEPTED).build();
+        }else{
+            return Response.ok(Response.Status.FORBIDDEN).build();
+        }
     }
 }

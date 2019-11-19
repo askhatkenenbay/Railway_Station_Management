@@ -52,6 +52,7 @@ public class CrudDaoImpl implements CrudDao {
     private static final String READ_STATION_BY_ID = "select * from station where id=?";
     private static final String UPDATE_INDIVIDUAL_LOGIN = "UPDATE individual set remember=? where login=?";
     private static final String UPDATE_TRAIN_ACTIVITY = "UPDATE train SET is_active = ? where id = ?";
+    private static final String UPDATE_TICKET_REFUND = "UPDATE Ticket set waiting_refund = ? where id = ?";
 
     @Override
     public void createTrainType(TrainType trainType) throws DaoException {
@@ -202,29 +203,29 @@ public class CrudDaoImpl implements CrudDao {
     }
 
 
-    @Override
-    public void createEmployee(Employee employee) throws DaoException {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        try {
-            connection = ConnectionPool.INSTANCE.getConnection();
-            preparedStatement = connection.prepareStatement(CREATE_EMPLOYEE);
-            preparedStatement.setInt(1, employee.getPaymentForHour());
-            preparedStatement.setString(2, employee.getType());
-            preparedStatement.setString(3, employee.getWorkStartTime());
-            preparedStatement.setString(4, employee.getWorkEndTime());
-            preparedStatement.setString(5, employee.getWorkDays());
-            preparedStatement.setInt(6, employee.getId());
-            preparedStatement.setInt(7, employee.getIndividualId());
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new DaoException("Cannot create new employee");
-        } finally {
-            close(preparedStatement);
-            close(connection);
-        }
-    }
+//    @Override
+//    public void createEmployee(Employee employee) throws DaoException {
+//        Connection connection = null;
+//        PreparedStatement preparedStatement = null;
+//        try {
+//            connection = ConnectionPool.INSTANCE.getConnection();
+//            preparedStatement = connection.prepareStatement(CREATE_EMPLOYEE);
+//            preparedStatement.setInt(1, employee.getPaymentForHour());
+//            preparedStatement.setString(2, employee.getType());
+//            preparedStatement.setString(3, employee.getWorkStartTime());
+//            preparedStatement.setString(4, employee.getWorkEndTime());
+//            preparedStatement.setString(5, employee.getWorkDays());
+//            preparedStatement.setInt(6, employee.getId());
+//            preparedStatement.setInt(7, employee.getIndividualId());
+//            preparedStatement.executeUpdate();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            throw new DaoException("Cannot create new employee");
+//        } finally {
+//            close(preparedStatement);
+//            close(connection);
+//        }
+//    }
 
     @Override
     public void setToken(String username, String token) {
@@ -242,6 +243,26 @@ public class CrudDaoImpl implements CrudDao {
             close(preparedStatement);
             close(connection);
         }
+    }
+
+    @Override
+    public boolean updateTicketRefund(int ticketId, int waiting_refund) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try{
+            connection = ConnectionPool.INSTANCE.getConnection();
+            preparedStatement = connection.prepareStatement(UPDATE_TICKET_REFUND);
+            preparedStatement.setInt(1,waiting_refund);
+            preparedStatement.setInt(2,ticketId);
+            preparedStatement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(preparedStatement);
+            close(connection);
+        }
+        return false;
     }
 
     @Override
@@ -285,6 +306,11 @@ public class CrudDaoImpl implements CrudDao {
     }
 
     @Override
+    public List<Employee> readAllEmployees() {
+        return null;
+    }
+
+    @Override
     public boolean updateTrainActivity(int trainId, int activity) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -302,6 +328,11 @@ public class CrudDaoImpl implements CrudDao {
             close(connection);
         }
         return false;
+    }
+
+    @Override
+    public void deleteTicket(int ticket_id) {
+
     }
 
 
@@ -413,6 +444,11 @@ public class CrudDaoImpl implements CrudDao {
             close(connection);
         }
         return false;
+    }
+
+    @Override
+    public void createSeatInstances(int trainId, String date) throws DaoException {
+
     }
 
     @Override
