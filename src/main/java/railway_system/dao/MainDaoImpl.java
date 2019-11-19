@@ -183,8 +183,8 @@ public class MainDaoImpl implements MainDao{
     }
 
     @Override
-    public Boolean refundTicket(int user_id, int train_id, int ticketId) {
-        return null;
+    public boolean refundTicket(int user_id, int train_id, int ticketId) {
+        return false;
     }
 
     @Override
@@ -203,7 +203,7 @@ public class MainDaoImpl implements MainDao{
     }
 
     @Override
-    public Boolean checkManager(int user_id) {
-        return null;
+    public boolean checkManager(int user_id) {
+        return false;
     }
 }

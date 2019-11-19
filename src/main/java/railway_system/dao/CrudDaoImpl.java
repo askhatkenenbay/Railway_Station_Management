@@ -26,10 +26,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class CrudDaoImpl implements CrudDao {
-    private static final String CREATE_TRAIN = "INSERT INTO train values(?,?,?,?)";
+    //private static final String CREATE_TRAIN = "INSERT INTO train values(?,?,?,?)";
     private static final String CREATE_TRAIN_TYPE = "INSERT INTO train_type values (?,?,?,?,?)";
     private static final String CREATE_STATION = "INSERT INTO station values(?,?,?,?)";
     private static final String CREATE_TRAIN_LEG = "INSERT INTO train_leg values(?,?,?,?,?)";
@@ -37,10 +39,19 @@ public class CrudDaoImpl implements CrudDao {
     private static final String CREATE_INDIVIDUAL = "INSERT INTO individual VALUES(?,?,?,?,?,?,?,?,?)";
     private static final String CREATE_EMPLOYEE = "INSERT INTO employee VALUES(?,?,?,?,?,?,?)";
     private static final String CREATE_TICKET = "INSERT INTO ticket VALUES(?,?,?,?,?,?,?,?,?,?)";
-    private static final String SELECT_WAGON_AMOUNT_CAPACITY = "select wagon_amount,wagon_capacity from train_type,train where train.id=? and train.train_type_id=train_type.id;";
+    private static final String CREATE_PAYCHECK = "INSERT INTO paycheck values(?,?,?)";
+    private static final String CREATE_TRAIN = "INSERT INTO train(company_name, train_type_id, is_active) values (?,?)";
+    private static final String CREATE_WEEK_DAY = "INSERT INTO week_day values(?,?)";
+    private static final String SELECT_WAGON_AMOUNT_CAPACITY = "select wagon_amount,wagon_capacity from train_type,train " +
+            "where train.id=? and train.train_type_id=train_type.id;";
     private static final String SELECT_TRAINID_AND_ORDER_BY_TRAINID = "select train_id, `order` from train_leg where train_id=?";
+    private static final String SELECT_EMPLOYEES_SALARY = "select salary from employee where id=?";
+    private static final String SELECT_MAX_TRAIN_ID = "select MAX(id) as `Max` from train";
     private static final String READ_PDF_FILE = "SELECT pdf_file FROM ticket";
+    private static final String READ_STATIONS = "select * from station";
     private static final String UPDATE_INDIVIDUAL_LOGIN = "UPDATE individual set remember=? where login=?";
+    private static final String UPDATE_TRAIN_ACTIVITY = "UPDATE train SET is_active = ? where id = ?";
+
     @Override
     public void createTrainType(TrainType trainType) throws DaoException {
         Connection connection = null;
@@ -84,26 +95,6 @@ public class CrudDaoImpl implements CrudDao {
         }
     }
 
-    @Override
-    public void createTrain(Train train) throws DaoException {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        try {
-            connection = ConnectionPool.INSTANCE.getConnection();
-            preparedStatement = connection.prepareStatement(CREATE_TRAIN);
-            preparedStatement.setInt(1, train.getId());
-            preparedStatement.setString(2, train.getCompanyName());
-            preparedStatement.setString(3, train.getWeekDays());
-            preparedStatement.setInt(4, train.getTrainTypeId());
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new DaoException("cannot create new train");
-        } finally {
-            close(preparedStatement);
-            close(connection);
-        }
-    }
 
     @Override
     public void createTrainLeg(int trainId, List<Integer> listOfStationId, List<String> arriveTime, List<String> departureTime) throws DaoException {
@@ -251,21 +242,71 @@ public class CrudDaoImpl implements CrudDao {
         }
     }
 
+    @Override
+    public List<Station> readStations() {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        List<Station> result = new LinkedList<>();
+        try {
+            connection = ConnectionPool.INSTANCE.getConnection();
+            preparedStatement = connection.prepareStatement(READ_STATIONS);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                result.add(new Station(resultSet.getInt("id"), resultSet.getString("name"),
+                        resultSet.getString("city"), resultSet.getString("state")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            close(preparedStatement);
+            close(connection);
+        }
+        return result;
+    }
+
+    @Override
+    public boolean updateTrainActivity(int trainId, int activity) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try{
+            connection = ConnectionPool.INSTANCE.getConnection();
+            preparedStatement = connection.prepareStatement(UPDATE_TRAIN_ACTIVITY);
+            preparedStatement.setInt(1,activity);
+            preparedStatement.setInt(2,trainId);
+            preparedStatement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(preparedStatement);
+            close(connection);
+        }
+        return false;
+    }
+
 
     @Override
     public int createTicket(Ticket ticket) {
         try (Connection connection = ConnectionPool.INSTANCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(CREATE_TICKET)) {
             createPdfFile(ticket);
-            preparedStatement.setInt(1,ticket.getTicketId());
-            preparedStatement.setInt(2,ticket.getTrainId());
-            preparedStatement.setInt(3,ticket.getStationIdFrom());
-            preparedStatement.setInt(4,ticket.getStationIdTo());
-            preparedStatement.setInt(5,ticket.getIndividualId());
-            preparedStatement.setString(6,ticket.getFirstName());
-            preparedStatement.setString(7,ticket.getSecondName());
-            preparedStatement.setString(8,ticket.getDocumentType());
-            preparedStatement.setString(9,ticket.getDocumentId());
+            preparedStatement.setInt(1, ticket.getTicketId());
+            preparedStatement.setInt(2, ticket.getTrainId());
+            preparedStatement.setInt(3, ticket.getStationIdFrom());
+            preparedStatement.setInt(4, ticket.getStationIdTo());
+            preparedStatement.setInt(5, ticket.getIndividualId());
+            preparedStatement.setString(6, ticket.getFirstName());
+            preparedStatement.setString(7, ticket.getSecondName());
+            preparedStatement.setString(8, ticket.getDocumentType());
+            preparedStatement.setString(9, ticket.getDocumentId());
             preparedStatement.setBytes(10, Files.readAllBytes(Paths.get("C:/Users/Askhat/Desktop/Railway_Station_Management/ticket.pdf")));
             preparedStatement.executeUpdate();
         } catch (SQLException | IOException e) {
@@ -274,11 +315,100 @@ public class CrudDaoImpl implements CrudDao {
         return 0;
     }
 
-    public void readPdfFile(){
+    @Override
+    public boolean createPaycheck(int employeeId, String date) {
+        Connection connection = null;
+        PreparedStatement preparedStatementSalary = null;
+        PreparedStatement preparedStatementPaycheck = null;
+        ResultSet resultSetSalary = null;
+        try {
+            connection = ConnectionPool.INSTANCE.getConnection();
+            preparedStatementSalary = connection.prepareStatement(SELECT_EMPLOYEES_SALARY);
+            preparedStatementSalary.setInt(1, employeeId);
+            resultSetSalary = preparedStatementSalary.executeQuery();
+            resultSetSalary.next();
+            preparedStatementPaycheck = connection.prepareStatement(CREATE_PAYCHECK);
+            preparedStatementPaycheck.setInt(1, employeeId);
+            preparedStatementPaycheck.setString(2, date);
+            preparedStatementPaycheck.setInt(3, resultSetSalary.getInt("salary"));
+            preparedStatementPaycheck.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                if (resultSetSalary != null) {
+                    resultSetSalary.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            close(preparedStatementSalary);
+            close(preparedStatementPaycheck);
+            close(connection);
+        }
+        return true;
+    }
+
+    @Override
+    public int createTrain(String companyName, int typeId) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        PreparedStatement preparedStatementTrainId = null;
+        ResultSet resultSet = null;
+        try{
+            connection = ConnectionPool.INSTANCE.getConnection();
+            preparedStatement = connection.prepareStatement(CREATE_TRAIN);
+            preparedStatement.setString(1,companyName);
+            preparedStatement.setInt(2,typeId);
+            preparedStatement.executeUpdate();
+            preparedStatementTrainId = connection.prepareStatement(SELECT_MAX_TRAIN_ID);
+            resultSet = preparedStatementTrainId.executeQuery();
+            resultSet.next();
+            return resultSet.getInt("Max");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            close(preparedStatement);
+            close(preparedStatementTrainId);
+            close(connection);
+        }
+        return -1;
+    }
+
+    @Override
+    public boolean createWeekdays(int trainId, int weekId) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try{
+            connection = ConnectionPool.INSTANCE.getConnection();
+            preparedStatement = connection.prepareStatement(CREATE_WEEK_DAY);
+            preparedStatement.setInt(1,weekId);
+            preparedStatement.setInt(2,trainId);
+            preparedStatement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(preparedStatement);
+            close(connection);
+        }
+        return false;
+    }
+
+
+    public void readPdfFile() {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-        try{
+        try {
             connection = ConnectionPool.INSTANCE.getConnection();
             preparedStatement = connection.prepareStatement(READ_PDF_FILE);
             resultSet = preparedStatement.executeQuery();
@@ -294,7 +424,14 @@ public class CrudDaoImpl implements CrudDao {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } finally{
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             close(preparedStatement);
             close(connection);
         }
