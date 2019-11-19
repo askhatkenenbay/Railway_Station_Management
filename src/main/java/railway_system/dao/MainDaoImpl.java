@@ -18,9 +18,9 @@ public class MainDaoImpl implements MainDao{
     private static final String GET_TRAINS_BY_WEEKDAYS = "SELECT T1.arrival_time as T1arrival_time, T1.departure_time as T1departure_time,\n" +
             "T1.order as T1order, T1.station_id as T1station_id, T1.train_id as T1train_id, T1.arrival_day as T1arrival_day,\n" +
             "T2.arrival_time, T2.departure_time, T2.order, T2.station_id, T2.train_id, T2.arrival_day\n" +
-            "from train_leg T1, train_leg T2, week_day W1\n" +
+            "from train_leg T1, train_leg T2, week_day W1, train T \n" +
             "where T1.train_id = T2.train_id and\n" +
-            "W1.train_id = T1.train_id and W1.weekId = ? and T1.order =\n" +
+            "W1.train_id = T1.train_id and W1.weekId = ? and T1.train_id = T.train_id and T.is_active = 1 and T1.order =\n" +
             "(SELECT Min(`order`) as Min from train_leg Q where Q.train_id=T1.train_id) \n" +
             "and T2.order = \n" +
             "(SELECT Max(`order`) as Min from train_leg Q where Q.train_id=T2.train_id)";
@@ -28,24 +28,24 @@ public class MainDaoImpl implements MainDao{
     private static final String GET_TRAINS_BY_WEEKDAYS_TO_ID = "SELECT T1.arrival_time as T1arrival_time, T1.departure_time as T1departure_time,\n" +
             "T1.order as T1order, T1.station_id as T1station_id, T1.train_id as T1train_id, T1.arrival_day as T1arrival_day,\n" +
             "T2.arrival_time, T2.departure_time, T2.order, T2.station_id, T2.train_id, T2.arrival_day\n" +
-            "from train_leg T1, train_leg T2, week_day W1\n" +
+            "from train_leg T1, train_leg T2, week_day W1, train T\n" +
             "where T1.train_id = T2.train_id and T2.station_id = ? and\n" +
-            "W1.train_id = T1.train_id and W1.weekId = ? and T1.order = (SELECT Min(`order`) as Min from train_leg Q where Q.train_id=T1.train_id )";
+            "W1.train_id = T1.train_id and W1.weekId = ? and T1.train_id = T.train_id and T.is_active = 1 and T1.order = (SELECT Min(`order`) as Min from train_leg Q where Q.train_id=T1.train_id )";
 
     private static final String GET_TRAINS_BY_WEEKDAYS_FROM_ID = "SELECT T1.arrival_time as T1arrival_time, T1.departure_time as T1departure_time,\n" +
             "T1.order as T1order, T1.station_id as T1station_id, T1.train_id as T1train_id, T1.arrival_day as T1arrival_day,\n" +
             "T2.arrival_time, T2.departure_time, T2.order, T2.station_id, T2.train_id, T2.arrival_day\n" +
-            " from train_leg T1, week_day W1, train_leg T2 where T1.train_id=T2.train_id and\n" +
-            "T1.train_id = W1.train_id and MOD(W1.weekId+T1.arrival_day,6) = ? \n" +
-            "and T1.station_id = ? \n" +
+            " from train_leg T1, week_day W1, train_leg T2, train T where T1.train_id=T2.train_id and\n" +
+            "T1.train_id = W1.train_id and MOD(W1.weekId+T1.arrival_day, 7) = ? \n" +
+            "and T1.station_id = ? and T1.train_id = T.train_id and T.is_active = 1\n" +
             "and T2.order = (SELECT Max(`order`) as Max from train_leg Q where Q.train_id=T1.train_id );";
 
     private static final String GET_TRAINS_BY_WEEKDAYS_FROM_ID_TO_ID = "select T1.arrival_time as T1arrival_time, T1.departure_time as T1departure_time,\n" +
             "T1.order as T1order, T1.station_id as T1station_id, T1.train_id as T1train_id, T1.arrival_day as T1arrival_day,\n" +
             "T2.arrival_time, T2.departure_time, T2.order, T2.station_id, T2.train_id, T2.arrival_day\n" +
-            "from train_leg T1, train_leg T2, week_day W1 where T1.train_id = T2.train_id\n" +
+            "from train_leg T1, train_leg T2, week_day W1, train T where T1.train_id = T2.train_id\n" +
             "and W1.train_id = T1.train_id and T1.station_id = ? and T2.station_id = ? and\n" +
-            "T1.`order` < T2.`order` and W1.weekId = ?";
+            "T1.`order` < T2.`order` and MOD(W1.weekId+T1.arrival_day, 7) = ?  and T1.train_id = T.train_id and T.is_active = 1";
     @Override
     public ArrayList<Pair<TrainLeg, TrainLeg>> getTrainsFromTo(int weekDay, int from_id, int to_id) {
         Connection connection = null;

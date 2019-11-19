@@ -57,6 +57,8 @@ public interface MainDao {
 
     boolean authenticated(String username, String password);
 
+    //check if train.is_active = 1
+    boolean checkIsActiveTrain(int train_id);
 
 
     //return true if user_id is manager
