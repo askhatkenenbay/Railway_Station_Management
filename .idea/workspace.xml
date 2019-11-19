@@ -6,27 +6,18 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="46b5dbea-92a9-4726-9f11-d8b13bc818fc" name="Default Changelist" comment="">
-
-      <change afterPath="$PROJECT_DIR$/src/main/java/railway_system/entity/Paycheck.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/PayrollService.java" afterDir="false" />
-
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/dao/MainDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/dao/MainDao.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/entity/TrainInstance.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/entity/TrainInstance.java" afterDir="false" />
-
-      <change afterPath="$PROJECT_DIR$/src/main/java/railway_system/entity/Seat.java" afterDir="false" />
+    <list default="true" id="2ee635dc-3053-4cb0-bac5-1c460a168b2e" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/dynamictodolist_war_exploded.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/dynamictodolist_war_exploded.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_openjfx_javafx_base_14_ea_1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_openjfx_javafx_base_win_14_ea_1.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/dao/CrudDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/dao/CrudDao.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/dao/MainDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/dao/MainDao.java" afterDir="false" />
-
-      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/entity/Ticket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/entity/Ticket.java" afterDir="false" />
-
-
-      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/server/RoutesService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/RoutesService.java" afterDir="false" />
-
+      <change beforePath="$PROJECT_DIR$/dynamictodolist.iml" beforeDir="false" afterPath="$PROJECT_DIR$/dynamictodolist.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/dao/MainDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/dao/MainDaoImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/server/AuthorizationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/AuthorizationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/server/ManagerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/ManagerService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/server/StationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/StationService.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -220,15 +211,10 @@
       <workItem from="1572582709575" duration="1989000" />
       <workItem from="1573060464505" duration="997000" />
       <workItem from="1573190402449" duration="81000" />
-
       <workItem from="1573998635571" duration="7222000" />
-
       <workItem from="1573998635571" duration="3314000" />
-
       <workItem from="1574003055577" duration="10797000" />
-
       <workItem from="1574003055577" duration="4549000" />
-
     </task>
     <task id="LOCAL-00001" summary="getUserTypeById added">
       <created>1572549592976</created>

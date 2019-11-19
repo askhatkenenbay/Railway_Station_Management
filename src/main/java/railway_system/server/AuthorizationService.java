@@ -2,8 +2,7 @@ package railway_system.server;
 
 import org.glassfish.json.JsonUtil;
 import org.w3c.dom.ls.LSOutput;
-import railway_system.dao.BaseDao;
-import railway_system.dao.BaseDaoImpl;
+import railway_system.dao.*;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -31,8 +30,8 @@ public class AuthorizationService {
 
 
     private void authenticate(String username, String password) throws Exception{
-        BaseDao baseDao = new BaseDaoImpl();
-        if(!baseDao.authenticated(username, Encryptor.encrypInput(password))){
+        MainDao mainDao = new MainDaoImpl();
+        if(mainDao.authenticated(username, Encryptor.encrypInput(password))){
             throw new Exception("not authenticated");
         }
     }
@@ -42,9 +41,9 @@ public class AuthorizationService {
         byte[] bytes = new byte[20];
         random.nextBytes(bytes);
         Base64.Encoder encoder = Base64.getUrlEncoder().withoutPadding();
-        BaseDao baseDao = new BaseDaoImpl();
+        CrudDao crudDao = new CrudDaoImpl();
         String token = encoder.encodeToString(bytes);
-        baseDao.setToken(username, token);
+        crudDao.setToken(username, token);
         return token;
     }
 

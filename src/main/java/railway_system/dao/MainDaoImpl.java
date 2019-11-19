@@ -203,6 +203,11 @@ public class MainDaoImpl implements MainDao{
     }
 
     @Override
+    public boolean checkIsActiveTrain(int train_id) {
+        return false;
+    }
+
+    @Override
     public boolean checkManager(int user_id) {
         return false;
     }
