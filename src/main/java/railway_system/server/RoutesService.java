@@ -4,11 +4,8 @@ package railway_system.server;
 import com.google.gson.Gson;
 import javafx.util.Pair;
 import railway_system.dao.*;
-import railway_system.entity.Seat;
-import railway_system.entity.Ticket;
-import railway_system.entity.Train;
-import railway_system.entity.TrainInstance;
-import railway_system.entity.TrainLeg;
+import railway_system.entity.*;
+
 import javax.json.bind.Jsonb;
 import javax.json.bind.annotation.JsonbNumberFormat;
 import javax.ws.rs.*;
@@ -22,12 +19,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 
 @Path("/routes")
 public class RoutesService {
-        @Context
-        SecurityContext securityContext;
+    @Context
+    SecurityContext securityContext;
 
     public RoutesService(){
 
@@ -81,7 +79,13 @@ public class RoutesService {
         Gson gson = new Gson();
         String date = String.valueOf(year) + '-' + String.valueOf(month) + '-' + String.valueOf(day);
         int train_id = Integer.parseInt(id);
-        ArrayList<Seat> seats = new MainDaoImpl().getSeats(date, train_id, fromOrder, toOrder);
+        TrainType trainType = new CrudDaoImpl().readTrainType(train_id);
+        List<Seat> seats = new ArrayList<>();
+        for(int i = 0; i < trainType.getWagonAmount(); i++){
+            for(int j = 0; j < trainType.getWagonCapacity(); j++){
+                seats.add(new MainDaoImpl().getSeat(i, j, date, train_id, fromOrder, toOrder));
+            }
+        }
 
         Seat[] arr = seats.toArray(new Seat[seats.size()]);
         String json = gson.toJson(arr, Seat[].class);
@@ -140,11 +144,12 @@ public class RoutesService {
         }
     }
 
-    @DELETE
+    @POST
     @Secured
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Path("/{train_id: [0-9]+}/{place: [0-9]+}/delete-ticket")
-    public Response refundTicket(@Context SecurityContext securityContext, @FormParam("ticketId") int ticketId, @PathParam("train_id") String trainId){
+    @Path("/{train-id: [0-9]+}/{place: [0-9]+}/delete-ticket")
+    public Response refundTicket(@Context SecurityContext securityContext, @FormParam("ticket-id") int ticketId,
+                                 @PathParam("train-id") String trainId){
         int train_id = Integer.parseInt(trainId);
 
         MainDao mainDao = new MainDaoImpl();

@@ -178,7 +178,7 @@ public class MainDaoImpl implements MainDao{
     }
 
     @Override
-    public ArrayList<Seat> getSeats(String date, int train_id, int fromOrder, int toOrder) {
+    public Seat getSeat(int wagon_num, int seat_num, String date, int train_id, int fromOrder, int toOrder) {
         return null;
     }
 
@@ -209,6 +209,11 @@ public class MainDaoImpl implements MainDao{
 
     @Override
     public boolean checkManager(int user_id) {
+        return false;
+    }
+
+    @Override
+    public boolean checkAgent(int user_id) {
         return false;
     }
 }

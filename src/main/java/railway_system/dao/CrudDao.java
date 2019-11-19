@@ -15,7 +15,7 @@ public interface CrudDao extends CloseDao{
     void createTrainType(TrainType trainType) throws DaoException;
     void createStation(Station station) throws DaoException;
     //create Train from list
-    void createTrainLeg(int trainId,List<Integer> listOfStationId, List<String> arriveTime, List<String> departureTime)  throws DaoException ;
+    void createTrainLeg(TrainLeg trainLeg)  throws DaoException ;
     void createSeats(int traindId);
     void createIndividual(Individual individual) throws DaoException;
     void createEmployee(Employee employee) throws DaoException;
@@ -29,8 +29,16 @@ public interface CrudDao extends CloseDao{
     //create weekday for a new train line
     boolean createWeekdays(int trainId, int weekId);
     void setToken(String username, String token);
+
     List<Station> readStations();
+
+    TrainType readTrainType(int trainId);
+    //Return Tickets of user
+    List<Ticket> readTicketsOfUser(int individual_id);
+
     boolean updateTrainActivity(int trainId, int activity);
+
+
 
 
 }

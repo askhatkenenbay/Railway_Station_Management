@@ -1,9 +1,7 @@
 package railway_system.server;
 
-import railway_system.dao.CrudDao;
-import railway_system.dao.CrudDaoImpl;
-import railway_system.dao.MainDao;
-import railway_system.dao.MainDaoImpl;
+import railway_system.dao.*;
+import railway_system.entity.TrainLeg;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -54,7 +52,7 @@ public class ManagerService {
     @POST
     @Secured
     @Path("/create-train-line")
-    public Response createTrainLine(@FormParam("train-type-id") int type_id,
+    public Response createTrainLine(@Context SecurityContext securityContext, @FormParam("train-type-id") int type_id,
                                     @FormParam("weekdays") String weekdays, @FormParam("company-name") String company_name){
         MainDao mainDao = new MainDaoImpl();
         Principal principal = securityContext.getUserPrincipal();
@@ -67,10 +65,35 @@ public class ManagerService {
         int trainId = crudDao.createTrain(company_name, type_id);
         int weekId = Integer.parseInt(weekdays);
         if(crudDao.createWeekdays(trainId, weekId)){
-            return Response.ok(Response.Status.ACCEPTED).build();
+            String json = "{ \"trainId\": " + trainId + " }";
+            return Response.ok(json).build();
         }else{
             return Response.ok(Response.Status.FORBIDDEN).build();
         }
+    }
+
+    @POST
+    @Secured
+    @Path("/create-train-leg")
+    public Response createTrainLeg(@Context SecurityContext securityContext, @FormParam("train-id") int train_id, @FormParam("order") int order,
+                                   @FormParam("station_id") int station_id, @FormParam("arrival-time") String arrival_time,
+                                   @FormParam("departure_time") String departure_time, @FormParam("arrival_day") int arrival_day){
+        MainDao mainDao = new MainDaoImpl();
+        Principal principal = securityContext.getUserPrincipal();
+        int user_id = Integer.parseInt(principal.getName());
+        if(!mainDao.checkManager(user_id)){
+            return Response.ok(Response.Status.FORBIDDEN).build();
+        }
+
+        TrainLeg trainLeg = new TrainLeg(train_id, order, station_id, arrival_time, departure_time, arrival_day);
+        CrudDao crudDao = new CrudDaoImpl();
+        try {
+            crudDao.createTrainLeg(trainLeg);
+        } catch (DaoException e) {
+            e.printStackTrace();
+            return Response.ok(Response.Status.FORBIDDEN).build();
+        }
+        return Response.ok(Response.Status.ACCEPTED).build();
     }
 
     @POST

@@ -13,6 +13,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
 public interface MainDao {
     //select all pairs <train_leg1, train_leg2>
@@ -43,8 +44,8 @@ public interface MainDao {
 
 
 
-    //return all seats of the given train_leg and on the given date
-    ArrayList<Seat> getSeats(String date, int train_id, int fromOrder, int toOrder);
+    //return Seat, set available to 1, if ticketId of every seat fromOrder to toOrder is null
+    Seat getSeat(int wagon_num, int seat_num, String date, int train_id, int fromOrder, int toOrder);
 
 
     boolean refundTicket(int user_id, int train_id, int ticketId);
@@ -63,6 +64,9 @@ public interface MainDao {
 
     //return true if user_id is manager
     boolean checkManager(int user_id);
+
+    //return true if user if agent
+    boolean checkAgent(int user_id);
 
     default void close(Statement statement) {
         try {

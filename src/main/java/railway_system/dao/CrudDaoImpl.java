@@ -34,7 +34,7 @@ public class CrudDaoImpl implements CrudDao {
     //private static final String CREATE_TRAIN = "INSERT INTO train values(?,?,?,?)";
     private static final String CREATE_TRAIN_TYPE = "INSERT INTO train_type values (?,?,?,?,?)";
     private static final String CREATE_STATION = "INSERT INTO station values(?,?,?,?)";
-    private static final String CREATE_TRAIN_LEG = "INSERT INTO train_leg values(?,?,?,?,?)";
+    private static final String CREATE_TRAIN_LEG = "INSERT INTO train_leg values(?,?,?,?,?,?)";
     private static final String CREATE_SEAT = "INSERT INTO seats values(?,?,?,?)";
     private static final String CREATE_INDIVIDUAL = "INSERT INTO individual VALUES(?,?,?,?,?,?,?,?,?)";
     private static final String CREATE_EMPLOYEE = "INSERT INTO employee VALUES(?,?,?,?,?,?,?)";
@@ -97,20 +97,21 @@ public class CrudDaoImpl implements CrudDao {
 
 
     @Override
-    public void createTrainLeg(int trainId, List<Integer> listOfStationId, List<String> arriveTime, List<String> departureTime) throws DaoException {
+    public void createTrainLeg(TrainLeg trainLeg) throws DaoException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         try {
             connection = ConnectionPool.INSTANCE.getConnection();
             preparedStatement = connection.prepareStatement(CREATE_TRAIN_LEG);
-            preparedStatement.setInt(5, trainId);
-            for (int i = 0; i < listOfStationId.size(); i++) {
-                preparedStatement.setString(1, arriveTime.get(i));
-                preparedStatement.setString(2, departureTime.get(i));
-                preparedStatement.setInt(3, i);
-                preparedStatement.setInt(4, listOfStationId.get(i));
-                preparedStatement.executeUpdate();
-            }
+
+            preparedStatement.setString(1, trainLeg.getArrival_time());
+            preparedStatement.setString(2, trainLeg.getDeparture_time());
+            preparedStatement.setInt(3, trainLeg.getOrder());
+            preparedStatement.setInt(4, trainLeg.getStation_id());
+            preparedStatement.setInt(5, trainLeg.getTrain_id());
+            preparedStatement.setInt(6,trainLeg.getArrival_day());
+
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
             throw new DaoException("cannot create new train leg");
@@ -270,6 +271,16 @@ public class CrudDaoImpl implements CrudDao {
             close(connection);
         }
         return result;
+    }
+
+    @Override
+    public TrainType readTrainType(int trainId) {
+        return null;
+    }
+
+    @Override
+    public List<Ticket> readTicketsOfUser(int individual_id) {
+        return null;
     }
 
     @Override
