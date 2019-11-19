@@ -15,7 +15,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface MainDao {
+public interface MainDao extends CloseDao{
     //select all pairs <train_leg1, train_leg2>
     //where train_leg1.station_id == from_id and train_lef2.station_id == to_id and train_leg1.order < train_leg2.order
     //and train_leg1.train_id == train_leg2.train_id and Train(train_leg1.train_id).weekdays like "%weekDay%"
@@ -39,16 +39,20 @@ public interface MainDao {
     //and train_leg1.train_id == train_leg2.train_id and Train(train_leg1.train_id).weekdays like "%weekDay%"
     ArrayList<Pair<TrainLeg, TrainLeg>> getTrains(int weekDay);
 
-    //get Station by ID
-    public Station getStation(int id);
 
 
 
+
+<<<<<<< HEAD
     //return Seat, set available to 1, if ticketId of every seat fromOrder to toOrder is null
     Seat getSeat(int wagon_num, int seat_num, String date, int train_id, int fromOrder, int toOrder);
+=======
+    //return all seats of the given train_leg and on the given date
+    List<Seat> getSeatsInstance(String date, int train_id, int fromOrder, int toOrder);
+>>>>>>> 6c05274c257e004658125d94981de32a4d2dec2a
 
 
-    boolean refundTicket(int user_id, int train_id, int ticketId);
+    boolean refundTicket(int individual_id, int train_id, int ticketId);
 
     //check if train_id between from_order and to_order are null
     boolean checkIfAvailable(String date, int seat_number, int wagon_number, int from_order, int to_order, int train_id);
@@ -65,6 +69,7 @@ public interface MainDao {
     //return true if user_id is manager
     boolean checkManager(int user_id);
 
+<<<<<<< HEAD
     //return true if user if agent
     boolean checkAgent(int user_id);
 
@@ -87,4 +92,7 @@ public interface MainDao {
             }
         }
     }
+=======
+
+>>>>>>> 6c05274c257e004658125d94981de32a4d2dec2a
 }
