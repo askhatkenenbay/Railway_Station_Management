@@ -14,13 +14,8 @@
           <element id="module-output" name="dynamictodolist" />
         </element>
         <element id="directory" name="lib">
-
-          <element id="library" level="project" name="Maven: org.openjfx:javafx-base:14-ea+1" />
-          <element id="library" level="project" name="Maven: org.openjfx:javafx-base:win:14-ea+1" />
-
           <element id="library" level="project" name="Maven: javax.mail:mail:1.5.0-b01" />
           <element id="library" level="project" name="Maven: javax.activation:activation:1.1" />
-
           <element id="library" level="project" name="Maven: com.itextpdf:itextpdf:5.5.10" />
           <element id="library" level="project" name="Maven: com.itextpdf:kernel:7.0.2" />
           <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.26" />

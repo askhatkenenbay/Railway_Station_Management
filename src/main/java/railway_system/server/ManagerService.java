@@ -9,6 +9,7 @@ import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
@@ -63,7 +64,7 @@ public class ManagerService {
         }
 
         CrudDao crudDao = new CrudDaoImpl();
-        int trainId = crudDao.createTrainLine(company_name, type_id);
+        int trainId = crudDao.createTrain(company_name, type_id);
         int weekId = Integer.parseInt(weekdays);
         if(crudDao.createWeekdays(trainId, weekId)){
             return Response.ok(Response.Status.ACCEPTED).build();
@@ -84,7 +85,7 @@ public class ManagerService {
         }
 
         CrudDao crudDao = new CrudDaoImpl();
-        if(crudDao.cancelTrainLine(trainId)) {
+        if(crudDao.updateTrainActivity(trainId, 0)) {
 //            String username = "manager@mail.com";
 //            String password = "12345678";
 //
@@ -101,20 +102,16 @@ public class ManagerService {
 //                }
 //                Message message = new MimeMessage(session);
 //                message.setFrom(new InternetAddress("from@gmail.com"));
-//                message.setRecipients(
-//                                Message.RecipientType.TO, InternetAddress.parse("to@gmail.com"));
+//                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("to@gmail.com"));
 //                message.setSubject("Mail Subject");
 //
-//                                String msg = "This is my first email using JavaMailer";
+//                String msg = "This is my first email using JavaMailer";
 //
-//                                MimeBodyPart mimeBodyPart = new MimeBodyPart();
+//                MimeBodyPart mimeBodyPart = new MimeBodyPart();
 //                mimeBodyPart.setContent(msg, "text/html");
-//
-//                                Multipart multipart = new MimeMultipart();
+//                Multipart multipart = new MimeMultipart();
 //                multipart.addBodyPart(mimeBodyPart);
-//
 //                message.setContent(multipart);
-//
 //                Transport.send(message);
 //
 //            });
@@ -137,7 +134,7 @@ public class ManagerService {
         }
 
         CrudDao crudDao = new CrudDaoImpl();
-        if(crudDao.reopenTrainLine(trainId)) {
+        if(crudDao.updateTrainActivity(trainId, 1)) {
             return Response.ok(Response.Status.ACCEPTED).build();
         }else{
             return Response.ok(Response.Status.FORBIDDEN).build();
