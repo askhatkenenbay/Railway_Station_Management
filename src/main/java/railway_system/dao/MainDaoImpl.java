@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainDaoImpl implements MainDao{
@@ -46,6 +47,10 @@ public class MainDaoImpl implements MainDao{
             "from train_leg T1, train_leg T2, week_day W1 where T1.train_id = T2.train_id\n" +
             "and W1.train_id = T1.train_id and T1.station_id = ? and T2.station_id = ? and\n" +
             "T1.`order` < T2.`order` and W1.weekId = ?";
+    private static final String REFUND_TICKET = "UPDATE Ticket set waiting_refund = 1 where individual_id = ? and\n" +
+            "train_id = ? and id = ?";
+    private static final String AUTHENTICATE_INDIVIDUAL = "select * from individual where login=? and password=?";
+    private static final String IS_MANAGER = "select * from employee where individual_id=? and type='manager'";
     @Override
     public ArrayList<Pair<TrainLeg, TrainLeg>> getTrainsFromTo(int weekDay, int from_id, int to_id) {
         Connection connection = null;
@@ -172,18 +177,32 @@ public class MainDaoImpl implements MainDao{
         return result;
     }
 
+
+
     @Override
-    public Station getStation(int id) {
+    public List<Seat> getSeatsInstance(String date, int train_id, int fromOrder, int toOrder) {
+
         return null;
     }
 
     @Override
-    public ArrayList<Seat> getSeats(String date, int train_id, int fromOrder, int toOrder) {
-        return null;
-    }
-
-    @Override
-    public boolean refundTicket(int user_id, int train_id, int ticketId) {
+    public boolean refundTicket(int individual_id, int train_id, int ticketId) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try{
+            connection = ConnectionPool.INSTANCE.getConnection();
+            preparedStatement = connection.prepareStatement(REFUND_TICKET);
+            preparedStatement.setInt(1,individual_id);
+            preparedStatement.setInt(2,train_id);
+            preparedStatement.setInt(3,ticketId);
+            preparedStatement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(preparedStatement);
+            close(connection);
+        }
         return false;
     }
 
@@ -199,11 +218,38 @@ public class MainDaoImpl implements MainDao{
 
     @Override
     public boolean authenticated(String username, String password) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try{
+            connection = ConnectionPool.INSTANCE.getConnection();
+            preparedStatement = connection.prepareStatement(AUTHENTICATE_INDIVIDUAL);
+            preparedStatement.setString(1,username);
+            preparedStatement.setString(2,password);
+            return preparedStatement.executeQuery().next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(preparedStatement);
+            close(connection);
+        }
         return false;
     }
 
     @Override
     public boolean checkManager(int user_id) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try{
+            connection = ConnectionPool.INSTANCE.getConnection();
+            preparedStatement = connection.prepareStatement(AUTHENTICATE_INDIVIDUAL);
+            preparedStatement.setInt(1,user_id);
+            return preparedStatement.executeQuery().next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(preparedStatement);
+            close(connection);
+        }
         return false;
     }
 }

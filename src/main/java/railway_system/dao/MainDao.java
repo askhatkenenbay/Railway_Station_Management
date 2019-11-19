@@ -13,8 +13,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
-public interface MainDao {
+public interface MainDao extends CloseDao{
     //select all pairs <train_leg1, train_leg2>
     //where train_leg1.station_id == from_id and train_lef2.station_id == to_id and train_leg1.order < train_leg2.order
     //and train_leg1.train_id == train_leg2.train_id and Train(train_leg1.train_id).weekdays like "%weekDay%"
@@ -38,16 +39,15 @@ public interface MainDao {
     //and train_leg1.train_id == train_leg2.train_id and Train(train_leg1.train_id).weekdays like "%weekDay%"
     ArrayList<Pair<TrainLeg, TrainLeg>> getTrains(int weekDay);
 
-    //get Station by ID
-    public Station getStation(int id);
+
 
 
 
     //return all seats of the given train_leg and on the given date
-    ArrayList<Seat> getSeats(String date, int train_id, int fromOrder, int toOrder);
+    List<Seat> getSeatsInstance(String date, int train_id, int fromOrder, int toOrder);
 
 
-    boolean refundTicket(int user_id, int train_id, int ticketId);
+    boolean refundTicket(int individual_id, int train_id, int ticketId);
 
     //check if train_id between from_order and to_order are null
     boolean checkIfAvailable(String date, int seat_number, int wagon_number, int from_order, int to_order, int train_id);
@@ -62,23 +62,5 @@ public interface MainDao {
     //return true if user_id is manager
     boolean checkManager(int user_id);
 
-    default void close(Statement statement) {
-        try {
-            if (statement != null) {
-                statement.close();
-            }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-    }
 
-    default void close(Connection connection) {
-        if (connection != null) {
-            try {
-                ConnectionPool.INSTANCE.releaseConnection(connection);
-            } catch (ConnectionPoolException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 }

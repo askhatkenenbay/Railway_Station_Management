@@ -49,6 +49,7 @@ public class CrudDaoImpl implements CrudDao {
     private static final String SELECT_MAX_TRAIN_ID = "select MAX(id) as `Max` from train";
     private static final String READ_PDF_FILE = "SELECT pdf_file FROM ticket";
     private static final String READ_STATIONS = "select * from station";
+    private static final String READ_STATION_BY_ID = "select * from station where id=?";
     private static final String UPDATE_INDIVIDUAL_LOGIN = "UPDATE individual set remember=? where login=?";
     private static final String UPDATE_TRAIN_ACTIVITY = "UPDATE train SET is_active = ? where id = ?";
 
@@ -401,6 +402,36 @@ public class CrudDaoImpl implements CrudDao {
             close(connection);
         }
         return false;
+    }
+
+    @Override
+    public Station getStation(int id) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try{
+            connection = ConnectionPool.INSTANCE.getConnection();
+            preparedStatement = connection.prepareStatement(READ_STATION_BY_ID);
+            preparedStatement.setInt(1,id);
+            resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()) {
+                return new Station(resultSet.getInt("id"), resultSet.getString("name"),
+                        resultSet.getString("city"), resultSet.getString("state"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally{
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            close(preparedStatement);
+            close(connection);
+        }
+        return null;
     }
 
 

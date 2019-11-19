@@ -28,6 +28,9 @@ public interface CrudDao extends CloseDao{
     int createTrain(String companyName, int typeId);
     //create weekday for a new train line
     boolean createWeekdays(int trainId, int weekId);
+    //get Station by ID
+    public Station getStation(int id);
+
     void setToken(String username, String token);
     List<Station> readStations();
     boolean updateTrainActivity(int trainId, int activity);
