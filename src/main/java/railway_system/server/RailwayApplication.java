@@ -1,7 +1,9 @@
 package railway_system.server;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMethod;
+import railway_system.filters.AuthenticationFilter;
+import railway_system.filters.CorsFilter;
+import railway_system.filters.Logged;
+import railway_system.filters.LoggingFilter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -12,6 +14,7 @@ import javax.ws.rs.core.Application;
 
 
 @ApplicationPath("/services")
+@Logged
 public class RailwayApplication extends Application {
     private Set<Object> singletons = new HashSet<Object>();
     private Set<Class<?>> empty = new HashSet<Class<?>>();
@@ -22,7 +25,10 @@ public class RailwayApplication extends Application {
         singletons.add(new AuthorizationService());
         singletons.add(new PassengerService());
         singletons.add(new AuthenticationFilter());
+        singletons.add(new AgentService());
+        singletons.add(new ManagerService());
         singletons.add(new CorsFilter());
+        singletons.add(new LoggingFilter());
     }
     
     @Override

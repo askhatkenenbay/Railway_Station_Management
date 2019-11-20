@@ -20,7 +20,8 @@ public class Ticket {
     private String documentType;
     private String documentId;
     private boolean waitingRefund;
-    private String arrival_datetime;
-    private String departure_datetime;
-
+    private String arrivalDatetime;
+    private String departureDatetime;
+    private int seatNumber;
+    private int wagonNumber;
 }

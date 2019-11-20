@@ -5,9 +5,8 @@ import com.google.gson.Gson;
 import javafx.util.Pair;
 import railway_system.dao.*;
 import railway_system.entity.*;
+import railway_system.filters.Secured;
 
-import javax.json.bind.Jsonb;
-import javax.json.bind.annotation.JsonbNumberFormat;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -45,6 +44,7 @@ public class RoutesService {
         Calendar c = Calendar.getInstance();
         c.setTime(date);
         int dayOfWeek = c.get(Calendar.DAY_OF_WEEK) - 1;
+        System.out.println(dayOfWeek);
         MainDao mainDao = new MainDaoImpl();
         ArrayList<Pair<TrainLeg, TrainLeg>> result = null;
 
@@ -65,7 +65,7 @@ public class RoutesService {
         for(Pair<TrainLeg, TrainLeg> legs : result){
             trains.add( new TrainInstance(legs.getKey(), legs.getValue(), c));
         }
-
+        System.out.println(trains.size());
         TrainInstance[] arr = trains.toArray(new TrainInstance[trains.size()]);
 
         String json = gson.toJson(arr, TrainInstance[].class);
@@ -110,11 +110,11 @@ public class RoutesService {
         Principal principal = securityContext.getUserPrincipal();
         int user_id = Integer.parseInt(principal.getName());
 
-        if(!mainDao.checkIfAvailable(init_date, place, wagon_number, from_order, to_order, train_id)){
+        if(!mainDao.checkIfAvailable(init_date, place, wagon_number, from_order, to_order, train_id) || to_order == from_order){
             return Response.ok(Response.Status.FORBIDDEN).build();
         }
 
-        Ticket ticket = new Ticket(0, train_id, from_id, to_id, user_id, first_name, last_name, doctype, doc_id, false, arrival_datetime, departure_datetime);
+        Ticket ticket = new Ticket(0, train_id, from_id, to_id, user_id, first_name, last_name, doctype, doc_id, false, arrival_datetime, departure_datetime, place, wagon_number);
         CrudDao crudDao = new CrudDaoImpl();
         int ticket_id = crudDao.createTicket(ticket);
 

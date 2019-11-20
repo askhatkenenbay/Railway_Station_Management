@@ -4,6 +4,8 @@ package railway_system.entity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import railway_system.dao.CrudDao;
+import railway_system.dao.CrudDaoImpl;
 import railway_system.dao.MainDao;
 import railway_system.dao.MainDaoImpl;
 
@@ -25,11 +27,13 @@ public class TrainInstance {
     private String departure_time;
     private String arrival_time;
     private String initial_date;
+    private int price;
     public TrainInstance(TrainLeg from, TrainLeg to, Calendar c){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         this.id = from.train_id;
         this.from_id = from.station_id;
         this.to_id = to.station_id;
+        c = (Calendar)  c.clone();
         this.departure_time =  sdf.format(c.getTime()) + " " + from.departure_time;
 
         this.from_order = from.order;
@@ -42,11 +46,12 @@ public class TrainInstance {
         this.arrival_time = sdf.format(c.getTime()) + " " + to.arrival_time;
 
 
+        CrudDao crudDao = new CrudDaoImpl();
+        this.from = crudDao.getStation(this.from_id).getCity();
+        this.to = crudDao.getStation(this.to_id).getCity();
+        this.price = 0;
+//        this.price = crudDao.readTrainType(id).getPrice() * (this.to_order - this.from_order);
 
-
-        MainDao mainDao = new MainDaoImpl();
-        this.from = mainDao.getStation(this.from_id).getCity();
-        this.to = mainDao.getStation(this.to_id).getCity();
     }
 
 }

@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import railway_system.dao.*;
 import railway_system.entity.Individual;
 import railway_system.entity.Ticket;
+import railway_system.filters.Secured;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -12,7 +13,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 
 @Path("/passenger")

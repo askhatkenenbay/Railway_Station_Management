@@ -1,4 +1,4 @@
-package railway_system.server;
+package railway_system.filters;
 
 import javax.ws.rs.container.*;
 import javax.ws.rs.core.Response;
