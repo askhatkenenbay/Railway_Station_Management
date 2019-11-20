@@ -37,7 +37,7 @@ public class LoggingFilter implements ContainerRequestFilter, ContainerResponseF
         // implementation goes here
         StringBuilder sb = new StringBuilder();
         sb.append("User: ").append( context.getSecurityContext().getUserPrincipal() == null ? "unknown"
-                : context.getSecurityContext().getUserPrincipal());
+                : context.getSecurityContext().getUserPrincipal().getName());
         sb.append(" - Path: ").append(context.getUriInfo().getPath());
         sb.append(" - Header: ").append(context.getHeaders());
         sb.append(" - Entity: ").append(getEntityBody(context));
@@ -48,6 +48,7 @@ public class LoggingFilter implements ContainerRequestFilter, ContainerResponseF
         // implementation goes here
         StringBuilder sb = new StringBuilder();
         sb.append("Header: ").append(context.getHeaders());
+        sb.append(" - Status: ").append(context.getStatus());
         sb.append(" - Entity: ").append(context.getEntity());
         LOGGER.info( "HTTP RESPONSE : " + sb.toString());
     }

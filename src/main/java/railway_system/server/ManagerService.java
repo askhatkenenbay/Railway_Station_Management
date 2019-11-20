@@ -8,8 +8,10 @@ import railway_system.filters.Secured;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import java.io.File;
 import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -166,6 +168,19 @@ public class ManagerService {
         Employee[] arr =  employees.toArray(new Employee[employees.size()]);
         String json = gson.toJson(arr, Employee[].class);
         return Response.ok(json).build();
+    }
+
+    @GET
+    @Secured
+    @Path("/logs")
+    public Response getLogs(@Context SecurityContext securityContext){
+        if(!checkIsManager(securityContext)){
+            return Response.ok(Response.Status.FORBIDDEN).build();
+        }
+        File file = new File("log/logging.log");
+        return Response.ok(file, MediaType.APPLICATION_OCTET_STREAM)
+                .header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"" ) //optional
+                .build();
     }
 
 }

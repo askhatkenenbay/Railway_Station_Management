@@ -81,8 +81,9 @@ public class RoutesService {
         int train_id = Integer.parseInt(id);
         TrainType trainType = new CrudDaoImpl().readTrainType(train_id);
         List<Seat> seats = new ArrayList<>();
-        for(int i = 0; i < trainType.getWagonAmount(); i++){
-            for(int j = 0; j < trainType.getWagonCapacity(); j++){
+        System.out.println(trainType.getWagonAmount());
+        for(int i = 1; i <= trainType.getWagonAmount(); i++){
+            for(int j = 1; j <= trainType.getWagonCapacity(); j++){
                 seats.add(new MainDaoImpl().getSeat(i, j, date, train_id, fromOrder, toOrder));
             }
         }
@@ -106,7 +107,6 @@ public class RoutesService {
 
         MainDao mainDao = new MainDaoImpl();
         int train_id = Integer.parseInt(id);
-        Gson gson = new Gson();
         Principal principal = securityContext.getUserPrincipal();
         int user_id = Integer.parseInt(principal.getName());
 

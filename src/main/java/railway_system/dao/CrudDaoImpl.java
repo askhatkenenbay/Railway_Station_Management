@@ -55,7 +55,7 @@ public class CrudDaoImpl implements CrudDao {
     private static final String READ_WAITING_REFUND_TICKET = "select * from ticket where waiting_refund=1";
     private static final String READ_ALL_EMPLOYEE = "select salary,type,work_since,employee.id,individual_id,first_name,second_name\n" +
             "from employee, individual where  employee.id=individual.id";
-    private static final String READ_TRAIN_TYPE_BY_ID = "select * from train_type where id=?";
+    private static final String READ_TRAIN_TYPE_BY_ID = "select * from train T, train_type where T.id = ? and train_type.id=T.train_type_id";
     private static final String READ_SEAT_INFO = "select wagon_amount,wagon_capacity,count(train_leg.order) as `order` from train_type,train_leg,train where\n" +
             "train.id = ? and train_type.id = train.train_type_id  and train_leg.train_id=train.id";
     private static final String UPDATE_INDIVIDUAL_LOGIN = "UPDATE individual set remember=? where login=?";
@@ -315,7 +315,7 @@ public class CrudDaoImpl implements CrudDao {
             preparedStatement.setInt(1,trainId);
             resultSet = preparedStatement.executeQuery();
             resultSet.next();
-            return new TrainType(resultSet.getInt("id"),resultSet.getInt("wagon_number"),
+            return new TrainType(resultSet.getInt("id"),resultSet.getInt("wagon_amount"),
                     resultSet.getInt("wagon_capacity"),resultSet.getInt("price"));
         } catch (SQLException e) {
             e.printStackTrace();
@@ -477,9 +477,10 @@ public class CrudDaoImpl implements CrudDao {
 
     @Override
     public int createTicket(Ticket ticket) {
+        //TODO
         try (Connection connection = ConnectionPool.INSTANCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(CREATE_TICKET)) {
-            createPdfFile(ticket);
+//            createPdfFile(ticket);
             preparedStatement.setInt(1, ticket.getTicketId());
             preparedStatement.setInt(2, ticket.getTrainId());
             preparedStatement.setInt(3, ticket.getStationIdFrom());
@@ -489,7 +490,7 @@ public class CrudDaoImpl implements CrudDao {
             preparedStatement.setString(7, ticket.getSecondName());
             preparedStatement.setString(8, ticket.getDocumentType());
             preparedStatement.setString(9, ticket.getDocumentId());
-            preparedStatement.setBytes(10, Files.readAllBytes(Paths.get("C:/Users/Askhat/Desktop/Railway_Station_Management/ticket.pdf")));
+            preparedStatement.setBytes(10, Files.readAllBytes(Paths.get("D:\\Projects\\IdeaProjects\\RailwaySystem\\Railway_System_Management\\ticket.pdf")));
             preparedStatement.executeUpdate();
         } catch (SQLException | IOException e) {
             e.printStackTrace();
@@ -617,6 +618,7 @@ public class CrudDaoImpl implements CrudDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new DaoException("Already Created");
         } finally {
             try {
                 if (resultSet != null) {

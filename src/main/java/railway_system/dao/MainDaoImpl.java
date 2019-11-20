@@ -51,9 +51,9 @@ public class MainDaoImpl implements MainDao {
     private static final String IS_TRAIN_ACTIVE = "select is_active from train where is_active=1 and id=?";
     private static final String IS_AGENT = "select * from employee where type='agent' and individual_id=?";
     private static final String GET_SEAT = "select * from seat_instance where\n" +
-            "date = ?  and seats_seat_number=? and\n" +
-            "seats_wagon_number = ? and seats_train_leg_train_id =?\n" +
-            "and seats_train_leg_order>=? and seats_train_leg_order<=? and ticket_id IS NOT NULL";
+            "date = ?  and seat_number=? and\n" +
+            "wagon_number = ? and train_leg_train_id =?\n" +
+            "and train_leg_order>=? and train_leg_order<=? and ticket_id IS NOT NULL";
 
     private static final String UPDATE_TICKET = "INSERT INTO seat_instance values(?,?,?,?,?,?)";
     @Override
@@ -198,7 +198,11 @@ public class MainDaoImpl implements MainDao {
             preparedStatement.setInt(5,fromOrder);
             preparedStatement.setInt(6,toOrder);
             resultSet = preparedStatement.executeQuery();
-            return new Seat(date,seat_num,wagon_num,train_id,resultSet.next());
+            boolean available = true;
+            if(resultSet.next()){
+                available = false;
+            }
+                return new Seat(date,seat_num,wagon_num,train_id,available);
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -305,7 +309,7 @@ public class MainDaoImpl implements MainDao {
         PreparedStatement preparedStatement = null;
         try {
             connection = ConnectionPool.INSTANCE.getConnection();
-            preparedStatement = connection.prepareStatement(AUTHENTICATE_INDIVIDUAL);
+            preparedStatement = connection.prepareStatement(IS_MANAGER);
             preparedStatement.setInt(1, user_id);
             return preparedStatement.executeQuery().next();
         } catch (SQLException e) {
