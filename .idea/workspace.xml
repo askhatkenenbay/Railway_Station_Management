@@ -169,12 +169,53 @@
         </option>
       </method>
     </configuration>
+    <configuration name="index.html" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" temporary="true" APPLICATION_SERVER_NAME="Tomcat 8.5.47" ALTERNATIVE_JRE_ENABLED="false">
+      <option name="OPEN_IN_BROWSER_URL" value="http://localhost:8080/index.html" />
+      <deployment>
+        <artifact name="dynamictodolist:war exploded">
+          <settings>
+            <option name="CONTEXT_PATH" value="/dynamictodolist_war_exploded" />
+          </settings>
+        </artifact>
+      </deployment>
+      <server-settings>
+        <option name="BASE_DIRECTORY_NAME" value="index_html_dynamictodolist_3" />
+      </server-settings>
+      <predefined_log_file enabled="true" id="Tomcat" />
+      <predefined_log_file enabled="true" id="Tomcat Catalina" />
+      <predefined_log_file id="Tomcat Manager" />
+      <predefined_log_file id="Tomcat Host Manager" />
+      <predefined_log_file id="Tomcat Localhost Access" />
+      <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Run">
+        <option name="USE_ENV_VARIABLES" value="true" />
+        <STARTUP>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </STARTUP>
+        <SHUTDOWN>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </SHUTDOWN>
+      </ConfigurationWrapper>
+      <method v="2">
+        <option name="Make" enabled="true" />
+        <option name="BuildArtifacts" enabled="true">
+          <artifact name="dynamictodolist:war exploded" />
+        </option>
+      </method>
+    </configuration>
     <list>
       <item itemvalue="Application.main" />
       <item itemvalue="Tomcat Server.Tomcat 8.5.45" />
+      <item itemvalue="Tomcat Server.index.html" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Tomcat Server.index.html" />
         <item itemvalue="Application.main" />
       </list>
     </recent_temporary>
@@ -218,6 +259,11 @@
       <workItem from="1574003055577" duration="4549000" />
       <workItem from="1574157181370" duration="2798000" />
       <workItem from="1574274469978" duration="6078000" />
+      <workItem from="1574243195926" duration="1183000" />
+      <workItem from="1574247533309" duration="14000" />
+      <workItem from="1574250180068" duration="1457000" />
+      <workItem from="1574237411591" duration="9514000" />
+      <workItem from="1574240910066" duration="6560000" />
     </task>
     <task id="LOCAL-00001" summary="getUserTypeById added">
       <created>1572549592976</created>

@@ -103,13 +103,14 @@ public class ManagerService {
 
         CrudDao crudDao = new CrudDaoImpl();
         int trainId = crudDao.createTrain(company_name, type_id);
-        int weekId = Integer.parseInt(weekdays);
-        if(crudDao.createWeekdays(trainId, weekId)){
-            String json = "{ \"trainId\": " + trainId + " }";
-            return Response.ok(json).build();
-        }else{
-            return Response.ok(Response.Status.FORBIDDEN).build();
+        for(int i = 0 ; i < weekdays.length(); i++){
+            int weekId = weekdays.charAt(i) - 48;
+            if(!crudDao.createWeekdays(trainId, weekId)) {
+                return Response.ok(Response.Status.FORBIDDEN).build();
+            }
         }
+        String json = "{ \"trainId\": " + trainId + " }";
+        return Response.ok(json).build();
     }
 
     @POST
