@@ -3,6 +3,7 @@ package railway_system.server;
 import com.google.gson.Gson;
 import railway_system.dao.*;
 import railway_system.entity.Employee;
+import railway_system.entity.Individual;
 import railway_system.entity.TrainLeg;
 import railway_system.filters.Secured;
 
@@ -16,6 +17,15 @@ import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import java.util.Properties;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 @Path("/manager")
 public class ManagerService {
@@ -32,6 +42,31 @@ public class ManagerService {
             return false;
         }
         return true;
+    }
+
+    static Properties mailServerProperties;
+    static Session getMailSession;
+    static MimeMessage generateMailMessage;
+
+    public static void sendEmail(int trainId) throws AddressException, MessagingException {
+        mailServerProperties = System.getProperties();
+        mailServerProperties.put("mail.smtp.port", "587");
+        mailServerProperties.put("mail.smtp.auth", "true");
+        mailServerProperties.put("mail.smtp.starttls.enable", "true");
+
+        getMailSession = Session.getDefaultInstance(mailServerProperties, null);
+        generateMailMessage = new MimeMessage(getMailSession);
+        generateMailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress("nurtas.ilyas@nu.edu.kz"));
+        generateMailMessage.addRecipient(Message.RecipientType.CC, new InternetAddress("askhat.kenenbay@nu.edu.kz"));
+        generateMailMessage.setSubject("Trail Line is canceled");
+        String emailBody = "We are sorry, but train line " + String.valueOf(trainId) +" is unavailable until further notice " + "<br><br> Regards, <br>InElonWeTrust Team";
+        generateMailMessage.setContent(emailBody, "text/html");
+
+        Transport transport = getMailSession.getTransport("smtp");
+
+        transport.connect("smtp.gmail.com", "kim.denis.998@gmail.com", "manager.001");
+        transport.sendMessage(generateMailMessage, generateMailMessage.getAllRecipients());
+        transport.close();
     }
 
     @POST
@@ -103,36 +138,6 @@ public class ManagerService {
 
         CrudDao crudDao = new CrudDaoImpl();
         if(crudDao.updateTrainActivity(trainId, 0)) {
-//            String username = "manager@mail.com";
-//            String password = "12345678";
-//
-//            Properties prop = new Properties();
-//            prop.put("mail.smtp.auth", true);
-//            prop.put("mail.smtp.starttls.enable", "true");
-//            prop.put("mail.smtp.host", "smtp.mailtrap.io");
-//            prop.put("mail.smtp.port", "25");
-//            prop.put("mail.smtp.ssl.trust", "smtp.mailtrap.io");
-//            Session session = Session.getInstance(prop, new Authenticator() {
-//                @Override
-//                protected PasswordAuthentication getPasswordAuthentication() {
-//                    return new PasswordAuthentication(username, password);
-//                }
-//                Message message = new MimeMessage(session);
-//                message.setFrom(new InternetAddress("from@gmail.com"));
-//                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("to@gmail.com"));
-//                message.setSubject("Mail Subject");
-//
-//                String msg = "This is my first email using JavaMailer";
-//
-//                MimeBodyPart mimeBodyPart = new MimeBodyPart();
-//                mimeBodyPart.setContent(msg, "text/html");
-//                Multipart multipart = new MimeMultipart();
-//                multipart.addBodyPart(mimeBodyPart);
-//                message.setContent(multipart);
-//                Transport.send(message);
-//
-//            });
-
             return Response.ok(Response.Status.ACCEPTED).build();
         }else{
             return Response.ok(Response.Status.FORBIDDEN).build();
@@ -173,14 +178,32 @@ public class ManagerService {
     @GET
     @Secured
     @Path("/logs")
-    public Response getLogs(@Context SecurityContext securityContext){
-        if(!checkIsManager(securityContext)){
+    public Response getLogs(@Context SecurityContext securityContext) {
+        if (!checkIsManager(securityContext)) {
             return Response.ok(Response.Status.FORBIDDEN).build();
         }
         File file = new File("log/logging.log");
         return Response.ok(file, MediaType.APPLICATION_OCTET_STREAM)
-                .header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"" ) //optional
+                .header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"") //optional
                 .build();
+    }
+
+    @POST
+    @Secured
+    @Path("/send-notification")
+    public Response sendMail(@Context SecurityContext securityContext, @FormParam("train-id") int trainId){
+        if(!checkIsManager(securityContext)){
+            return Response.ok(Response.Status.FORBIDDEN).build();
+        }
+        List<String> agentsEmails = new MainDaoImpl().getAgentsEmails();
+        try {
+            sendEmail(trainId);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            return Response.ok(Response.Status.FORBIDDEN).build();
+        }
+        return Response.ok(Response.Status.ACCEPTED).build();
+
     }
 
 }

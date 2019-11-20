@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 
 public class MainDaoImpl implements MainDao {
@@ -374,6 +375,11 @@ public class MainDaoImpl implements MainDao {
             close(connection);
         }
         return false;
+    }
+
+    @Override
+    public List<String> getAgentsEmails() {
+        return null;
     }
 
 

@@ -59,5 +59,8 @@ public interface MainDao extends CloseDao{
     //check if Tickets.individual_id = user_id
     boolean isBelongTo(int user_id, int ticket_id);
 
+    //return list of agents' emails
+    List<String> getAgentsEmails();
+
 
 }
