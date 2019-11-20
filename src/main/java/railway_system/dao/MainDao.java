@@ -39,8 +39,7 @@ public interface MainDao extends CloseDao{
     Seat getSeat(int wagon_num, int seat_num, String date, int train_id, int fromOrder, int toOrder);
 
 
-    //check if train_id between from_order and to_order are null
-    boolean checkIfAvailable(String date, int seat_number, int wagon_number, int from_order, int to_order, int train_id);
+
 
     //change seat instance ticket id between from_order and to_order
     void updateSeatInstances(String date, int seat_num, int wagon_num, int from_order, int to_order, int train_id, int ticket_id);

@@ -50,6 +50,12 @@ public class MainDaoImpl implements MainDao {
     private static final String IS_BELONG_TO = "select * from ticket where id=? and individual_id=?";
     private static final String IS_TRAIN_ACTIVE = "select is_active from train where is_active=1 and id=?";
     private static final String IS_AGENT = "select * from employee where type='agent' and individual_id=?";
+    private static final String GET_SEAT = "select * from seat_instance where\n" +
+            "date = ?  and seats_seat_number=? and\n" +
+            "seats_wagon_number = ? and seats_train_leg_train_id =?\n" +
+            "and seats_train_leg_order>=? and seats_train_leg_order<=? and ticket_id IS NOT NULL";
+
+    private static final String UPDATE_TICKET = "INSERT INTO seat_instance values(?,?,?,?,?,?)";
     @Override
     public ArrayList<Pair<TrainLeg, TrainLeg>> getTrainsFromTo(int weekDay, int from_id, int to_id) {
         Connection connection = null;
@@ -149,8 +155,6 @@ public class MainDaoImpl implements MainDao {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            close(preparedStatement);
-            close(connection);
             try {
                 if (resultSet != null) {
                     resultSet.close();
@@ -158,6 +162,8 @@ public class MainDaoImpl implements MainDao {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+            close(preparedStatement);
+            close(connection);
         }
         return new ArrayList<>();
     }
@@ -179,19 +185,60 @@ public class MainDaoImpl implements MainDao {
 
     @Override
     public Seat getSeat(int wagon_num, int seat_num, String date, int train_id, int fromOrder, int toOrder) {
-        //TODO
-        return null;
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try{
+            connection = ConnectionPool.INSTANCE.getConnection();
+            preparedStatement = connection.prepareStatement(GET_SEAT);
+            preparedStatement.setString(1,date);
+            preparedStatement.setInt(2,seat_num);
+            preparedStatement.setInt(3,wagon_num);
+            preparedStatement.setInt(4,train_id);
+            preparedStatement.setInt(5,fromOrder);
+            preparedStatement.setInt(6,toOrder);
+            resultSet = preparedStatement.executeQuery();
+            return new Seat(date,seat_num,wagon_num,train_id,resultSet.next());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            close(preparedStatement);
+            close(connection);
+        }
+        return new Seat(date,seat_num,wagon_num,train_id,false);
     }
 
-    @Override
-    public boolean checkIfAvailable(String date, int seat_number, int wagon_number, int from_order, int to_order, int train_id) {
-        //TODO
-        return false;
-    }
+
 
     @Override
     public void updateSeatInstances(String date, int seat_num, int wagon_num, int from_order, int to_order, int train_id, int ticket_id) {
-        //TODO
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try{
+            connection = ConnectionPool.INSTANCE.getConnection();
+            preparedStatement = connection.prepareStatement(UPDATE_TICKET);
+            preparedStatement.setString(1,date);
+            preparedStatement.setInt(2,seat_num);
+            preparedStatement.setInt(3,wagon_num);
+            preparedStatement.setInt(5,train_id);
+            preparedStatement.setInt(6,ticket_id);
+            for (int i = from_order; i <=to_order; i++) {
+                preparedStatement.setInt(4,i);
+                preparedStatement.execute();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(preparedStatement);
+            close(connection);
+        }
     }
 
     @Override

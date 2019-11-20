@@ -110,7 +110,7 @@ public class RoutesService {
         Principal principal = securityContext.getUserPrincipal();
         int user_id = Integer.parseInt(principal.getName());
 
-        if(!mainDao.checkIfAvailable(init_date, place, wagon_number, from_order, to_order, train_id) || to_order == from_order){
+        if(!mainDao.getSeat(wagon_number, place , init_date, train_id, from_order, to_order).isAvailable() || to_order == from_order){
             return Response.ok(Response.Status.FORBIDDEN).build();
         }
 
