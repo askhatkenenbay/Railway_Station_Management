@@ -42,6 +42,7 @@ public class CrudDaoImpl implements CrudDao {
     private static final String CREATE_PAYCHECK = "INSERT INTO paycheck values(?,?,?)";
     private static final String CREATE_TRAIN = "INSERT INTO train(company_name, train_type_id, is_active) values (?,?)";
     private static final String CREATE_WEEK_DAY = "INSERT INTO week_day values(?,?)";
+    private static final String CREATE_SEAT_INSTANCE = "INSERT INTO seat_instance values(?,?,?,?,?,null)";
     private static final String SELECT_WAGON_AMOUNT_CAPACITY = "select wagon_amount,wagon_capacity from train_type,train " +
             "where train.id=? and train.train_type_id=train_type.id;";
     private static final String SELECT_TRAINID_AND_ORDER_BY_TRAINID = "select train_id, `order` from train_leg where train_id=?";
@@ -50,9 +51,18 @@ public class CrudDaoImpl implements CrudDao {
     private static final String READ_PDF_FILE = "SELECT pdf_file FROM ticket";
     private static final String READ_STATIONS = "select * from station";
     private static final String READ_STATION_BY_ID = "select * from station where id=?";
+    private static final String READ_TICKET_BY_INDIVIDUAL_ID = "select * from ticket where individual_id=?";
+    private static final String READ_WAITING_REFUND_TICKET = "select * from ticket where waiting_refund=1";
+    private static final String READ_ALL_EMPLOYEE = "select salary,type,work_since,employee.id,individual_id,first_name,second_name\n" +
+            "from employee, individual where  employee.id=individual.id";
+    private static final String READ_TRAIN_TYPE_BY_ID = "select * from train_type where id=?";
+    private static final String READ_SEAT_INFO = "select wagon_amount,wagon_capacity,count(train_leg.order) as `order` from train_type,train_leg,train where\n" +
+            "train.id = ? and train_type.id = train.train_type_id  and train_leg.train_id=train.id";
     private static final String UPDATE_INDIVIDUAL_LOGIN = "UPDATE individual set remember=? where login=?";
     private static final String UPDATE_TRAIN_ACTIVITY = "UPDATE train SET is_active = ? where id = ?";
     private static final String UPDATE_TICKET_REFUND = "UPDATE Ticket set waiting_refund = ? where id = ?";
+    private static final String DELETE_TICKET_BY_ID = "delete from ticket where id=?";
+
 
     @Override
     public void createTrainType(TrainType trainType) throws DaoException {
@@ -110,7 +120,7 @@ public class CrudDaoImpl implements CrudDao {
             preparedStatement.setInt(3, trainLeg.getOrder());
             preparedStatement.setInt(4, trainLeg.getStation_id());
             preparedStatement.setInt(5, trainLeg.getTrain_id());
-            preparedStatement.setInt(6,trainLeg.getArrival_day());
+            preparedStatement.setInt(6, trainLeg.getArrival_day());
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -248,11 +258,11 @@ public class CrudDaoImpl implements CrudDao {
     public boolean updateTicketRefund(int ticketId, int waiting_refund) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-        try{
+        try {
             connection = ConnectionPool.INSTANCE.getConnection();
             preparedStatement = connection.prepareStatement(UPDATE_TICKET_REFUND);
-            preparedStatement.setInt(1,waiting_refund);
-            preparedStatement.setInt(2,ticketId);
+            preparedStatement.setInt(1, waiting_refund);
+            preparedStatement.setInt(2, ticketId);
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException e) {
@@ -296,28 +306,145 @@ public class CrudDaoImpl implements CrudDao {
 
     @Override
     public TrainType readTrainType(int trainId) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try{
+            connection = ConnectionPool.INSTANCE.getConnection();
+            preparedStatement = connection.prepareStatement(READ_TRAIN_TYPE_BY_ID);
+            preparedStatement.setInt(1,trainId);
+            resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            return new TrainType(resultSet.getInt("id"),resultSet.getInt("wagon_number"),
+                    resultSet.getInt("wagon_capacity"),resultSet.getInt("price"));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            close(preparedStatement);
+            close(connection);
+        }
         return null;
     }
 
     @Override
     public List<Ticket> readTicketsOfUser(int individual_id) {
-        return null;
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = ConnectionPool.INSTANCE.getConnection();
+            preparedStatement = connection.prepareStatement(READ_TICKET_BY_INDIVIDUAL_ID);
+            preparedStatement.setInt(1, individual_id);
+            resultSet = preparedStatement.executeQuery();
+            return helperTicket(resultSet);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            close(preparedStatement);
+            close(connection);
+        }
+        return new LinkedList<>();
+    }
+
+    @Override
+    public List<Ticket> readWaitingTickets() {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = ConnectionPool.INSTANCE.getConnection();
+            preparedStatement = connection.prepareStatement(READ_WAITING_REFUND_TICKET);
+            resultSet = preparedStatement.executeQuery();
+            return helperTicket(resultSet);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            close(preparedStatement);
+            close(connection);
+        }
+        return new LinkedList<>();
+    }
+
+    private List<Ticket> helperTicket(ResultSet resultSet) throws SQLException {
+        LinkedList<Ticket> result = new LinkedList<>();
+        while (resultSet.next()) {
+            result.add(new Ticket(resultSet.getInt("id"), resultSet.getInt("train_id"),
+                    resultSet.getInt("station_id_from"), resultSet.getInt("station_id_to"),
+                    resultSet.getInt("individual_id"), resultSet.getString("first_name"),
+                    resultSet.getString("second_name"), resultSet.getString("document_type"),
+                    resultSet.getString("document_id"), resultSet.getBoolean("waiting_refund"),
+                    resultSet.getString("arrival_datetime"), resultSet.getString("departure_datetime"),
+                    resultSet.getInt("seat_number"), resultSet.getInt("wagon_number")));
+        }
+        return result;
     }
 
     @Override
     public List<Employee> readAllEmployees() {
-        return null;
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = ConnectionPool.INSTANCE.getConnection();
+            preparedStatement = connection.prepareStatement(READ_ALL_EMPLOYEE);
+            resultSet = preparedStatement.executeQuery();
+            return helperEmployee(resultSet);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            close(preparedStatement);
+            close(connection);
+        }
+        return new LinkedList<>();
+    }
+
+    private List<Employee> helperEmployee(ResultSet resultSet) throws SQLException {
+        LinkedList<Employee> employees = new LinkedList<>();
+        while (resultSet.next()) {
+            employees.add(new Employee(resultSet.getInt("salary"), resultSet.getString("type"),
+                    resultSet.getString("work_since"), resultSet.getInt("id"),
+                    resultSet.getInt("individual_id"), resultSet.getString("first_name"), resultSet.getString("second_name")));
+        }
+        return employees;
     }
 
     @Override
     public boolean updateTrainActivity(int trainId, int activity) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-        try{
+        try {
             connection = ConnectionPool.INSTANCE.getConnection();
             preparedStatement = connection.prepareStatement(UPDATE_TRAIN_ACTIVITY);
-            preparedStatement.setInt(1,activity);
-            preparedStatement.setInt(2,trainId);
+            preparedStatement.setInt(1, activity);
+            preparedStatement.setInt(2, trainId);
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException e) {
@@ -330,8 +457,21 @@ public class CrudDaoImpl implements CrudDao {
     }
 
     @Override
-    public void deleteTicket(int ticket_id) {
-
+    public void deleteTicket(int ticket_id) throws DaoException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = ConnectionPool.INSTANCE.getConnection();
+            preparedStatement = connection.prepareStatement(DELETE_TICKET_BY_ID);
+            preparedStatement.setInt(1, ticket_id);
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DaoException("problems with deleting ticket");
+        } finally {
+            close(preparedStatement);
+            close(connection);
+        }
     }
 
 
@@ -398,11 +538,11 @@ public class CrudDaoImpl implements CrudDao {
         PreparedStatement preparedStatement = null;
         PreparedStatement preparedStatementTrainId = null;
         ResultSet resultSet = null;
-        try{
+        try {
             connection = ConnectionPool.INSTANCE.getConnection();
             preparedStatement = connection.prepareStatement(CREATE_TRAIN);
-            preparedStatement.setString(1,companyName);
-            preparedStatement.setInt(2,typeId);
+            preparedStatement.setString(1, companyName);
+            preparedStatement.setInt(2, typeId);
             preparedStatement.executeUpdate();
             preparedStatementTrainId = connection.prepareStatement(SELECT_MAX_TRAIN_ID);
             resultSet = preparedStatementTrainId.executeQuery();
@@ -429,11 +569,11 @@ public class CrudDaoImpl implements CrudDao {
     public boolean createWeekdays(int trainId, int weekId) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-        try{
+        try {
             connection = ConnectionPool.INSTANCE.getConnection();
             preparedStatement = connection.prepareStatement(CREATE_WEEK_DAY);
-            preparedStatement.setInt(1,weekId);
-            preparedStatement.setInt(2,trainId);
+            preparedStatement.setInt(1, weekId);
+            preparedStatement.setInt(2, trainId);
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException e) {
@@ -447,7 +587,48 @@ public class CrudDaoImpl implements CrudDao {
 
     @Override
     public void createSeatInstances(int trainId, String date) throws DaoException {
-
+        //TODO
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        PreparedStatement preparedStatementHelper = null;
+        ResultSet resultSet = null;
+        try{
+            connection = ConnectionPool.INSTANCE.getConnection();
+            preparedStatementHelper = connection.prepareStatement(READ_SEAT_INFO);
+            preparedStatementHelper.setInt(1,trainId);
+            resultSet = preparedStatementHelper.executeQuery();
+            resultSet.next();
+            int wagonNumber = resultSet.getInt("wagon_amount");
+            int wagonCapacity = resultSet.getInt("wagon_capacity");
+            int order = resultSet.getInt("order");
+            //-------------------------------------------------------------
+            preparedStatement = connection.prepareStatement(CREATE_SEAT_INSTANCE);
+            preparedStatement.setString(1,date);
+            preparedStatement.setInt(5,trainId);
+            for (int i = 1; i <=order; i++) {
+                for (int j = 1; j <=wagonNumber; j++) {
+                    for (int k = 1; k <=wagonCapacity; k++) {
+                        preparedStatement.setInt(2,k);
+                        preparedStatement.setInt(3,j);
+                        preparedStatement.setInt(4,i);
+                        preparedStatement.execute();
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            close(preparedStatement);
+            close(preparedStatementHelper);
+            close(connection);
+        }
     }
 
     @Override
@@ -455,18 +636,18 @@ public class CrudDaoImpl implements CrudDao {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-        try{
+        try {
             connection = ConnectionPool.INSTANCE.getConnection();
             preparedStatement = connection.prepareStatement(READ_STATION_BY_ID);
-            preparedStatement.setInt(1,id);
+            preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
-            if(resultSet.next()) {
+            if (resultSet.next()) {
                 return new Station(resultSet.getInt("id"), resultSet.getString("name"),
                         resultSet.getString("city"), resultSet.getString("state"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally{
+        } finally {
             try {
                 if (resultSet != null) {
                     resultSet.close();

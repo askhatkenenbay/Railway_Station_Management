@@ -15,5 +15,4 @@ public class Seat {
     private int wagonNumber;
     private int TrainLegTrainId;
     private boolean available;
-    private int price;
 }

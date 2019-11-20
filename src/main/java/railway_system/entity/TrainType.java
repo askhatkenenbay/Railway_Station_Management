@@ -10,7 +10,8 @@ import lombok.ToString;
 @Setter
 @ToString
 public class TrainType {
-    private int Id;
+
+    private int id;
     private int wagonAmount;
     private int wagonCapacity;
     private int price;

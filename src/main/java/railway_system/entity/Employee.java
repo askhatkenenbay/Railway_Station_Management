@@ -10,7 +10,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class Employee {
-    private int Salary;
+    private int salary;
     private String type;
     private String workSince;
     private int id;

@@ -65,7 +65,7 @@ public class AgentService {
             return Response.ok(Response.Status.FORBIDDEN).build();
         }
         Gson gson = new Gson();
-        List tickets = new MainDaoImpl().readWaitingTickets();
+        List tickets = new CrudDaoImpl().readWaitingTickets();
         Ticket[] arr = (Ticket[]) tickets.toArray(new Ticket[tickets.size()]);
         String json = gson.toJson(arr, Ticket[].class);
         return Response.ok(json).build();
