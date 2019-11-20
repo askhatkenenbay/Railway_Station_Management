@@ -31,7 +31,7 @@ public class AuthorizationService {
 
     private void authenticate(String username, String password) throws Exception{
         MainDao mainDao = new MainDaoImpl();
-        if(mainDao.authenticated(username, Encryptor.encrypInput(password))){
+        if(!mainDao.authenticated(username, Encryptor.encrypInput(password))){
             throw new Exception("not authenticated");
         }
     }

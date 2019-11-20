@@ -4,22 +4,16 @@ import com.google.gson.Gson;
 import railway_system.dao.*;
 import railway_system.entity.Employee;
 import railway_system.entity.TrainLeg;
+import railway_system.filters.Secured;
 
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 
 @Path("/manager")
 public class ManagerService {

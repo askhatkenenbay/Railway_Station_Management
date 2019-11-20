@@ -62,4 +62,5 @@ public interface MainDao extends CloseDao{
 
     //read all tickets where waiting_refund = 1;
     List<Ticket> readWaitingTickets();
+
 }

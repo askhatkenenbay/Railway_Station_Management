@@ -17,32 +17,32 @@ import java.util.List;
 
 
 public class MainDaoImpl implements MainDao{
-    private static final String GET_TRAINS_BY_WEEKDAYS = "SELECT T1.arrival_time as T1arrival_time, T1.departure_time as T1departure_time,\n" +
+    private static final String GET_TRAINS_BY_WEEKDAYS = "SELECT DISTINCT T1.arrival_time as T1arrival_time, T1.departure_time as T1departure_time,\n" +
             "T1.order as T1order, T1.station_id as T1station_id, T1.train_id as T1train_id, T1.arrival_day as T1arrival_day,\n" +
             "T2.arrival_time, T2.departure_time, T2.order, T2.station_id, T2.train_id, T2.arrival_day\n" +
             "from train_leg T1, train_leg T2, week_day W1\n" +
             "where T1.train_id = T2.train_id and\n" +
-            "W1.train_id = T1.train_id and W1.weekId = ? and T1.order =\n" +
+            "W1.train_id = T1.train_id and W1.weekId = ? and T1.`order` < T2.`order` and T1.order =\n " +
             "(SELECT Min(`order`) as Min from train_leg Q where Q.train_id=T1.train_id) \n" +
             "and T2.order = \n" +
             "(SELECT Max(`order`) as Min from train_leg Q where Q.train_id=T2.train_id)";
 
-    private static final String GET_TRAINS_BY_WEEKDAYS_TO_ID = "SELECT T1.arrival_time as T1arrival_time, T1.departure_time as T1departure_time,\n" +
+    private static final String GET_TRAINS_BY_WEEKDAYS_TO_ID = "SELECT DISTINCT T1.arrival_time as T1arrival_time, T1.departure_time as T1departure_time,\n" +
             "T1.order as T1order, T1.station_id as T1station_id, T1.train_id as T1train_id, T1.arrival_day as T1arrival_day,\n" +
             "T2.arrival_time, T2.departure_time, T2.order, T2.station_id, T2.train_id, T2.arrival_day\n" +
             "from train_leg T1, train_leg T2, week_day W1\n" +
             "where T1.train_id = T2.train_id and T2.station_id = ? and\n" +
-            "W1.train_id = T1.train_id and W1.weekId = ? and T1.order = (SELECT Min(`order`) as Min from train_leg Q where Q.train_id=T1.train_id )";
+            "W1.train_id = T1.train_id and T1.`order` < T2.`order` and W1.weekId = ? and T1.order = (SELECT Min(`order`) as Min from train_leg Q where Q.train_id=T1.train_id )";
 
-    private static final String GET_TRAINS_BY_WEEKDAYS_FROM_ID = "SELECT T1.arrival_time as T1arrival_time, T1.departure_time as T1departure_time,\n" +
+    private static final String GET_TRAINS_BY_WEEKDAYS_FROM_ID = "SELECT DISTINCT T1.arrival_time as T1arrival_time, T1.departure_time as T1departure_time,\n" +
             "T1.order as T1order, T1.station_id as T1station_id, T1.train_id as T1train_id, T1.arrival_day as T1arrival_day,\n" +
             "T2.arrival_time, T2.departure_time, T2.order, T2.station_id, T2.train_id, T2.arrival_day\n" +
             " from train_leg T1, week_day W1, train_leg T2 where T1.train_id=T2.train_id and\n" +
             "T1.train_id = W1.train_id and MOD(W1.weekId+T1.arrival_day,6) = ? \n" +
             "and T1.station_id = ? \n" +
-            "and T2.order = (SELECT Max(`order`) as Max from train_leg Q where Q.train_id=T1.train_id );";
+            "and T1.`order` < T2.`order` and T2.order = (SELECT Max(`order`) as Max from train_leg Q where Q.train_id=T1.train_id );";
 
-    private static final String GET_TRAINS_BY_WEEKDAYS_FROM_ID_TO_ID = "select T1.arrival_time as T1arrival_time, T1.departure_time as T1departure_time,\n" +
+    private static final String GET_TRAINS_BY_WEEKDAYS_FROM_ID_TO_ID = "select DISTINCT T1.arrival_time as T1arrival_time, T1.departure_time as T1departure_time,\n" +
             "T1.order as T1order, T1.station_id as T1station_id, T1.train_id as T1train_id, T1.arrival_day as T1arrival_day,\n" +
             "T2.arrival_time, T2.departure_time, T2.order, T2.station_id, T2.train_id, T2.arrival_day\n" +
             "from train_leg T1, train_leg T2, week_day W1 where T1.train_id = T2.train_id\n" +
@@ -198,15 +198,26 @@ public class MainDaoImpl implements MainDao{
     public boolean authenticated(String username, String password) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
         try{
             connection = ConnectionPool.INSTANCE.getConnection();
             preparedStatement = connection.prepareStatement(AUTHENTICATE_INDIVIDUAL);
             preparedStatement.setString(1,username);
             preparedStatement.setString(2,password);
-            return preparedStatement.executeQuery().next();
+            resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                return true;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             close(preparedStatement);
             close(connection);
         }
