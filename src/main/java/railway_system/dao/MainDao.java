@@ -60,6 +60,5 @@ public interface MainDao extends CloseDao{
     //check if Tickets.individual_id = user_id
     boolean isBelongTo(int user_id, int ticket_id);
 
-    //read all tickets where waiting_refund = 1;
-    List<Ticket> readWaitingTickets();
+
 }

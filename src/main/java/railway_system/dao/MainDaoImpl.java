@@ -13,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -51,6 +52,8 @@ public class MainDaoImpl implements MainDao{
 
     private static final String AUTHENTICATE_INDIVIDUAL = "select * from individual where login=? and password=?";
     private static final String IS_MANAGER = "select * from employee where individual_id=? and type='manager'";
+    private static final String IS_BELONG_TO = "select * from ticket where id=? and individual_id=?";
+    private static final String IS_TRAIN_ACTIVE = "select is_active from train where is_active=1 and id=?";
     @Override
     public ArrayList<Pair<TrainLeg, TrainLeg>> getTrainsFromTo(int weekDay, int from_id, int to_id) {
         Connection connection = null;
@@ -215,6 +218,29 @@ public class MainDaoImpl implements MainDao{
 
     @Override
     public boolean checkIsActiveTrain(int train_id) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = ConnectionPool.INSTANCE.getConnection();
+            preparedStatement = connection.prepareStatement(IS_TRAIN_ACTIVE);
+            preparedStatement.setInt(1,train_id);
+            resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            return resultSet.getBoolean("is_active");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            close(preparedStatement);
+            close(connection);
+        }
         return false;
     }
 
@@ -243,11 +269,31 @@ public class MainDaoImpl implements MainDao{
 
     @Override
     public boolean isBelongTo(int user_id, int ticket_id) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try{
+            connection = ConnectionPool.INSTANCE.getConnection();
+            preparedStatement = connection.prepareStatement(IS_BELONG_TO);
+            preparedStatement.setInt(1,ticket_id);
+            preparedStatement.setInt(2,user_id);
+            resultSet = preparedStatement.executeQuery();
+            return resultSet.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            close(preparedStatement);
+            close(connection);
+        }
         return false;
     }
 
-    @Override
-    public List<Ticket> readWaitingTickets() {
-        return null;
-    }
+
 }
