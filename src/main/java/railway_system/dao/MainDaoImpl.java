@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -57,6 +58,8 @@ public class MainDaoImpl implements MainDao {
             "and seats_train_leg_order>=? and seats_train_leg_order<=? and ticket_id IS NOT NULL";
 
     private static final String UPDATE_TICKET = "INSERT INTO seat_instance values(?,?,?,?,?,?)";
+    private static final String GET_ALL_AGENTS_EMAIL = "select email from employee,individual  where employee.type='agent' \n" +
+            "and employee.individual_id=individual.id";
     @Override
     public ArrayList<Pair<TrainLeg, TrainLeg>> getTrainsFromTo(int weekDay, int from_id, int to_id) {
         Connection connection = null;
@@ -375,7 +378,31 @@ public class MainDaoImpl implements MainDao {
 
     @Override
     public List<String> getAgentsEmails() {
-        return null;
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        List<String> emailList = new LinkedList<>();
+        try{
+            connection = ConnectionPool.INSTANCE.getConnection();
+            preparedStatement = connection.prepareStatement(GET_ALL_AGENTS_EMAIL);
+            resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                emailList.add(resultSet.getString("email"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            close(preparedStatement);
+            close(connection);
+        }
+        return emailList;
     }
 
 
