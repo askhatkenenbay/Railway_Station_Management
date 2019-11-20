@@ -3,6 +3,7 @@ package railway_system.server;
 import org.glassfish.json.JsonUtil;
 import org.w3c.dom.ls.LSOutput;
 import railway_system.dao.*;
+import railway_system.filters.Logged;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -11,6 +12,7 @@ import java.security.SecureRandom;
 import java.util.Base64;
 
 @Path("/login")
+@Logged
 public class AuthorizationService {
     public AuthorizationService(){}
 

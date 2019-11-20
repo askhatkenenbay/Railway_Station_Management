@@ -38,7 +38,7 @@ public class CrudDaoImpl implements CrudDao {
     private static final String CREATE_SEAT = "INSERT INTO seats values(?,?,?,?)";
     private static final String CREATE_INDIVIDUAL = "INSERT INTO individual VALUES(?,?,?,?,?,?,?,?,?)";
     private static final String CREATE_EMPLOYEE = "INSERT INTO employee VALUES(?,?,?,?,?,?,?)";
-    private static final String CREATE_TICKET = "INSERT INTO ticket VALUES(?,?,?,?,?,?,?,?,?,?)";
+    private static final String CREATE_TICKET = "INSERT INTO ticket values(?,?,?,?,?,?,?,?,?,null,?,?,?,?,?);";
     private static final String CREATE_PAYCHECK = "INSERT INTO paycheck values(?,?,?)";
     private static final String CREATE_TRAIN = "INSERT INTO train(company_name, train_type_id, is_active) values (?,?)";
     private static final String CREATE_WEEK_DAY = "INSERT INTO week_day values(?,?)";
@@ -490,9 +490,15 @@ public class CrudDaoImpl implements CrudDao {
             preparedStatement.setString(7, ticket.getSecondName());
             preparedStatement.setString(8, ticket.getDocumentType());
             preparedStatement.setString(9, ticket.getDocumentId());
-            preparedStatement.setBytes(10, Files.readAllBytes(Paths.get("D:\\Projects\\IdeaProjects\\RailwaySystem\\Railway_System_Management\\ticket.pdf")));
+
+            preparedStatement.setBoolean(10,ticket.isWaitingRefund());
+            preparedStatement.setString(11,ticket.getArrivalDatetime());
+            preparedStatement.setString(12,ticket.getDepartureDatetime());
+            preparedStatement.setInt(13,ticket.getSeatNumber());
+            preparedStatement.setInt(14,ticket.getWagonNumber());
+
             preparedStatement.executeUpdate();
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return 0;
@@ -587,8 +593,7 @@ public class CrudDaoImpl implements CrudDao {
     }
 
     @Override
-    public void createSeatInstances(int trainId, String date) throws DaoException {
-        //TODO
+    public void createSeatInstances(int trainId, String date) throws DaoException{
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         PreparedStatement preparedStatementHelper = null;
