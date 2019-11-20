@@ -185,6 +185,7 @@ public class ManagerService {
             sendEmail(trainId);
         } catch (MessagingException e) {
             e.printStackTrace();
+            return Response.ok(Response.Status.FORBIDDEN).build();
         }
         return Response.ok(Response.Status.ACCEPTED).build();
 
