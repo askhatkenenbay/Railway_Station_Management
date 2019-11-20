@@ -32,7 +32,7 @@ import java.util.List;
 
 public class CrudDaoImpl implements CrudDao {
     //private static final String CREATE_TRAIN = "INSERT INTO train values(?,?,?,?)";
-    private static final String CREATE_TRAIN_TYPE = "INSERT INTO train_type values (?,?,?,?,?)";
+    private static final String CREATE_TRAIN_TYPE = "INSERT INTO train_type values (?,?,?,?)";
     private static final String CREATE_STATION = "INSERT INTO station values(?,?,?,?)";
     private static final String CREATE_TRAIN_LEG = "INSERT INTO train_leg values(?,?,?,?,?,?)";
     private static final String CREATE_SEAT = "INSERT INTO seats values(?,?,?,?)";
@@ -62,10 +62,9 @@ public class CrudDaoImpl implements CrudDao {
             connection = ConnectionPool.INSTANCE.getConnection();
             preparedStatement = connection.prepareStatement(CREATE_TRAIN_TYPE);
             preparedStatement.setInt(1, trainType.getId());
-            preparedStatement.setString(2, trainType.getName());
-            preparedStatement.setInt(3, trainType.getWagonAmount());
-            preparedStatement.setInt(4, trainType.getWagonCapacity());
-            preparedStatement.setInt(5, trainType.getPrice());
+            preparedStatement.setInt(2, trainType.getWagonAmount());
+            preparedStatement.setInt(3, trainType.getWagonCapacity());
+            preparedStatement.setInt(4, trainType.getPrice());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

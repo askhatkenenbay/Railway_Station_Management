@@ -7,24 +7,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="46b5dbea-92a9-4726-9f11-d8b13bc818fc" name="Default Changelist" comment="Merge branch 'master' of https://github.com/askhatkenenbay/Railway_Station_Management&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml&#10;#&#9;src/main/java/railway_system/dao/MainDaoImpl.java">
-      <change afterPath="$PROJECT_DIR$/src/main/java/railway_system/filters/LoggingFilter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/railway_system/filters/Secured.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__log4j_log4j_1_2_17.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/log/logging.log" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/logging.log" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/log4j.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/log4j2.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/dynamictodolist_war_exploded.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/dynamictodolist_war_exploded.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/dao/MainDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/dao/MainDao.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/dao/MainDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/dao/MainDaoImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/entity/Ticket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/entity/Ticket.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/entity/TrainInstance.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/entity/TrainInstance.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/server/AgentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/AgentService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/server/AuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/filters/AuthenticationFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/server/AuthorizationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/AuthorizationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/server/CorsFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/filters/CorsFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/server/ManagerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/ManagerService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/server/PassengerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/PassengerService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/server/RailwayApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/RailwayApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/server/RoutesService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/RoutesService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/server/Secured.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/filters/Logged.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/database.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/database.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dynamictodolist.iml" beforeDir="false" afterPath="$PROJECT_DIR$/dynamictodolist.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/dao/CrudDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/dao/CrudDaoImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/entity/TrainType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/entity/TrainType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/filters/LoggingFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/filters/LoggingFilter.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -78,6 +72,7 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Projects\IdeaProjects\RailwaySystem\Railway_System_Management" />
       <recent name="D:\Projects\IdeaProjects\RailwaySystem\Railway_System_Management\src\main\resources" />
       <recent name="D:\Projects\IdeaProjects\RailwaySystem\Railway_System_Management\src\main\java\railway_system\dao" />
       <recent name="D:\Projects\IdeaProjects\RailwaySystem\Railway_System_Management\src\main\java\railway_system\connection" />
@@ -224,6 +219,7 @@
       <workItem from="1574003055577" duration="10797000" />
       <workItem from="1574003055577" duration="4549000" />
       <workItem from="1574157181370" duration="2798000" />
+      <workItem from="1574237411591" duration="9514000" />
     </task>
     <task id="LOCAL-00001" summary="getUserTypeById added">
       <created>1572549592976</created>
@@ -265,6 +261,9 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.log" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
