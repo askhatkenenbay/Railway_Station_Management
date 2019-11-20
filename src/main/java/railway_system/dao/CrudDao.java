@@ -43,14 +43,15 @@ public interface CrudDao extends CloseDao{
     TrainType readTrainType(int trainId);
     //Return Tickets of user
     List<Ticket> readTicketsOfUser(int individual_id);
+    //read all tickets where waiting_refund = 1;
+    List<Ticket> readWaitingTickets();
 
     //Return all employees including fname and lname
     List<Employee> readAllEmployees();
 
     boolean updateTrainActivity(int trainId, int activity);
-
-
     //update all SeatInstances where Seat.ticket_id = ticket_id to ticket_id = NULL
+
     //delete ticket
     void deleteTicket(int ticket_id) throws DaoException;
 
