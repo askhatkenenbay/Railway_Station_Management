@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 
 public class MainDaoImpl implements MainDao {
@@ -305,7 +306,7 @@ public class MainDaoImpl implements MainDao {
         PreparedStatement preparedStatement = null;
         try {
             connection = ConnectionPool.INSTANCE.getConnection();
-            preparedStatement = connection.prepareStatement(AUTHENTICATE_INDIVIDUAL);
+            preparedStatement = connection.prepareStatement(IS_MANAGER);
             preparedStatement.setInt(1, user_id);
             return preparedStatement.executeQuery().next();
         } catch (SQLException e) {
@@ -370,6 +371,11 @@ public class MainDaoImpl implements MainDao {
             close(connection);
         }
         return false;
+    }
+
+    @Override
+    public List<String> getAgentsEmails() {
+        return null;
     }
 
 

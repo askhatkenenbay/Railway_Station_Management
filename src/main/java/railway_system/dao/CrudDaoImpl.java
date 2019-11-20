@@ -40,7 +40,7 @@ public class CrudDaoImpl implements CrudDao {
     private static final String CREATE_EMPLOYEE = "INSERT INTO employee VALUES(?,?,?,?,?,?,?)";
     private static final String CREATE_TICKET = "INSERT INTO ticket VALUES(?,?,?,?,?,?,?,?,?,?)";
     private static final String CREATE_PAYCHECK = "INSERT INTO paycheck values(?,?,?)";
-    private static final String CREATE_TRAIN = "INSERT INTO train(company_name, train_type_id, is_active) values (?,?)";
+    private static final String CREATE_TRAIN = "INSERT INTO train(company_name, train_type_id, is_active) values (?,?,1)";
     private static final String CREATE_WEEK_DAY = "INSERT INTO week_day values(?,?)";
     private static final String CREATE_SEAT_INSTANCE = "INSERT INTO seat_instance values(?,?,?,?,?,null)";
     private static final String SELECT_WAGON_AMOUNT_CAPACITY = "select wagon_amount,wagon_capacity from train_type,train " +
@@ -60,7 +60,7 @@ public class CrudDaoImpl implements CrudDao {
             "train.id = ? and train_type.id = train.train_type_id  and train_leg.train_id=train.id";
     private static final String UPDATE_INDIVIDUAL_LOGIN = "UPDATE individual set remember=? where login=?";
     private static final String UPDATE_TRAIN_ACTIVITY = "UPDATE train SET is_active = ? where id = ?";
-    private static final String UPDATE_TICKET_REFUND = "UPDATE Ticket set waiting_refund = ? where id = ?";
+    private static final String UPDATE_TICKET_REFUND = "UPDATE ticket set waiting_refund = ? where id = ?";
     private static final String DELETE_TICKET_BY_ID = "delete from ticket where id=?";
 
 
