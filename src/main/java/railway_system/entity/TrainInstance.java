@@ -49,8 +49,7 @@ public class TrainInstance {
         CrudDao crudDao = new CrudDaoImpl();
         this.from = crudDao.getStation(this.from_id).getCity();
         this.to = crudDao.getStation(this.to_id).getCity();
-        this.price = 0;
-//        this.price = crudDao.readTrainType(id).getPrice() * (this.to_order - this.from_order);
+        this.price = crudDao.readTrainType(id).getPrice() * (this.to_order - this.from_order);
 
     }
 

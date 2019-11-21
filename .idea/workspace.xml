@@ -8,8 +8,7 @@
   <component name="ChangeListManager">
     <list default="true" id="46b5dbea-92a9-4726-9f11-d8b13bc818fc" name="Default Changelist" comment="Merge branch 'master' of https://github.com/askhatkenenbay/Railway_Station_Management&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml&#10;#&#9;src/main/java/railway_system/dao/MainDaoImpl.java">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/dao/CrudDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/dao/CrudDaoImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/dao/MainDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/dao/MainDaoImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/entity/TrainInstance.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/entity/TrainInstance.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -81,7 +80,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Tomcat Server.index.html">
+  <component name="RunManager" selected="Tomcat Server.index.html (1)">
     <configuration name="main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="main" />
       <module name="dynamictodolist" />
@@ -162,6 +161,45 @@
         </option>
       </method>
     </configuration>
+    <configuration name="index.html (1)" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" temporary="true" APPLICATION_SERVER_NAME="Tomcat 8.5.47" ALTERNATIVE_JRE_ENABLED="false">
+      <option name="OPEN_IN_BROWSER_URL" value="http://localhost:8080/index.html" />
+      <deployment>
+        <artifact name="dynamictodolist:war exploded">
+          <settings>
+            <option name="CONTEXT_PATH" value="/dynamictodolist_war_exploded" />
+          </settings>
+        </artifact>
+      </deployment>
+      <server-settings>
+        <option name="BASE_DIRECTORY_NAME" value="index_html_(1)_dynamictodolist" />
+      </server-settings>
+      <predefined_log_file enabled="true" id="Tomcat" />
+      <predefined_log_file enabled="true" id="Tomcat Catalina" />
+      <predefined_log_file id="Tomcat Manager" />
+      <predefined_log_file id="Tomcat Host Manager" />
+      <predefined_log_file id="Tomcat Localhost Access" />
+      <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Run">
+        <option name="USE_ENV_VARIABLES" value="true" />
+        <STARTUP>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </STARTUP>
+        <SHUTDOWN>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </SHUTDOWN>
+      </ConfigurationWrapper>
+      <method v="2">
+        <option name="Make" enabled="true" />
+        <option name="BuildArtifacts" enabled="true">
+          <artifact name="dynamictodolist:war exploded" />
+        </option>
+      </method>
+    </configuration>
     <configuration name="index.html" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" temporary="true" APPLICATION_SERVER_NAME="Tomcat 8.5.47" ALTERNATIVE_JRE_ENABLED="false">
       <option name="OPEN_IN_BROWSER_URL" value="http://localhost:8080/index.html" />
       <deployment>
@@ -205,9 +243,11 @@
       <item itemvalue="Application.main" />
       <item itemvalue="Tomcat Server.Tomcat 8.5.45" />
       <item itemvalue="Tomcat Server.index.html" />
+      <item itemvalue="Tomcat Server.index.html (1)" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Tomcat Server.index.html (1)" />
         <item itemvalue="Tomcat Server.index.html" />
         <item itemvalue="Application.main" />
       </list>
@@ -256,6 +296,7 @@
       <workItem from="1574250180068" duration="1457000" />
       <workItem from="1574237411591" duration="9514000" />
       <workItem from="1574240910066" duration="6560000" />
+      <workItem from="1574332201764" duration="336000" />
     </task>
     <task id="LOCAL-00001" summary="getUserTypeById added">
       <created>1572549592976</created>
