@@ -10,7 +10,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class SeatInstance {
+public class        SeatInstance {
     private String date;
     private int seatNumber;
     private int wagonNumber;
