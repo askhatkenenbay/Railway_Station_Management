@@ -1,6 +1,7 @@
 package railway_system.server;
 
 import com.google.gson.Gson;
+import org.apache.log4j.chainsaw.Main;
 import railway_system.dao.*;
 import railway_system.entity.Ticket;
 import railway_system.filters.Logged;
@@ -33,13 +34,13 @@ public class AgentService {
     @Path("/reject-refund")
     public Response rejectRefund(@Context SecurityContext securityContext, @FormParam("ticket-id") int ticketId){
         if(!checkIsAgent(securityContext)){
-            return Response.ok(Response.Status.FORBIDDEN).build();
+            return Response.status(Response.Status.FORBIDDEN).build();
         }
         CrudDao crudDao = new CrudDaoImpl();
         if(crudDao.updateTicketRefund(ticketId, 0)){
             return Response.ok(Response.Status.ACCEPTED).build();
         }
-        return Response.ok(Response.Status.FORBIDDEN).build();
+        return Response.status(Response.Status.FORBIDDEN).build();
     }
 
     @Secured
@@ -47,14 +48,16 @@ public class AgentService {
     @Path("/accept-refund")
     public Response acceptRefund(@Context SecurityContext securityContext, @FormParam("ticket-id") int ticketId){
         if(!checkIsAgent(securityContext)){
-            return Response.ok(Response.Status.FORBIDDEN).build();
+            return Response.status(Response.Status.FORBIDDEN).build();
         }
         CrudDao crudDao = new CrudDaoImpl();
+        MainDao mainDao = new MainDaoImpl();
         try {
             crudDao.deleteTicket(ticketId);
+            mainDao.refundSeatInstances(ticketId);
         } catch (DaoException e) {
             e.printStackTrace();
-            return Response.ok(Response.Status.FORBIDDEN).build();
+            return Response.status(Response.Status.FORBIDDEN).build();
         }
 
         return Response.ok(Response.Status.ACCEPTED).build();
@@ -65,7 +68,7 @@ public class AgentService {
     @Path("/refund-requests")
     public Response getRefundRequests(@Context SecurityContext securityContext){
         if(!checkIsAgent(securityContext)){
-            return Response.ok(Response.Status.FORBIDDEN).build();
+            return Response.status(Response.Status.FORBIDDEN).build();
         }
         Gson gson = new Gson();
         List tickets = new CrudDaoImpl().readWaitingTickets();
@@ -84,7 +87,7 @@ public class AgentService {
             crudDao.createSeatInstances(train_id, date);
         } catch (DaoException e) {
             e.printStackTrace();
-            return Response.ok(Response.Status.FORBIDDEN).build();
+            return Response.status(Response.Status.FORBIDDEN).build();
         }
         return Response.ok(Response.Status.ACCEPTED).build();
     }
