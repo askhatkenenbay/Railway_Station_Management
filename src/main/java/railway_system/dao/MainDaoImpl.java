@@ -61,6 +61,9 @@ public class MainDaoImpl implements MainDao {
     private static final String UPDATE_TICKET = "INSERT INTO seat_instance values(?,?,?,?,?,?)";
     private static final String GET_ALL_AGENTS_EMAIL = "select email from employee,individual  where employee.type='agent' \n" +
             "and employee.individual_id=individual.id";
+    private static final String GET_ALL_TRAINS = "select * from train";
+    private static final String GET_EMAILS_FROM_TRAIN = "select individual.email from ticket,individual where ticket.departure_datetime > ? and ticket.train_id=?\n" +
+            "and ticket.individual_id = individual.id";
     @Override
     public ArrayList<Pair<TrainLeg, TrainLeg>> getTrainsFromTo(int weekDay, int from_id, int to_id) {
         Connection connection = null;
@@ -411,9 +414,68 @@ public class MainDaoImpl implements MainDao {
     }
 
     @Override
-    public List<Train> getTrains() {
-        return null;
+    public List<String> getPassengersEmails(int train_id, String date) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        List<String> emailList = new LinkedList<>();
+        try{
+            connection = ConnectionPool.INSTANCE.getConnection();
+            preparedStatement = connection.prepareStatement(GET_EMAILS_FROM_TRAIN);
+            preparedStatement.setString(1,date);
+            preparedStatement.setInt(2,train_id);
+            resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                emailList.add(resultSet.getString("email"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            close(preparedStatement);
+            close(connection);
+        }
+        return emailList;
     }
 
+    @Override
+    public List<Train> getTrains() {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try{
+            connection = ConnectionPool.INSTANCE.getConnection();
+            preparedStatement = connection.prepareStatement(GET_ALL_TRAINS);
+            resultSet = preparedStatement.executeQuery();
+            return getTrainsHelper(resultSet);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            close(preparedStatement);
+            close(connection);
+        }
+        return new LinkedList<>();
+    }
+    private List<Train> getTrainsHelper(ResultSet resultSet) throws SQLException {
+        List<Train> trainList = new LinkedList<>();
+        while (resultSet.next()){
+            trainList.add(new Train(resultSet.getInt("id"),resultSet.getString("company_name"),
+                    resultSet.getInt("train_type_id"),resultSet.getBoolean("is_active")));
+        }
+        return trainList;
+    }
 
 }

@@ -62,6 +62,8 @@ public interface MainDao extends CloseDao{
     //return list of agents' emails
     List<String> getAgentsEmails();
 
+    List<String> getPassengersEmails(int id, String date);
+
     //return all trains
     List<Train> getTrains();
 

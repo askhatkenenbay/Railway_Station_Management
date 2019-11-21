@@ -52,7 +52,7 @@ public class ManagerService {
     static Session getMailSession;
     static MimeMessage generateMailMessage;
 
-    public static void sendEmail(int trainId) throws AddressException, MessagingException {
+    public static void sendEmail(int trainId, List<String> emails) throws AddressException, MessagingException {
         mailServerProperties = System.getProperties();
         mailServerProperties.put("mail.smtp.port", "587");
         mailServerProperties.put("mail.smtp.auth", "true");
@@ -60,10 +60,16 @@ public class ManagerService {
 
         getMailSession = Session.getDefaultInstance(mailServerProperties, null);
         generateMailMessage = new MimeMessage(getMailSession);
-        generateMailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress("nurtas.ilyas@nu.edu.kz"));
-        generateMailMessage.addRecipient(Message.RecipientType.CC, new InternetAddress("askhat.kenenbay@nu.edu.kz"));
+        if(emails.size() == 0){
+            return;
+        }
+        generateMailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(emails.get(0)));
+        emails.remove(0);
+        for (String email : emails){
+            generateMailMessage.addRecipient(Message.RecipientType.CC, new InternetAddress(email));
+        }
         generateMailMessage.setSubject("Trail Line is canceled");
-        String emailBody = "We are sorry, but train line " + String.valueOf(trainId) +" is unavailable until further notice " + "<br><br> Regards, <br>InElonWeTrust Team";
+        String emailBody = "We are sorry, but train line " + String.valueOf(trainId) +" is unavailable until further notice " + "<br><br> Best Regards, <br>InElonWeTrust Team";
         generateMailMessage.setContent(emailBody, "text/html");
 
         Transport transport = getMailSession.getTransport("smtp");
@@ -239,9 +245,14 @@ public class ManagerService {
         if(!checkIsManager(securityContext)){
             return Response.ok(Response.Status.FORBIDDEN).build();
         }
+        String date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
+
+        List<String> passEmails = new MainDaoImpl().getPassengersEmails(trainId, date);
         List<String> agentsEmails = new MainDaoImpl().getAgentsEmails();
+        List<String> emails = new ArrayList<String>(passEmails);
+        emails.addAll(agentsEmails);
         try {
-            sendEmail(trainId);
+            sendEmail(trainId, emails);
         } catch (MessagingException e) {
             e.printStackTrace();
             return Response.ok(Response.Status.FORBIDDEN).build();

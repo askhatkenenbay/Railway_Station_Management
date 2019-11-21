@@ -15,5 +15,5 @@ public class Train {
     private String companyName;
     private int trainTypeId;
     private boolean isActive;
-    
+
 }
