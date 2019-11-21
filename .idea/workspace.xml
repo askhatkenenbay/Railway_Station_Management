@@ -8,9 +8,6 @@
   <component name="ChangeListManager">
     <list default="true" id="208d3812-b242-4279-b04a-66a7c836b5e5" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/dao/MainDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/dao/MainDao.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/dao/MainDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/dao/MainDaoImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/entity/Train.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/entity/Train.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/server/ManagerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/ManagerService.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -261,7 +258,7 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="46b5dbea-92a9-4726-9f11-d8b13bc818fc" name="Default Changelist" comment="" />
+      <changelist id="208d3812-b242-4279-b04a-66a7c836b5e5" name="Default Changelist" comment="" />
       <created>1568351267645</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -300,6 +297,9 @@
       <workItem from="1574237411591" duration="9514000" />
       <workItem from="1574240910066" duration="6560000" />
       <workItem from="1574332201764" duration="336000" />
+      <workItem from="1574342510894" duration="64000" />
+      <workItem from="1574346538784" duration="1084000" />
+      <workItem from="1574348111483" duration="730000" />
     </task>
     <task id="LOCAL-00001" summary="getUserTypeById added">
       <created>1572549592976</created>

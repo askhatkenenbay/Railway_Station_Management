@@ -69,7 +69,7 @@ public class ManagerService {
             generateMailMessage.addRecipient(Message.RecipientType.CC, new InternetAddress(email));
         }
         generateMailMessage.setSubject("Trail Line is canceled");
-        String emailBody = "We are sorry, but train line " + String.valueOf(trainId) +" is unavailable until further notice " + "<br><br> Best Regards, <br>InElonWeTrust Team";
+        String emailBody = "We are sorry, but train line " + String.valueOf(trainId) +" is unavailable. Please make refund request to return ticke! " + "<br><br> Best Regards, <br>InElonWeTrust Team";
         generateMailMessage.setContent(emailBody, "text/html");
 
         Transport transport = getMailSession.getTransport("smtp");
