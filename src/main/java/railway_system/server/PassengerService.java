@@ -38,7 +38,7 @@ public class PassengerService {
             crudDao.createIndividual(user);
         } catch (DaoException e) {
             e.printStackTrace();
-            return Response.ok(Response.Status.FORBIDDEN).build();
+            return Response.status(Response.Status.FORBIDDEN).build();
         }
         return Response.ok(Response.Status.ACCEPTED).build();
     }
@@ -95,7 +95,7 @@ public class PassengerService {
         if(mainDao.isBelongTo(user_id, ticketId) && crudDao.updateTicketRefund(ticketId, 1)) {
             return Response.ok(Response.Status.ACCEPTED).build();
         }else{
-            return Response.ok(Response.Status.FORBIDDEN).build();
+            return Response.status(Response.Status.FORBIDDEN).build();
         }
     }
 }

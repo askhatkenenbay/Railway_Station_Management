@@ -13,6 +13,7 @@ import lombok.ToString;
 public class Train {
     private int id;
     private String companyName;
-    private String weekDays;
     private int trainTypeId;
+    private boolean isActive;
+
 }

@@ -56,6 +56,7 @@ public class AgentService {
             e.printStackTrace();
             return Response.ok(Response.Status.FORBIDDEN).build();
         }
+
         return Response.ok(Response.Status.ACCEPTED).build();
     }
 

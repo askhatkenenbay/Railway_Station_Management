@@ -3,6 +3,7 @@ package railway_system.dao;
 import javafx.util.Pair;
 import railway_system.connection.ConnectionPool;
 import railway_system.entity.Seat;
+import railway_system.entity.Train;
 import railway_system.entity.TrainLeg;
 
 import java.util.ArrayList;
@@ -18,8 +19,8 @@ public class MainDaoImpl implements MainDao {
     private static final String GET_TRAINS_BY_WEEKDAYS = "SELECT DISTINCT T1.arrival_time as T1arrival_time, T1.departure_time as T1departure_time,\n" +
             "T1.order as T1order, T1.station_id as T1station_id, T1.train_id as T1train_id, T1.arrival_day as T1arrival_day,\n" +
             "T2.arrival_time, T2.departure_time, T2.order, T2.station_id, T2.train_id, T2.arrival_day\n" +
-            "from train_leg T1, train_leg T2, week_day W1\n" +
-            "where T1.train_id = T2.train_id and\n" +
+            "from train_leg T1, train_leg T2, train T, week_day W1\n" +
+            "where T1.train_id = T2.train_id and T.id = T1.train_id and T.is_active = 1 and \n" +
             "W1.train_id = T1.train_id and W1.weekId = ? and T1.`order` < T2.`order` and T1.order =\n " +
             "(SELECT Min(`order`) as Min from train_leg Q where Q.train_id=T1.train_id) \n" +
             "and T2.order = \n" +
@@ -28,23 +29,23 @@ public class MainDaoImpl implements MainDao {
     private static final String GET_TRAINS_BY_WEEKDAYS_TO_ID = "SELECT DISTINCT T1.arrival_time as T1arrival_time, T1.departure_time as T1departure_time,\n" +
             "T1.order as T1order, T1.station_id as T1station_id, T1.train_id as T1train_id, T1.arrival_day as T1arrival_day,\n" +
             "T2.arrival_time, T2.departure_time, T2.order, T2.station_id, T2.train_id, T2.arrival_day\n" +
-            "from train_leg T1, train_leg T2, week_day W1\n" +
-            "where T1.train_id = T2.train_id and T2.station_id = ? and\n" +
+            "from train_leg T1, train_leg T2, train T, week_day W1\n" +
+            "where T1.train_id = T2.train_id and T.id = T1.train_id and T.is_active = 1 and T2.station_id = ? and\n" +
             "W1.train_id = T1.train_id and T1.`order` < T2.`order` and W1.weekId = ? and T1.order = (SELECT Min(`order`) as Min from train_leg Q where Q.train_id=T1.train_id )";
 
     private static final String GET_TRAINS_BY_WEEKDAYS_FROM_ID = "SELECT DISTINCT T1.arrival_time as T1arrival_time, T1.departure_time as T1departure_time,\n" +
             "T1.order as T1order, T1.station_id as T1station_id, T1.train_id as T1train_id, T1.arrival_day as T1arrival_day,\n" +
             "T2.arrival_time, T2.departure_time, T2.order, T2.station_id, T2.train_id, T2.arrival_day\n" +
-            " from train_leg T1, week_day W1, train_leg T2 where T1.train_id=T2.train_id and\n" +
-            "T1.train_id = W1.train_id and MOD(W1.weekId+T1.arrival_day,6) = ? \n" +
+            " from train_leg T1, week_day W1, train_leg T2, train T where T1.train_id=T2.train_id and\n" +
+            "T1.train_id = W1.train_id and T.id = T1.train_id and T.is_active = 1 and MOD(W1.weekId+T1.arrival_day,6) = ? \n" +
             "and T1.station_id = ? \n" +
             "and T1.`order` < T2.`order` and T2.order = (SELECT Max(`order`) as Max from train_leg Q where Q.train_id=T1.train_id );";
 
     private static final String GET_TRAINS_BY_WEEKDAYS_FROM_ID_TO_ID = "select DISTINCT T1.arrival_time as T1arrival_time, T1.departure_time as T1departure_time,\n" +
             "T1.order as T1order, T1.station_id as T1station_id, T1.train_id as T1train_id, T1.arrival_day as T1arrival_day,\n" +
             "T2.arrival_time, T2.departure_time, T2.order, T2.station_id, T2.train_id, T2.arrival_day\n" +
-            "from train_leg T1, train_leg T2, week_day W1 where T1.train_id = T2.train_id\n" +
-            "and W1.train_id = T1.train_id and T1.station_id = ? and T2.station_id = ? and\n" +
+            "from train_leg T1, train_leg T2, train T, week_day W1 where T1.train_id = T2.train_id\n" +
+            "and W1.train_id = T1.train_id and T.id = T1.train_id and T.is_active = 1 and T1.station_id = ? and T2.station_id = ? and\n" +
             "T1.`order` < T2.`order` and W1.weekId = ?";
 
     private static final String AUTHENTICATE_INDIVIDUAL = "select * from individual where login=? and password=?";
@@ -60,6 +61,9 @@ public class MainDaoImpl implements MainDao {
     private static final String UPDATE_TICKET = "INSERT INTO seat_instance values(?,?,?,?,?,?)";
     private static final String GET_ALL_AGENTS_EMAIL = "select email from employee,individual  where employee.type='agent' \n" +
             "and employee.individual_id=individual.id";
+    private static final String GET_ALL_TRAINS = "select * from train";
+    private static final String GET_EMAILS_FROM_TRAIN = "select individual.email from ticket,individual where ticket.departure_datetime > ? and ticket.train_id=?\n" +
+            "and ticket.individual_id = individual.id";
     @Override
     public ArrayList<Pair<TrainLeg, TrainLeg>> getTrainsFromTo(int weekDay, int from_id, int to_id) {
         Connection connection = null;
@@ -250,6 +254,11 @@ public class MainDaoImpl implements MainDao {
     }
 
     @Override
+    public void refundSeatInstances(int ticket_id) {
+
+    }
+
+    @Override
     public boolean authenticated(String username, String password) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -409,5 +418,69 @@ public class MainDaoImpl implements MainDao {
         return emailList;
     }
 
+    @Override
+    public List<String> getPassengersEmails(int train_id, String date) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        List<String> emailList = new LinkedList<>();
+        try{
+            connection = ConnectionPool.INSTANCE.getConnection();
+            preparedStatement = connection.prepareStatement(GET_EMAILS_FROM_TRAIN);
+            preparedStatement.setString(1,date);
+            preparedStatement.setInt(2,train_id);
+            resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                emailList.add(resultSet.getString("email"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            close(preparedStatement);
+            close(connection);
+        }
+        return emailList;
+    }
+
+    @Override
+    public List<Train> getTrains() {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try{
+            connection = ConnectionPool.INSTANCE.getConnection();
+            preparedStatement = connection.prepareStatement(GET_ALL_TRAINS);
+            resultSet = preparedStatement.executeQuery();
+            return getTrainsHelper(resultSet);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            close(preparedStatement);
+            close(connection);
+        }
+        return new LinkedList<>();
+    }
+    private List<Train> getTrainsHelper(ResultSet resultSet) throws SQLException {
+        List<Train> trainList = new LinkedList<>();
+        while (resultSet.next()){
+            trainList.add(new Train(resultSet.getInt("id"),resultSet.getString("company_name"),
+                    resultSet.getInt("train_type_id"),resultSet.getBoolean("is_active")));
+        }
+        return trainList;
+    }
 
 }

@@ -44,6 +44,9 @@ public interface MainDao extends CloseDao{
     //change seat instance ticket id between from_order and to_order
     void updateSeatInstances(String date, int seat_num, int wagon_num, int from_order, int to_order, int train_id, int ticket_id);
 
+    //set ticket_id = NULL where seat_instance.ticket_id = ticket_id
+    void refundSeatInstances(int ticket_id);
+
     boolean authenticated(String username, String password);
 
     //check if train.is_active = 1
@@ -61,6 +64,11 @@ public interface MainDao extends CloseDao{
 
     //return list of agents' emails
     List<String> getAgentsEmails();
+
+    List<String> getPassengersEmails(int id, String date);
+
+    //return all trains
+    List<Train> getTrains();
 
 
 }

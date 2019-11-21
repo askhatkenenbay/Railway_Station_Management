@@ -46,7 +46,6 @@ public class RoutesService {
         Calendar c = Calendar.getInstance();
         c.setTime(date);
         int dayOfWeek = c.get(Calendar.DAY_OF_WEEK) - 1;
-        System.out.println(dayOfWeek);
         MainDao mainDao = new MainDaoImpl();
         ArrayList<Pair<TrainLeg, TrainLeg>> result = null;
 
@@ -67,7 +66,6 @@ public class RoutesService {
         for(Pair<TrainLeg, TrainLeg> legs : result){
             trains.add( new TrainInstance(legs.getKey(), legs.getValue(), c));
         }
-        System.out.println(trains.size());
         TrainInstance[] arr = trains.toArray(new TrainInstance[trains.size()]);
 
         String json = gson.toJson(arr, TrainInstance[].class);
@@ -83,7 +81,6 @@ public class RoutesService {
         int train_id = Integer.parseInt(id);
         TrainType trainType = new CrudDaoImpl().readTrainType(train_id);
         List<Seat> seats = new ArrayList<>();
-        System.out.println(trainType.getWagonAmount());
         for(int i = 1; i <= trainType.getWagonAmount(); i++){
             for(int j = 1; j <= trainType.getWagonCapacity(); j++){
                 seats.add(new MainDaoImpl().getSeat(i, j, date, train_id, fromOrder, toOrder));
@@ -97,9 +94,8 @@ public class RoutesService {
 
     @POST
     @Secured
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Path("/{id: [0-9]+}/tickets")
     @Logged
+    @Path("/{id: [0-9]+}/tickets")
     public Response buyTicket(@Context SecurityContext securityContext, @FormParam("wagon_number") int wagon_number,
                               @FormParam("place") int place, @FormParam("init-date") String init_date, @FormParam("departure-datetime") String departure_datetime,
                               @FormParam("arrival-datetime") String arrival_datetime, @PathParam("id") String id,
@@ -113,8 +109,10 @@ public class RoutesService {
         Principal principal = securityContext.getUserPrincipal();
         int user_id = Integer.parseInt(principal.getName());
 
-        if(!mainDao.getSeat(wagon_number, place , init_date, train_id, from_order, to_order).isAvailable() || to_order == from_order){
-            return Response.ok(Response.Status.FORBIDDEN).build();
+        if(!mainDao.getSeat(wagon_number, place , init_date, train_id, from_order, to_order).isAvailable() || to_order == from_order
+        || !mainDao.checkIsActiveTrain(train_id)){
+            System.out.println("forbid");
+            return Response.status(Response.Status.FORBIDDEN).build();
         }
 
         Ticket ticket = new Ticket(0, train_id, from_id, to_id, user_id, first_name, last_name, doctype, doc_id, false, arrival_datetime, departure_datetime, place, wagon_number);
@@ -122,6 +120,6 @@ public class RoutesService {
         int ticket_id = crudDao.createTicket(ticket);
 
         mainDao.updateSeatInstances(init_date, place, wagon_number, from_order, to_order, train_id, ticket_id);
-        return Response.ok().build();
+        return Response.ok(Response.Status.ACCEPTED).build();
     }
 }
