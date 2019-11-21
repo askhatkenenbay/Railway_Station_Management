@@ -3,6 +3,7 @@ package railway_system.dao;
 import javafx.util.Pair;
 import railway_system.connection.ConnectionPool;
 import railway_system.entity.Seat;
+import railway_system.entity.Train;
 import railway_system.entity.TrainLeg;
 
 import java.util.ArrayList;
@@ -53,9 +54,9 @@ public class MainDaoImpl implements MainDao {
     private static final String IS_TRAIN_ACTIVE = "select is_active from train where is_active=1 and id=?";
     private static final String IS_AGENT = "select * from employee where type='agent' and individual_id=?";
     private static final String GET_SEAT = "select * from seat_instance where\n" +
-            "date = ?  and seats_seat_number=? and\n" +
-            "seats_wagon_number = ? and seats_train_leg_train_id =?\n" +
-            "and seats_train_leg_order>=? and seats_train_leg_order<=? and ticket_id IS NOT NULL";
+            "date = ?  and seat_number=? and\n" +
+            "wagon_number = ? and train_leg_train_id =?\n" +
+            "and train_leg_order>=? and train_leg_order<=? and ticket_id IS NOT NULL";
 
     private static final String UPDATE_TICKET = "INSERT INTO seat_instance values(?,?,?,?,?,?)";
     private static final String GET_ALL_AGENTS_EMAIL = "select email from employee,individual  where employee.type='agent' \n" +
@@ -202,7 +203,11 @@ public class MainDaoImpl implements MainDao {
             preparedStatement.setInt(5,fromOrder);
             preparedStatement.setInt(6,toOrder);
             resultSet = preparedStatement.executeQuery();
-            return new Seat(date,seat_num,wagon_num,train_id,resultSet.next());
+            boolean available = true;
+            if(resultSet.next()){
+                available = false;
+            }
+                return new Seat(date,seat_num,wagon_num,train_id,available);
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -403,6 +408,11 @@ public class MainDaoImpl implements MainDao {
             close(connection);
         }
         return emailList;
+    }
+
+    @Override
+    public List<Train> getTrains() {
+        return null;
     }
 
 

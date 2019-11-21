@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import javafx.util.Pair;
 import railway_system.dao.*;
 import railway_system.entity.*;
+import railway_system.filters.Logged;
 import railway_system.filters.Secured;
 
 import javax.ws.rs.*;
@@ -30,6 +31,7 @@ public class RoutesService {
 
     }
     @GET
+    @Logged
     public Response getAll(@QueryParam("day") int day, @QueryParam("month") int month, @QueryParam("year") int year,
                            @QueryParam("from") int from_id, @QueryParam("to") int to_id){
         Gson gson = new Gson();
@@ -81,8 +83,9 @@ public class RoutesService {
         int train_id = Integer.parseInt(id);
         TrainType trainType = new CrudDaoImpl().readTrainType(train_id);
         List<Seat> seats = new ArrayList<>();
-        for(int i = 0; i < trainType.getWagonAmount(); i++){
-            for(int j = 0; j < trainType.getWagonCapacity(); j++){
+        System.out.println(trainType.getWagonAmount());
+        for(int i = 1; i <= trainType.getWagonAmount(); i++){
+            for(int j = 1; j <= trainType.getWagonCapacity(); j++){
                 seats.add(new MainDaoImpl().getSeat(i, j, date, train_id, fromOrder, toOrder));
             }
         }
@@ -96,6 +99,7 @@ public class RoutesService {
     @Secured
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Path("/{id: [0-9]+}/tickets")
+    @Logged
     public Response buyTicket(@Context SecurityContext securityContext, @FormParam("wagon_number") int wagon_number,
                               @FormParam("place") int place, @FormParam("init-date") String init_date, @FormParam("departure-datetime") String departure_datetime,
                               @FormParam("arrival-datetime") String arrival_datetime, @PathParam("id") String id,
@@ -106,7 +110,6 @@ public class RoutesService {
 
         MainDao mainDao = new MainDaoImpl();
         int train_id = Integer.parseInt(id);
-        Gson gson = new Gson();
         Principal principal = securityContext.getUserPrincipal();
         int user_id = Integer.parseInt(principal.getName());
 

@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import railway_system.dao.*;
 import railway_system.entity.Individual;
 import railway_system.entity.Ticket;
+import railway_system.filters.Logged;
 import railway_system.filters.Secured;
 
 import javax.ws.rs.*;
@@ -23,6 +24,7 @@ public class PassengerService {
     public PassengerService(){}
 
     @POST
+    @Logged
     @Path("/register")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response registerPassenger(@FormParam("fname") String fname, @FormParam("lname") String lname,
@@ -82,6 +84,7 @@ public class PassengerService {
     @Secured
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Path("/refund-request")
+    @Logged
     public Response requestRefund(@Context SecurityContext securityContext, @FormParam("ticket-id") int ticketId){
 
         CrudDao crudDao = new CrudDaoImpl();

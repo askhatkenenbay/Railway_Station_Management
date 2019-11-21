@@ -3,6 +3,7 @@ package railway_system.server;
 import com.google.gson.Gson;
 import railway_system.dao.*;
 import railway_system.entity.Ticket;
+import railway_system.filters.Logged;
 import railway_system.filters.Secured;
 
 import javax.ws.rs.*;
@@ -13,6 +14,7 @@ import java.security.Principal;
 import java.util.List;
 
 @Path("/agent")
+@Logged
 public class AgentService {
     public AgentService(){}
 

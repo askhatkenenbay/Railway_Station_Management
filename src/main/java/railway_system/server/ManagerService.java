@@ -1,22 +1,28 @@
 package railway_system.server;
 
 import com.google.gson.Gson;
+import org.apache.log4j.Level;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import railway_system.dao.*;
 import railway_system.entity.Employee;
 import railway_system.entity.Individual;
+import railway_system.entity.Train;
 import railway_system.entity.TrainLeg;
+import railway_system.filters.Logged;
 import railway_system.filters.Secured;
 
+import javax.print.DocFlavor;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import java.io.*;
 import java.security.Principal;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
-import java.util.Properties;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -68,6 +74,7 @@ public class ManagerService {
     }
 
     @POST
+    @Logged
     @Secured
     @Path("/make-payroll")
     public Response makePayroll(@Context SecurityContext securityContext, @FormParam("employee-id") int employeeId){
@@ -86,6 +93,7 @@ public class ManagerService {
     }
 
     @POST
+    @Logged
     @Secured
     @Path("/create-train-line")
     public Response createTrainLine(@Context SecurityContext securityContext, @FormParam("train-type-id") int type_id,
@@ -107,6 +115,7 @@ public class ManagerService {
     }
 
     @POST
+    @Logged
     @Secured
     @Path("/create-train-leg")
     public Response createTrainLeg(@Context SecurityContext securityContext, @FormParam("train-id") int train_id, @FormParam("order") int order,
@@ -128,6 +137,7 @@ public class ManagerService {
     }
 
     @POST
+    @Logged
     @Secured
     @Path("/cancel-train-line")
     public Response cancelTrainLine(@Context SecurityContext securityContext, @FormParam("train-id") int trainId){
@@ -145,6 +155,7 @@ public class ManagerService {
 
     @POST
     @Secured
+    @Logged
     @Path("/reopen-train-line")
     public Response reopenTrainLine(@Context SecurityContext securityContext, @FormParam("train-id") int trainId){
         if(!checkIsManager(securityContext)){
@@ -174,6 +185,53 @@ public class ManagerService {
         return Response.ok(json).build();
     }
 
+    @GET
+    @Secured
+    @Path("/trains")
+    public Response getTrains(@Context SecurityContext securityContext){
+        if(!checkIsManager(securityContext)){
+            return Response.ok(Response.Status.FORBIDDEN).build();
+        }
+        Gson gson = new Gson();
+        List<Train> trains = new MainDaoImpl().getTrains();
+        Train[] arr =  trains.toArray(new Train[trains.size()]);
+        String json = gson.toJson(arr, Train[].class);
+        return Response.ok(json).build();
+    }
+
+    @GET
+    @Secured
+    @Path("/logs")
+    public Response getLogs(@Context SecurityContext securityContext) {
+        if (!checkIsManager(securityContext)) {
+            return Response.ok(Response.Status.FORBIDDEN).build();
+        }
+        File file = new File("D:\\Projects\\IdeaProjects\\RailwaySystem\\Railway_System_Management\\log\\logging.log");
+        List<String> lines = new LinkedList<String>();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+
+            for(String tmp; (tmp = br.readLine()) != null;) {
+                if (tmp.length() < 1) {
+                    continue;
+                }
+                if (lines.add(tmp) && lines.size() > 20)
+                    lines.remove(0);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+//        StringBuilder sb = new StringBuilder();
+//        for(String line : lines){
+//            sb.append(line).append("\n");
+//        }
+        Gson gson = new Gson();
+        String[] arr = lines.toArray(new String[0]);
+        String json = gson.toJson(arr, String[].class);
+//        String json = "{ \"logs\": \"" + sb.toString() + "\" }";
+        return Response.ok(json).build();
+    }
+
     @POST
     @Secured
     @Path("/send-notification")
@@ -192,4 +250,45 @@ public class ManagerService {
 
     }
 
+    @POST
+    @Secured
+    @Path("/logs-status")
+    public Response changeLogStatus(@Context SecurityContext securityContext, @FormParam("status") boolean status) {
+        if(!checkIsManager(securityContext)){
+            return Response.ok(Response.Status.FORBIDDEN).build();
+        }
+        if(status){
+            changeLogging(Level.INFO);
+        }
+        else{
+            changeLogging(Level.OFF);
+        }
+        return Response.ok().build();
+    }
+
+    @GET
+    @Secured
+    @Path("/logs-status")
+    public Response getLogStatus(@Context SecurityContext securityContext) {
+        if(!checkIsManager(securityContext)){
+            return Response.ok(Response.Status.FORBIDDEN).build();
+        }
+        Level level = Level.OFF;
+        List<Logger> loggers = Collections.<Logger>list(LogManager.getCurrentLoggers());
+        loggers.add(LogManager.getRootLogger());
+        for ( Logger logger : loggers ) {
+            level = logger.getLevel();
+        }
+        String json = "{\"status\": " + (level == Level.INFO)+"}";
+        System.out.println(json);
+        return Response.ok(json).build();
+    }
+
+    private void changeLogging(Level level){
+        List<Logger> loggers = Collections.<Logger>list(LogManager.getCurrentLoggers());
+        loggers.add(LogManager.getRootLogger());
+        for ( Logger logger : loggers ) {
+            logger.setLevel(level);
+        }
+    }
 }

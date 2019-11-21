@@ -14,7 +14,7 @@ import javax.ws.rs.core.Application;
 
 
 @ApplicationPath("/services")
-@Logged
+
 public class RailwayApplication extends Application {
     private Set<Object> singletons = new HashSet<Object>();
     private Set<Class<?>> empty = new HashSet<Class<?>>();
