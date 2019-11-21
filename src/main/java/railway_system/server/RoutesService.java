@@ -117,7 +117,13 @@ public class RoutesService {
 
         Ticket ticket = new Ticket(0, train_id, from_id, to_id, user_id, first_name, last_name, doctype, doc_id, false, arrival_datetime, departure_datetime, place, wagon_number);
         CrudDao crudDao = new CrudDaoImpl();
-        int ticket_id = crudDao.createTicket(ticket);
+        int ticket_id = 0;
+        try {
+            ticket_id = crudDao.createTicket(ticket);
+        } catch (DaoException e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
 
         mainDao.updateSeatInstances(init_date, place, wagon_number, from_order, to_order, train_id, ticket_id);
         return Response.ok(Response.Status.ACCEPTED).build();

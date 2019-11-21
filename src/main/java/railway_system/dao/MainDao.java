@@ -39,7 +39,7 @@ public interface MainDao extends CloseDao{
     Seat getSeat(int wagon_num, int seat_num, String date, int train_id, int fromOrder, int toOrder);
 
 
-
+//    boolean areSeatsCreated(int wagon_num, )
 
     //change seat instance ticket id between from_order and to_order
     void updateSeatInstances(String date, int seat_num, int wagon_num, int from_order, int to_order, int train_id, int ticket_id);

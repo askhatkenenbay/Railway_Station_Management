@@ -46,7 +46,7 @@ public class MainDaoImpl implements MainDao {
             "T2.arrival_time, T2.departure_time, T2.order, T2.station_id, T2.train_id, T2.arrival_day\n" +
             "from train_leg T1, train_leg T2, train T, week_day W1 where T1.train_id = T2.train_id\n" +
             "and W1.train_id = T1.train_id and T.id = T1.train_id and T.is_active = 1 and T1.station_id = ? and T2.station_id = ? and\n" +
-            "T1.`order` < T2.`order` and W1.weekId = ?";
+            "T1.`order` < T2.`order` and MOD(W1.weekId+T1.arrival_day,6) = ? ";
 
     private static final String AUTHENTICATE_INDIVIDUAL = "select * from individual where login=? and password=?";
     private static final String IS_MANAGER = "select * from employee where individual_id=? and type='manager'";
@@ -64,6 +64,7 @@ public class MainDaoImpl implements MainDao {
     private static final String GET_ALL_TRAINS = "select * from train";
     private static final String GET_EMAILS_FROM_TRAIN = "select individual.email from ticket,individual where ticket.departure_datetime > ? and ticket.train_id=?\n" +
             "and ticket.individual_id = individual.id";
+    private static final String REFUND_SEAT_INSTANCE = "UPDATE ticket SET id=null WHERE id=?";
     @Override
     public ArrayList<Pair<TrainLeg, TrainLeg>> getTrainsFromTo(int weekDay, int from_id, int to_id) {
         Connection connection = null;
@@ -231,6 +232,7 @@ public class MainDaoImpl implements MainDao {
 
     @Override
     public void updateSeatInstances(String date, int seat_num, int wagon_num, int from_order, int to_order, int train_id, int ticket_id) {
+        //TODO
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         try{
@@ -255,7 +257,19 @@ public class MainDaoImpl implements MainDao {
 
     @Override
     public void refundSeatInstances(int ticket_id) {
-
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try{
+            connection = ConnectionPool.INSTANCE.getConnection();
+            preparedStatement = connection.prepareStatement(REFUND_SEAT_INSTANCE);
+            preparedStatement.setInt(1,ticket_id);
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(preparedStatement);
+            close(connection);
+        }
     }
 
     @Override

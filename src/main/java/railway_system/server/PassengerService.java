@@ -82,11 +82,10 @@ public class PassengerService {
 
     @POST
     @Secured
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Path("/refund-request")
     @Logged
+    @Path("/refund-request")
     public Response requestRefund(@Context SecurityContext securityContext, @FormParam("ticket-id") int ticketId){
-
+        System.out.println("here");
         CrudDao crudDao = new CrudDaoImpl();
         MainDao mainDao = new MainDaoImpl();
         Principal principal = securityContext.getUserPrincipal();

@@ -21,7 +21,7 @@ public interface CrudDao extends CloseDao{
 //    void createEmployee(Employee employee) throws DaoException;
     //buy ticket for someone
     //return ticket id
-    int createTicket(Ticket ticket);
+    int createTicket(Ticket ticket) throws DaoException;
     //create a paycheck for employeeId paycheck.amount = employee.salary
     boolean createPaycheck(int employeeId, String date);
     //return train id
