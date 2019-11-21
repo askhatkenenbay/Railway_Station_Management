@@ -64,6 +64,7 @@ public class MainDaoImpl implements MainDao {
     private static final String GET_ALL_TRAINS = "select * from train";
     private static final String GET_EMAILS_FROM_TRAIN = "select individual.email from ticket,individual where ticket.departure_datetime > ? and ticket.train_id=?\n" +
             "and ticket.individual_id = individual.id";
+    private static final String REFUND_SEAT_INSTANCE = "UPDATE ticket SET id=null WHERE id=?";
     @Override
     public ArrayList<Pair<TrainLeg, TrainLeg>> getTrainsFromTo(int weekDay, int from_id, int to_id) {
         Connection connection = null;
@@ -255,7 +256,19 @@ public class MainDaoImpl implements MainDao {
 
     @Override
     public void refundSeatInstances(int ticket_id) {
-
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try{
+            connection = ConnectionPool.INSTANCE.getConnection();
+            preparedStatement = connection.prepareStatement(REFUND_SEAT_INSTANCE);
+            preparedStatement.setInt(1,ticket_id);
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(preparedStatement);
+            close(connection);
+        }
     }
 
     @Override

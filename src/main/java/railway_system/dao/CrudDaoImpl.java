@@ -38,7 +38,7 @@ public class CrudDaoImpl implements CrudDao {
     private static final String CREATE_SEAT = "INSERT INTO seats values(?,?,?,?)";
     private static final String CREATE_INDIVIDUAL = "INSERT INTO individual VALUES(?,?,?,?,?,?,?,?,?)";
     private static final String CREATE_EMPLOYEE = "INSERT INTO employee VALUES(?,?,?,?,?,?,?)";
-    private static final String CREATE_TICKET = "INSERT INTO ticket values(?,?,?,?,?,?,?,?,?,null,?,?,?,?,?);";
+    private static final String CREATE_TICKET = "INSERT INTO ticket values(?,?,?,?,?,?,?,?,null,?,?,?,?,?)";
     private static final String CREATE_PAYCHECK = "INSERT INTO paycheck values(?,?,?)";
     private static final String CREATE_TRAIN = "INSERT INTO train(company_name, train_type_id, is_active) values (?,?,1)";
     private static final String CREATE_WEEK_DAY = "INSERT INTO week_day values(?,?)";
@@ -474,34 +474,47 @@ public class CrudDaoImpl implements CrudDao {
         }
     }
 
-
+    private static final String GET_MAX_TICKET_ID = "Select MAX(id) as id from ticket";
     @Override
     public int createTicket(Ticket ticket) {
-        //TODO
+        int id = -1;
+        PreparedStatement preparedStatementId = null;
+        ResultSet resultSet = null;
         try (Connection connection = ConnectionPool.INSTANCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(CREATE_TICKET)) {
 //            createPdfFile(ticket);
-            preparedStatement.setInt(1, ticket.getTicketId());
-            preparedStatement.setInt(2, ticket.getTrainId());
-            preparedStatement.setInt(3, ticket.getStationIdFrom());
-            preparedStatement.setInt(4, ticket.getStationIdTo());
-            preparedStatement.setInt(5, ticket.getIndividualId());
-            preparedStatement.setString(6, ticket.getFirstName());
-            preparedStatement.setString(7, ticket.getSecondName());
-            preparedStatement.setString(8, ticket.getDocumentType());
-            preparedStatement.setString(9, ticket.getDocumentId());
-
-            preparedStatement.setBoolean(10,ticket.isWaitingRefund());
-            preparedStatement.setString(11,ticket.getArrivalDatetime());
-            preparedStatement.setString(12,ticket.getDepartureDatetime());
-            preparedStatement.setInt(13,ticket.getSeatNumber());
-            preparedStatement.setInt(14,ticket.getWagonNumber());
-
+            //preparedStatement.setInt(1, ticket.getTicketId());
+            preparedStatement.setInt(1, ticket.getTrainId());
+            preparedStatement.setInt(2, ticket.getStationIdFrom());
+            preparedStatement.setInt(3, ticket.getStationIdTo());
+            preparedStatement.setInt(4, ticket.getIndividualId());
+            preparedStatement.setString(5, ticket.getFirstName());
+            preparedStatement.setString(6, ticket.getSecondName());
+            preparedStatement.setString(7, ticket.getDocumentType());
+            preparedStatement.setString(8, ticket.getDocumentId());
+            preparedStatement.setBoolean(9,ticket.isWaitingRefund());
+            preparedStatement.setString(10,ticket.getArrivalDatetime());
+            preparedStatement.setString(11,ticket.getDepartureDatetime());
+            preparedStatement.setInt(12,ticket.getSeatNumber());
+            preparedStatement.setInt(13,ticket.getWagonNumber());
             preparedStatement.executeUpdate();
+            preparedStatementId = connection.prepareStatement(GET_MAX_TICKET_ID);
+            resultSet = preparedStatementId.executeQuery();
+            resultSet.next();
+            id = resultSet.getInt("id");
         } catch (SQLException e) {
             e.printStackTrace();
+        }finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            close(preparedStatementId);
         }
-        return 0;
+        return id;
     }
 
     @Override
