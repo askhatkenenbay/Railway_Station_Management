@@ -38,7 +38,7 @@ public class CrudDaoImpl implements CrudDao {
     private static final String CREATE_SEAT = "INSERT INTO seats values(?,?,?,?)";
     private static final String CREATE_INDIVIDUAL = "INSERT INTO individual(first_name, second_name, email, login, `password`, activation, remember, `reset`, activated) VALUES(?,?,?,?,?,?,?,?,?)";
     private static final String CREATE_EMPLOYEE = "INSERT INTO employee VALUES(?,?,?,?,?,?,?)";
-    private static final String CREATE_TICKET = "INSERT INTO ticket(train_id, station_id_from, station_id_to, individual_id, first_name, second_name, document_type, document_id, pdf_file, waiting_refund, arrival_datetime, departure_datetime, seat_number, wagon_number) values(?,?,?,?,?,?,?,?,null,?,?,?,?,?)";
+        private static final String CREATE_TICKET = "INSERT INTO ticket(train_id, station_id_from, station_id_to, individual_id, first_name, second_name, document_type, document_id, pdf_file, waiting_refund, arrival_datetime, departure_datetime, seat_number, wagon_number) values(?,?,?,?,?,?,?,?,null,?,?,?,?,?)";
     private static final String CREATE_PAYCHECK = "INSERT INTO paycheck values(?,?,?)";
     private static final String CREATE_TRAIN = "INSERT INTO train(company_name, train_type_id, is_active) values (?,?,1)";
     private static final String CREATE_WEEK_DAY = "INSERT INTO week_day values(?,?)";
