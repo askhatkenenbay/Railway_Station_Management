@@ -1,7 +1,6 @@
 package railway_system.server;
 
 import com.google.gson.Gson;
-import org.apache.log4j.chainsaw.Main;
 import railway_system.dao.*;
 import railway_system.entity.Ticket;
 import railway_system.filters.Logged;
@@ -17,27 +16,25 @@ import java.util.List;
 @Path("/agent")
 @Logged
 public class AgentService {
-    public AgentService(){}
+    public AgentService() {
+    }
 
-    boolean checkIsAgent(SecurityContext securityContext){
+    boolean checkIsAgent(SecurityContext securityContext) {
         MainDao mainDao = new MainDaoImpl();
         Principal principal = securityContext.getUserPrincipal();
         int user_id = Integer.parseInt(principal.getName());
-        if(!mainDao.checkAgent(user_id)){
-            return false;
-        }
-        return true;
+        return mainDao.checkAgent(user_id);
     }
 
     @Secured
     @POST
     @Path("/reject-refund")
-    public Response rejectRefund(@Context SecurityContext securityContext, @FormParam("ticket-id") int ticketId){
-        if(!checkIsAgent(securityContext)){
+    public Response rejectRefund(@Context SecurityContext securityContext, @FormParam("ticket-id") int ticketId) {
+        if (!checkIsAgent(securityContext)) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
         CrudDao crudDao = new CrudDaoImpl();
-        if(crudDao.updateTicketRefund(ticketId, 0)){
+        if (crudDao.updateTicketRefund(ticketId, 0)) {
             return Response.ok(Response.Status.ACCEPTED).build();
         }
         return Response.status(Response.Status.FORBIDDEN).build();
@@ -46,8 +43,8 @@ public class AgentService {
     @Secured
     @DELETE
     @Path("/accept-refund")
-    public Response acceptRefund(@Context SecurityContext securityContext, @FormParam("ticket-id") int ticketId){
-        if(!checkIsAgent(securityContext)){
+    public Response acceptRefund(@Context SecurityContext securityContext, @FormParam("ticket-id") int ticketId) {
+        if (!checkIsAgent(securityContext)) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
         CrudDao crudDao = new CrudDaoImpl();
@@ -66,8 +63,8 @@ public class AgentService {
     @Secured
     @GET
     @Path("/refund-requests")
-    public Response getRefundRequests(@Context SecurityContext securityContext){
-        if(!checkIsAgent(securityContext)){
+    public Response getRefundRequests(@Context SecurityContext securityContext) {
+        if (!checkIsAgent(securityContext)) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
         Gson gson = new Gson();
@@ -80,8 +77,8 @@ public class AgentService {
     @Secured
     @POST
     @Path("/create-seat-instances")
-    public Response createSeatInstances(@Context SecurityContext securityContext, @FormParam("train-id") int train_id, @FormParam("day") int day, @FormParam("month") int month, @FormParam("year") int year){
-        String date = String.valueOf(year) + '-' + String.valueOf(month) + '-' + String.valueOf(day);
+    public Response createSeatInstances(@Context SecurityContext securityContext, @FormParam("train-id") int train_id, @FormParam("day") int day, @FormParam("month") int month, @FormParam("year") int year) {
+        String date = String.valueOf(year) + '-' + month + '-' + day;
         CrudDao crudDao = new CrudDaoImpl();
         try {
             crudDao.createSeatInstances(train_id, date);

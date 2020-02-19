@@ -1,7 +1,7 @@
 package railway_system.filters;
 
-import railway_system.dao.BaseDao;
-import railway_system.dao.BaseDaoImpl;
+import railway_system.dao.MainDao;
+import railway_system.dao.MainDaoImpl;
 
 import javax.annotation.Priority;
 import javax.ws.rs.Priorities;
@@ -22,12 +22,12 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     private static final String REALM = "example";
     private static final String AUTHENTICATION_SCHEME = "Bearer";
 
-    public AuthenticationFilter(){
+    public AuthenticationFilter() {
         super();
-    };
+    }
 
     @Override
-    public void filter(ContainerRequestContext requestContext) throws IOException {
+    public void filter(ContainerRequestContext requestContext) {
         // Get the Authorization header from the request
         String authorizationHeader =
                 requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
@@ -100,9 +100,9 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     private int validateToken(String token) throws Exception {
         // Check if the token was issued by the server and if it's not expired
         // Throw an Exception if the token is invalid
-        BaseDao baseDao = new BaseDaoImpl();
+        MainDao baseDao = new MainDaoImpl();
         int id = baseDao.checkToken(token);
-        if(id == -1){
+        if (id == -1) {
             throw new Exception("do not exist");
         }
         return id;

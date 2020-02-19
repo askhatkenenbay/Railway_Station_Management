@@ -7,12 +7,14 @@ public class DBResourceManager {
     private static DBResourceManager instance = new DBResourceManager();
     private ResourceBundle resourceBundle = null;
     private static final String DATABASE_PROPERTIES_FILE_NAME = "database";
+
     /**
      * @return its private static field DBResourceManager instance
      */
     public static DBResourceManager getInstance() {
         return instance;
     }
+
     /**
      * @param key parameter of database
      * @return values of given key

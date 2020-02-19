@@ -21,7 +21,9 @@ import java.util.List;
 public class PassengerService {
     @Context
     SecurityContext securityContext;
-    public PassengerService(){}
+
+    public PassengerService() {
+    }
 
     @POST
     @Logged
@@ -29,11 +31,11 @@ public class PassengerService {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response registerPassenger(@FormParam("fname") String fname, @FormParam("lname") String lname,
                                       @FormParam("email") String email, @FormParam("login") String login,
-                                      @FormParam("password") String password){
+                                      @FormParam("password") String password) {
         password = Encryptor.encrypInput(password);
 
         CrudDao crudDao = new CrudDaoImpl();
-        Individual user = new Individual(0, fname, lname, email, login, password,"0","0","0",0);
+        Individual user = new Individual(0, fname, lname, email, login, password, "0", "0", "0", 0);
         try {
             crudDao.createIndividual(user);
         } catch (DaoException e) {
@@ -46,7 +48,7 @@ public class PassengerService {
     @GET
     @Path("/tickets")
     @Secured
-    public Response getTickets(@Context SecurityContext securityContext){
+    public Response getTickets(@Context SecurityContext securityContext) {
         Gson gson = new Gson();
         Principal principal = securityContext.getUserPrincipal();
         int user_id = Integer.parseInt(principal.getName());
@@ -62,17 +64,16 @@ public class PassengerService {
     @GET
     @Path("/type")
     @Secured
-    public Response getType(@Context SecurityContext securityContext){
+    public Response getType(@Context SecurityContext securityContext) {
         Gson gson = new Gson();
         MainDao mainDao = new MainDaoImpl();
         Principal principal = securityContext.getUserPrincipal();
         int user_id = Integer.parseInt(principal.getName());
         String type = "passenger";
 
-        if(mainDao.checkManager(user_id)){
+        if (mainDao.checkManager(user_id)) {
             type = "manager";
-        }
-        else if(mainDao.checkAgent(user_id)){
+        } else if (mainDao.checkAgent(user_id)) {
             type = "agent";
         }
         String json = "{ \"type\": \"" + type + "\" }";
@@ -84,16 +85,16 @@ public class PassengerService {
     @Secured
     @Logged
     @Path("/refund-request")
-    public Response requestRefund(@Context SecurityContext securityContext, @FormParam("ticket-id") int ticketId){
+    public Response requestRefund(@Context SecurityContext securityContext, @FormParam("ticket-id") int ticketId) {
         System.out.println("here");
         CrudDao crudDao = new CrudDaoImpl();
         MainDao mainDao = new MainDaoImpl();
         Principal principal = securityContext.getUserPrincipal();
         int user_id = Integer.parseInt(principal.getName());
 
-        if(mainDao.isBelongTo(user_id, ticketId) && crudDao.updateTicketRefund(ticketId, 1)) {
+        if (mainDao.isBelongTo(user_id, ticketId) && crudDao.updateTicketRefund(ticketId, 1)) {
             return Response.ok(Response.Status.ACCEPTED).build();
-        }else{
+        } else {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
     }

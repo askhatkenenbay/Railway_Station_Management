@@ -6,16 +6,13 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import railway_system.dao.*;
 import railway_system.entity.Employee;
-import railway_system.entity.Individual;
 import railway_system.entity.Train;
 import railway_system.entity.TrainLeg;
 import railway_system.filters.Logged;
 import railway_system.filters.Secured;
 
-import javax.print.DocFlavor;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.io.*;
@@ -36,23 +33,21 @@ public class ManagerService {
     @Context
     SecurityContext securityContext;
 
-    public ManagerService(){}
+    public ManagerService() {
+    }
 
-    boolean checkIsManager(SecurityContext securityContext){
+    boolean checkIsManager(SecurityContext securityContext) {
         MainDao mainDao = new MainDaoImpl();
         Principal principal = securityContext.getUserPrincipal();
         int user_id = Integer.parseInt(principal.getName());
-        if(!mainDao.checkManager(user_id)){
-            return false;
-        }
-        return true;
+        return mainDao.checkManager(user_id);
     }
 
     static Properties mailServerProperties;
     static Session getMailSession;
     static MimeMessage generateMailMessage;
 
-    public static void sendEmail(int trainId, List<String> emails) throws AddressException, MessagingException {
+    public static void sendEmail(int trainId, List<String> emails) throws MessagingException {
         mailServerProperties = System.getProperties();
         mailServerProperties.put("mail.smtp.port", "587");
         mailServerProperties.put("mail.smtp.auth", "true");
@@ -60,16 +55,16 @@ public class ManagerService {
 
         getMailSession = Session.getDefaultInstance(mailServerProperties, null);
         generateMailMessage = new MimeMessage(getMailSession);
-        if(emails.size() == 0){
+        if (emails.size() == 0) {
             return;
         }
         generateMailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(emails.get(0)));
         emails.remove(0);
-        for (String email : emails){
+        for (String email : emails) {
             generateMailMessage.addRecipient(Message.RecipientType.CC, new InternetAddress(email));
         }
         generateMailMessage.setSubject("Trail Line is canceled");
-        String emailBody = "We are sorry, but train line " + String.valueOf(trainId) +" is unavailable. Please make refund request to return ticket! " + "<br><br> Best Regards, <br>InElonWeTrust Team";
+        String emailBody = "We are sorry, but train line " + trainId + " is unavailable. Please make refund request to return ticket! " + "<br><br> Best Regards, <br>InElonWeTrust Team";
         generateMailMessage.setContent(emailBody, "text/html");
 
         Transport transport = getMailSession.getTransport("smtp");
@@ -83,17 +78,17 @@ public class ManagerService {
     @Logged
     @Secured
     @Path("/make-payroll")
-    public Response makePayroll(@Context SecurityContext securityContext, @FormParam("employee-id") int employeeId){
-        if(!checkIsManager(securityContext)){
+    public Response makePayroll(@Context SecurityContext securityContext, @FormParam("employee-id") int employeeId) {
+        if (!checkIsManager(securityContext)) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
 
         CrudDao crudDao = new CrudDaoImpl();
         String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 
-        if(crudDao.createPaycheck(employeeId, date)) {
+        if (crudDao.createPaycheck(employeeId, date)) {
             return Response.ok(Response.Status.ACCEPTED).build();
-        }else{
+        } else {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
     }
@@ -103,16 +98,16 @@ public class ManagerService {
     @Secured
     @Path("/create-train-line")
     public Response createTrainLine(@Context SecurityContext securityContext, @FormParam("train-type-id") int type_id,
-                                    @FormParam("weekdays") String weekdays, @FormParam("company-name") String company_name){
-        if(!checkIsManager(securityContext)){
+                                    @FormParam("weekdays") String weekdays, @FormParam("company-name") String company_name) {
+        if (!checkIsManager(securityContext)) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
 
         CrudDao crudDao = new CrudDaoImpl();
         int trainId = crudDao.createTrain(company_name, type_id);
-        for(int i = 0 ; i < weekdays.length(); i++){
+        for (int i = 0; i < weekdays.length(); i++) {
             int weekId = weekdays.charAt(i) - 48;
-            if(!crudDao.createWeekdays(trainId, weekId)) {
+            if (!crudDao.createWeekdays(trainId, weekId)) {
                 return Response.status(Response.Status.FORBIDDEN).build();
             }
         }
@@ -126,8 +121,8 @@ public class ManagerService {
     @Path("/create-train-leg")
     public Response createTrainLeg(@Context SecurityContext securityContext, @FormParam("train-id") int train_id, @FormParam("order") int order,
                                    @FormParam("station_id") int station_id, @FormParam("arrival-time") String arrival_time,
-                                   @FormParam("departure_time") String departure_time, @FormParam("arrival_day") int arrival_day){
-        if(!checkIsManager(securityContext)){
+                                   @FormParam("departure_time") String departure_time, @FormParam("arrival_day") int arrival_day) {
+        if (!checkIsManager(securityContext)) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
 
@@ -146,15 +141,15 @@ public class ManagerService {
     @Logged
     @Secured
     @Path("/cancel-train-line")
-    public Response cancelTrainLine(@Context SecurityContext securityContext, @FormParam("train-id") int trainId){
-        if(!checkIsManager(securityContext)){
+    public Response cancelTrainLine(@Context SecurityContext securityContext, @FormParam("train-id") int trainId) {
+        if (!checkIsManager(securityContext)) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
 
         CrudDao crudDao = new CrudDaoImpl();
-        if(crudDao.updateTrainActivity(trainId, 0)) {
+        if (crudDao.updateTrainActivity(trainId, 0)) {
             return Response.ok(Response.Status.ACCEPTED).build();
-        }else{
+        } else {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
     }
@@ -163,15 +158,15 @@ public class ManagerService {
     @Secured
     @Logged
     @Path("/reopen-train-line")
-    public Response reopenTrainLine(@Context SecurityContext securityContext, @FormParam("train-id") int trainId){
-        if(!checkIsManager(securityContext)){
+    public Response reopenTrainLine(@Context SecurityContext securityContext, @FormParam("train-id") int trainId) {
+        if (!checkIsManager(securityContext)) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
 
         CrudDao crudDao = new CrudDaoImpl();
-        if(crudDao.updateTrainActivity(trainId, 1)) {
+        if (crudDao.updateTrainActivity(trainId, 1)) {
             return Response.ok(Response.Status.ACCEPTED).build();
-        }else{
+        } else {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
     }
@@ -180,13 +175,13 @@ public class ManagerService {
     @GET
     @Secured
     @Path("/employees")
-    public Response getEmployees(@Context SecurityContext securityContext){
-        if(!checkIsManager(securityContext)){
+    public Response getEmployees(@Context SecurityContext securityContext) {
+        if (!checkIsManager(securityContext)) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
         Gson gson = new Gson();
         List<Employee> employees = new CrudDaoImpl().readAllEmployees();
-        Employee[] arr =  employees.toArray(new Employee[employees.size()]);
+        Employee[] arr = employees.toArray(new Employee[employees.size()]);
         String json = gson.toJson(arr, Employee[].class);
         return Response.ok(json).build();
     }
@@ -194,13 +189,13 @@ public class ManagerService {
     @GET
     @Secured
     @Path("/trains")
-    public Response getTrains(@Context SecurityContext securityContext){
-        if(!checkIsManager(securityContext)){
+    public Response getTrains(@Context SecurityContext securityContext) {
+        if (!checkIsManager(securityContext)) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
         Gson gson = new Gson();
         List<Train> trains = new MainDaoImpl().getTrains();
-        Train[] arr =  trains.toArray(new Train[trains.size()]);
+        Train[] arr = trains.toArray(new Train[trains.size()]);
         String json = gson.toJson(arr, Train[].class);
         return Response.ok(json).build();
     }
@@ -213,11 +208,11 @@ public class ManagerService {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
         File file = new File("D:\\Projects\\IdeaProjects\\RailwaySystem\\Railway_System_Management\\log\\logging.log");
-        List<String> lines = new LinkedList<String>();
+        List<String> lines = new LinkedList<>();
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
 
-            for(String tmp; (tmp = br.readLine()) != null;) {
+            for (String tmp; (tmp = br.readLine()) != null; ) {
                 if (tmp.length() < 1) {
                     continue;
                 }
@@ -227,29 +222,24 @@ public class ManagerService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        StringBuilder sb = new StringBuilder();
-//        for(String line : lines){
-//            sb.append(line).append("\n");
-//        }
         Gson gson = new Gson();
         String[] arr = lines.toArray(new String[0]);
         String json = gson.toJson(arr, String[].class);
-//        String json = "{ \"logs\": \"" + sb.toString() + "\" }";
         return Response.ok(json).build();
     }
 
     @POST
     @Secured
     @Path("/send-notification")
-    public Response sendMail(@Context SecurityContext securityContext, @FormParam("train-id") int trainId){
-        if(!checkIsManager(securityContext)){
+    public Response sendMail(@Context SecurityContext securityContext, @FormParam("train-id") int trainId) {
+        if (!checkIsManager(securityContext)) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
         String date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
 
         List<String> passEmails = new MainDaoImpl().getPassengersEmails(trainId, date);
         List<String> agentsEmails = new MainDaoImpl().getAgentsEmails();
-        List<String> emails = new ArrayList<String>(passEmails);
+        List<String> emails = new ArrayList<>(passEmails);
         emails.addAll(agentsEmails);
         try {
             sendEmail(trainId, emails);
@@ -265,13 +255,12 @@ public class ManagerService {
     @Secured
     @Path("/logs-status")
     public Response changeLogStatus(@Context SecurityContext securityContext, @FormParam("status") boolean status) {
-        if(!checkIsManager(securityContext)){
+        if (!checkIsManager(securityContext)) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
-        if(status){
+        if (status) {
             changeLogging(Level.INFO);
-        }
-        else{
+        } else {
             changeLogging(Level.OFF);
         }
         return Response.ok().build();
@@ -281,24 +270,24 @@ public class ManagerService {
     @Secured
     @Path("/logs-status")
     public Response getLogStatus(@Context SecurityContext securityContext) {
-        if(!checkIsManager(securityContext)){
+        if (!checkIsManager(securityContext)) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
         Level level = Level.OFF;
         List<Logger> loggers = Collections.<Logger>list(LogManager.getCurrentLoggers());
         loggers.add(LogManager.getRootLogger());
-        for ( Logger logger : loggers ) {
+        for (Logger logger : loggers) {
             level = logger.getLevel();
         }
-        String json = "{\"status\": " + (level == Level.INFO)+"}";
+        String json = "{\"status\": " + (level == Level.INFO) + "}";
         System.out.println(json);
         return Response.ok(json).build();
     }
 
-    private void changeLogging(Level level){
+    private void changeLogging(Level level) {
         List<Logger> loggers = Collections.<Logger>list(LogManager.getCurrentLoggers());
         loggers.add(LogManager.getRootLogger());
-        for ( Logger logger : loggers ) {
+        for (Logger logger : loggers) {
             logger.setLevel(level);
         }
     }

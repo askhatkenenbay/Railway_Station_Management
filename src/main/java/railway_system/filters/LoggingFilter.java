@@ -22,21 +22,22 @@ public class LoggingFilter implements ContainerRequestFilter, ContainerResponseF
 
     @Context
     private HttpServletRequest httpServletRequest;
-    private static Logger LOGGER = Logger.getLogger( LoggingFilter.class.getName() );
+    private static Logger LOGGER = Logger.getLogger(LoggingFilter.class.getName());
+
     @Override
-    public void filter(ContainerRequestContext requestContext) throws IOException {
+    public void filter(ContainerRequestContext requestContext) {
         log(requestContext);
     }
 
     @Override
-    public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) throws IOException {
+    public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) {
         log(responseContext);
     }
 
     private void log(ContainerRequestContext context) {
         // implementation goes here
         StringBuilder sb = new StringBuilder();
-        sb.append("User: ").append( context.getSecurityContext().getUserPrincipal() == null ? "unknown"
+        sb.append("User: ").append(context.getSecurityContext().getUserPrincipal() == null ? "unknown"
                 : context.getSecurityContext().getUserPrincipal().getName());
         sb.append(" - Path: ").append(context.getUriInfo().getPath());
         sb.append(" - Header: ").append(context.getHeaders());
@@ -50,29 +51,24 @@ public class LoggingFilter implements ContainerRequestFilter, ContainerResponseF
         sb.append("Header: ").append(context.getHeaders());
         sb.append(" - Status: ").append(context.getStatus());
         sb.append(" - Entity: ").append(context.getEntity());
-        LOGGER.info( "HTTP RESPONSE : " + sb.toString());
+        LOGGER.info("HTTP RESPONSE : " + sb.toString());
     }
 
-    private String getEntityBody(ContainerRequestContext requestContext)
-    {
+    private String getEntityBody(ContainerRequestContext requestContext) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         InputStream in = requestContext.getEntityStream();
 
         final StringBuilder b = new StringBuilder();
-        try
-        {
+        try {
             ReaderWriter.writeTo(in, out);
 
             byte[] requestEntity = out.toByteArray();
-            if (requestEntity.length == 0)
-            {
-                b.append("").append("\n");
-            }
-            else
-            {
+            if (requestEntity.length == 0) {
+                b.append("\n");
+            } else {
                 b.append(new String(requestEntity)).append("\n");
             }
-            requestContext.setEntityStream( new ByteArrayInputStream(requestEntity) );
+            requestContext.setEntityStream(new ByteArrayInputStream(requestEntity));
 
         } catch (IOException ex) {
             //Handle logging error

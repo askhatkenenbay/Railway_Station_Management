@@ -8,10 +8,39 @@
   <component name="ChangeListManager">
     <list default="true" id="208d3812-b242-4279-b04a-66a7c836b5e5" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/log/logging.log" beforeDir="false" afterPath="$PROJECT_DIR$/log/logging.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/connection/DBResourceManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/connection/DBResourceManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/connection/ProxyConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/connection/ProxyConnection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/dao/BaseDao.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/dao/BaseDaoImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/dao/CrudDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/dao/CrudDao.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/dao/CrudDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/dao/CrudDaoImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/dao/DaoException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/dao/DaoException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/dao/MainDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/dao/MainDao.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/dao/MainDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/dao/MainDaoImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/entity/TrainInstance.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/entity/TrainInstance.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/entity/TrainType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/entity/TrainType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/entity/User.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/filters/AuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/filters/AuthenticationFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/filters/CorsFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/filters/CorsFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/filters/Logged.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/filters/Logged.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/filters/LoggingFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/filters/LoggingFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/filters/Secured.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/filters/Secured.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/server/AgentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/AgentService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/server/AuthorizationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/AuthorizationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/server/Encryptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/Encryptor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/server/ManagerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/ManagerService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/server/PassengerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/PassengerService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/server/RailwayApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/RailwayApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/server/RoutesService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/RoutesService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/railway_system/server/StationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/railway_system/server/StationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/database.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/database.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/log4j.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/log4j.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/log4j2.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/log4j2.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/web.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/web.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ticket.pdf" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -62,6 +91,7 @@
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -305,6 +335,7 @@
       <workItem from="1574399046818" duration="1887000" />
       <workItem from="1574943160162" duration="5375000" />
       <workItem from="1574962011626" duration="1226000" />
+      <workItem from="1582102467281" duration="2525000" />
     </task>
     <task id="LOCAL-00001" summary="getUserTypeById added">
       <created>1572549592976</created>

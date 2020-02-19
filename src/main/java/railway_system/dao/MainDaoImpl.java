@@ -65,6 +65,14 @@ public class MainDaoImpl implements MainDao {
     private static final String GET_EMAILS_FROM_TRAIN = "select individual.email from ticket,individual where ticket.departure_datetime > ? and ticket.train_id=?\n" +
             "and ticket.individual_id = individual.id";
     private static final String REFUND_SEAT_INSTANCE = "UPDATE ticket SET id=null WHERE id=?";
+    private static final String COUNT_BY_REMEMBER_IN_INDIVIDUAL = "select ID from individual where remember=?";
+    private static final String AGENT_EMAIL = "email";
+    private static final String PASSENGER_EMAIL = "email";
+    private static final String TRAIN_ID = "id";
+    private static final String TRAIN_TYPE_ID = "train_type_id";
+    private static final String TRAIN_COMPANY_NAME = "company_name";
+    private static final String TRAIN_IS_ACTIVE = "is_active";
+
     @Override
     public ArrayList<Pair<TrainLeg, TrainLeg>> getTrainsFromTo(int weekDay, int from_id, int to_id) {
         Connection connection = null;
@@ -197,21 +205,21 @@ public class MainDaoImpl implements MainDao {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-        try{
+        try {
             connection = ConnectionPool.INSTANCE.getConnection();
             preparedStatement = connection.prepareStatement(GET_SEAT);
-            preparedStatement.setString(1,date);
-            preparedStatement.setInt(2,seat_num);
-            preparedStatement.setInt(3,wagon_num);
-            preparedStatement.setInt(4,train_id);
-            preparedStatement.setInt(5,fromOrder);
-            preparedStatement.setInt(6,toOrder);
+            preparedStatement.setString(1, date);
+            preparedStatement.setInt(2, seat_num);
+            preparedStatement.setInt(3, wagon_num);
+            preparedStatement.setInt(4, train_id);
+            preparedStatement.setInt(5, fromOrder);
+            preparedStatement.setInt(6, toOrder);
             resultSet = preparedStatement.executeQuery();
             boolean available = true;
-            if(resultSet.next()){
+            if (resultSet.next()) {
                 available = false;
             }
-                return new Seat(date,seat_num,wagon_num,train_id,available);
+            return new Seat(date, seat_num, wagon_num, train_id, available);
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -225,9 +233,8 @@ public class MainDaoImpl implements MainDao {
             close(preparedStatement);
             close(connection);
         }
-        return new Seat(date,seat_num,wagon_num,train_id,false);
+        return new Seat(date, seat_num, wagon_num, train_id, false);
     }
-
 
 
     @Override
@@ -235,16 +242,16 @@ public class MainDaoImpl implements MainDao {
         //TODO
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-        try{
+        try {
             connection = ConnectionPool.INSTANCE.getConnection();
             preparedStatement = connection.prepareStatement(UPDATE_TICKET);
-            preparedStatement.setString(1,date);
-            preparedStatement.setInt(2,seat_num);
-            preparedStatement.setInt(3,wagon_num);
-            preparedStatement.setInt(5,train_id);
-            preparedStatement.setInt(6,ticket_id);
-            for (int i = from_order; i <=to_order; i++) {
-                preparedStatement.setInt(4,i);
+            preparedStatement.setString(1, date);
+            preparedStatement.setInt(2, seat_num);
+            preparedStatement.setInt(3, wagon_num);
+            preparedStatement.setInt(5, train_id);
+            preparedStatement.setInt(6, ticket_id);
+            for (int i = from_order; i <= to_order; i++) {
+                preparedStatement.setInt(4, i);
                 preparedStatement.execute();
             }
         } catch (SQLException e) {
@@ -260,10 +267,10 @@ public class MainDaoImpl implements MainDao {
         //TODO
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-        try{
+        try {
             connection = ConnectionPool.INSTANCE.getConnection();
             preparedStatement = connection.prepareStatement(REFUND_SEAT_INSTANCE);
-            preparedStatement.setInt(1,ticket_id);
+            preparedStatement.setInt(1, ticket_id);
             preparedStatement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -314,7 +321,7 @@ public class MainDaoImpl implements MainDao {
             preparedStatement.setInt(1, train_id);
             resultSet = preparedStatement.executeQuery();
             resultSet.next();
-            return resultSet.getBoolean("is_active");
+            return resultSet.getBoolean(TRAIN_IS_ACTIVE);
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -354,10 +361,10 @@ public class MainDaoImpl implements MainDao {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-        try{
+        try {
             connection = ConnectionPool.INSTANCE.getConnection();
             preparedStatement = connection.prepareStatement(IS_AGENT);
-            preparedStatement.setInt(1,user_id);
+            preparedStatement.setInt(1, user_id);
             resultSet = preparedStatement.executeQuery();
             return resultSet.next();
         } catch (SQLException e) {
@@ -410,12 +417,12 @@ public class MainDaoImpl implements MainDao {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         List<String> emailList = new LinkedList<>();
-        try{
+        try {
             connection = ConnectionPool.INSTANCE.getConnection();
             preparedStatement = connection.prepareStatement(GET_ALL_AGENTS_EMAIL);
             resultSet = preparedStatement.executeQuery();
-            while(resultSet.next()){
-                emailList.add(resultSet.getString("email"));
+            while (resultSet.next()) {
+                emailList.add(resultSet.getString(AGENT_EMAIL));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -439,14 +446,14 @@ public class MainDaoImpl implements MainDao {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         List<String> emailList = new LinkedList<>();
-        try{
+        try {
             connection = ConnectionPool.INSTANCE.getConnection();
             preparedStatement = connection.prepareStatement(GET_EMAILS_FROM_TRAIN);
-            preparedStatement.setString(1,date);
-            preparedStatement.setInt(2,train_id);
+            preparedStatement.setString(1, date);
+            preparedStatement.setInt(2, train_id);
             resultSet = preparedStatement.executeQuery();
-            while(resultSet.next()){
-                emailList.add(resultSet.getString("email"));
+            while (resultSet.next()) {
+                emailList.add(resultSet.getString(PASSENGER_EMAIL));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -469,7 +476,7 @@ public class MainDaoImpl implements MainDao {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-        try{
+        try {
             connection = ConnectionPool.INSTANCE.getConnection();
             preparedStatement = connection.prepareStatement(GET_ALL_TRAINS);
             resultSet = preparedStatement.executeQuery();
@@ -489,13 +496,41 @@ public class MainDaoImpl implements MainDao {
         }
         return new LinkedList<>();
     }
+
     private List<Train> getTrainsHelper(ResultSet resultSet) throws SQLException {
         List<Train> trainList = new LinkedList<>();
-        while (resultSet.next()){
-            trainList.add(new Train(resultSet.getInt("id"),resultSet.getString("company_name"),
-                    resultSet.getInt("train_type_id"),resultSet.getBoolean("is_active")));
+        while (resultSet.next()) {
+            trainList.add(new Train(resultSet.getInt(TRAIN_ID), resultSet.getString(TRAIN_COMPANY_NAME),
+                    resultSet.getInt(TRAIN_TYPE_ID), resultSet.getBoolean(TRAIN_IS_ACTIVE)));
         }
         return trainList;
+    }
+
+    public int checkToken(String token) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = ConnectionPool.INSTANCE.getConnection();
+            preparedStatement = connection.prepareStatement(COUNT_BY_REMEMBER_IN_INDIVIDUAL);
+            preparedStatement.setString(1, token);
+            resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            return resultSet.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(preparedStatement);
+            close(connection);
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return -1;
     }
 
 }

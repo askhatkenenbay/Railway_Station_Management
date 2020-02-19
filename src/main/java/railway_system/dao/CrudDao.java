@@ -1,31 +1,33 @@
 package railway_system.dao;
 
-import railway_system.connection.ConnectionPool;
-import railway_system.connection.ConnectionPoolException;
 import railway_system.entity.*;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 
-public interface CrudDao extends CloseDao{
+public interface CrudDao extends CloseDao {
 
     void createTrainType(TrainType trainType) throws DaoException;
+
     void createStation(Station station) throws DaoException;
+
     //create Train from list
-    void createTrainLeg(TrainLeg trainLeg)  throws DaoException ;
+    void createTrainLeg(TrainLeg trainLeg) throws DaoException;
+
     void createSeats(int traindId);
+
     void createIndividual(Individual individual) throws DaoException;
-//    void createEmployee(Employee employee) throws DaoException;
+
+    //void createEmployee(Employee employee) throws DaoException;
     //buy ticket for someone
     //return ticket id
     int createTicket(Ticket ticket) throws DaoException;
+
     //create a paycheck for employeeId paycheck.amount = employee.salary
     boolean createPaycheck(int employeeId, String date);
+
     //return train id
     int createTrain(String companyName, int typeId);
+
     //create weekday for a new train line
     boolean createWeekdays(int trainId, int weekId);
 
@@ -41,8 +43,10 @@ public interface CrudDao extends CloseDao{
     List<Station> readStations();
 
     TrainType readTrainType(int trainId);
+
     //Return Tickets of user
     List<Ticket> readTicketsOfUser(int individual_id);
+
     //read all tickets where waiting_refund = 1;
     List<Ticket> readWaitingTickets();
 

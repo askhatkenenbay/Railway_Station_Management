@@ -1,21 +1,16 @@
 package railway_system.dao;
 
 import javafx.util.Pair;
-import railway_system.connection.ConnectionPool;
-import railway_system.connection.ConnectionPoolException;
 import railway_system.entity.*;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface MainDao extends CloseDao{
+public interface MainDao extends CloseDao {
     //select all pairs <train_leg1, train_leg2>
     //where train_leg1.station_id == from_id and train_lef2.station_id == to_id and train_leg1.order < train_leg2.order
     //and train_leg1.train_id == train_leg2.train_id and Train(train_leg1.train_id).weekdays like "%weekDay%"
-    ArrayList<Pair<TrainLeg, TrainLeg> > getTrainsFromTo(int weekDay, int from_id, int to_id);
+    ArrayList<Pair<TrainLeg, TrainLeg>> getTrainsFromTo(int weekDay, int from_id, int to_id);
 
 
     //select all pairs <train_leg1, train_leg2>
@@ -29,7 +24,6 @@ public interface MainDao extends CloseDao{
     //and train_leg1.train_id == train_leg2.train_id and Train(train_leg1.train_id).weekdays like "%weekDay%"
     ArrayList<Pair<TrainLeg, TrainLeg>> getTrainsTo(int weekDay, int to_id);
 
-
     //select all pairs <train_leg1, train_leg2>
     //where train_leg1.order < train_leg2.order and train_leg2.order is max and train_leg1 is min
     //and train_leg1.train_id == train_leg2.train_id and Train(train_leg1.train_id).weekdays like "%weekDay%"
@@ -37,9 +31,6 @@ public interface MainDao extends CloseDao{
 
     //return Seat, set available to 1, if ticketId of every seat fromOrder to toOrder is null
     Seat getSeat(int wagon_num, int seat_num, String date, int train_id, int fromOrder, int toOrder);
-
-
-//    boolean areSeatsCreated(int wagon_num, )
 
     //change seat instance ticket id between from_order and to_order
     void updateSeatInstances(String date, int seat_num, int wagon_num, int from_order, int to_order, int train_id, int ticket_id);
@@ -51,7 +42,6 @@ public interface MainDao extends CloseDao{
 
     //check if train.is_active = 1
     boolean checkIsActiveTrain(int train_id);
-
 
     //return true if user_id is manager
     boolean checkManager(int user_id);
@@ -70,5 +60,5 @@ public interface MainDao extends CloseDao{
     //return all trains
     List<Train> getTrains();
 
-
+    int checkToken(String token);//must return user_id, else = -1
 }

@@ -1,44 +1,22 @@
 package railway_system.dao;
 
-
-import com.itextpdf.io.font.FontConstants;
-import com.itextpdf.io.image.ImageData;
-import com.itextpdf.io.image.ImageDataFactory;
-
-import com.itextpdf.kernel.color.Color;
-import com.itextpdf.kernel.font.PdfFontFactory;
-import com.itextpdf.kernel.pdf.PdfDocument;
-import com.itextpdf.kernel.pdf.PdfWriter;
-
-import com.itextpdf.layout.Document;
-
-import com.itextpdf.layout.element.*;
-
-
 import railway_system.connection.ConnectionPool;
 import railway_system.entity.*;
 
-
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 public class CrudDaoImpl implements CrudDao {
-    //private static final String CREATE_TRAIN = "INSERT INTO train values(?,?,?,?)";
     private static final String CREATE_TRAIN_TYPE = "INSERT INTO train_type values (?,?,?,?)";
     private static final String CREATE_STATION = "INSERT INTO station values(?,?,?,?)";
     private static final String CREATE_TRAIN_LEG = "INSERT INTO train_leg values(?,?,?,?,?,?)";
     private static final String CREATE_SEAT = "INSERT INTO seats values(?,?,?,?)";
     private static final String CREATE_INDIVIDUAL = "INSERT INTO individual(first_name, second_name, email, login, `password`, activation, remember, `reset`, activated) VALUES(?,?,?,?,?,?,?,?,?)";
-    private static final String CREATE_EMPLOYEE = "INSERT INTO employee VALUES(?,?,?,?,?,?,?)";
-        private static final String CREATE_TICKET = "INSERT INTO ticket(train_id, station_id_from, station_id_to, individual_id, first_name, second_name, document_type, document_id, pdf_file, waiting_refund, arrival_datetime, departure_datetime, seat_number, wagon_number) values(?,?,?,?,?,?,?,?,null,?,?,?,?,?)";
+    private static final String CREATE_TICKET = "INSERT INTO ticket(train_id, station_id_from, station_id_to, individual_id, first_name, second_name, document_type, document_id, pdf_file, waiting_refund, arrival_datetime, departure_datetime, seat_number, wagon_number) values(?,?,?,?,?,?,?,?,null,?,?,?,?,?)";
     private static final String CREATE_PAYCHECK = "INSERT INTO paycheck values(?,?,?)";
     private static final String CREATE_TRAIN = "INSERT INTO train(company_name, train_type_id, is_active) values (?,?,1)";
     private static final String CREATE_WEEK_DAY = "INSERT INTO week_day values(?,?)";
@@ -48,7 +26,6 @@ public class CrudDaoImpl implements CrudDao {
     private static final String SELECT_TRAINID_AND_ORDER_BY_TRAINID = "select train_id, `order` from train_leg where train_id=?";
     private static final String SELECT_EMPLOYEES_SALARY = "select salary from employee where id=?";
     private static final String SELECT_MAX_TRAIN_ID = "select MAX(id) as `Max` from train";
-    private static final String READ_PDF_FILE = "SELECT pdf_file FROM ticket";
     private static final String READ_STATIONS = "select * from station";
     private static final String READ_STATION_BY_ID = "select * from station where id=?";
     private static final String READ_TICKET_BY_INDIVIDUAL_ID = "select * from ticket where individual_id=?";
@@ -212,30 +189,6 @@ public class CrudDaoImpl implements CrudDao {
     }
 
 
-//    @Override
-//    public void createEmployee(Employee employee) throws DaoException {
-//        Connection connection = null;
-//        PreparedStatement preparedStatement = null;
-//        try {
-//            connection = ConnectionPool.INSTANCE.getConnection();
-//            preparedStatement = connection.prepareStatement(CREATE_EMPLOYEE);
-//            preparedStatement.setInt(1, employee.getPaymentForHour());
-//            preparedStatement.setString(2, employee.getType());
-//            preparedStatement.setString(3, employee.getWorkStartTime());
-//            preparedStatement.setString(4, employee.getWorkEndTime());
-//            preparedStatement.setString(5, employee.getWorkDays());
-//            preparedStatement.setInt(6, employee.getId());
-//            preparedStatement.setInt(7, employee.getIndividualId());
-//            preparedStatement.executeUpdate();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            throw new DaoException("Cannot create new employee");
-//        } finally {
-//            close(preparedStatement);
-//            close(connection);
-//        }
-//    }
-
     @Override
     public void setToken(String username, String token) {
         Connection connection = null;
@@ -309,14 +262,14 @@ public class CrudDaoImpl implements CrudDao {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-        try{
+        try {
             connection = ConnectionPool.INSTANCE.getConnection();
             preparedStatement = connection.prepareStatement(READ_TRAIN_TYPE_BY_ID);
-            preparedStatement.setInt(1,trainId);
+            preparedStatement.setInt(1, trainId);
             resultSet = preparedStatement.executeQuery();
             resultSet.next();
-            return new TrainType(resultSet.getInt("id"),resultSet.getInt("wagon_amount"),
-                    resultSet.getInt("wagon_capacity"),resultSet.getInt("price"));
+            return new TrainType(resultSet.getInt("id"), resultSet.getInt("wagon_amount"),
+                    resultSet.getInt("wagon_capacity"), resultSet.getInt("price"));
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -475,15 +428,14 @@ public class CrudDaoImpl implements CrudDao {
     }
 
     private static final String GET_MAX_TICKET_ID = "Select MAX(id) as id from ticket";
+
     @Override
-    public int createTicket(Ticket ticket) throws DaoException{
-        int id = -1;
+    public int createTicket(Ticket ticket) throws DaoException {
+        int id;
         PreparedStatement preparedStatementId = null;
         ResultSet resultSet = null;
         try (Connection connection = ConnectionPool.INSTANCE.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(CREATE_TICKET)) {
-//            createPdfFile(ticket);
-            //preparedStatement.setInt(1, ticket.getTicketId());
             preparedStatement.setInt(1, ticket.getTrainId());
             preparedStatement.setInt(2, ticket.getStationIdFrom());
             preparedStatement.setInt(3, ticket.getStationIdTo());
@@ -492,11 +444,11 @@ public class CrudDaoImpl implements CrudDao {
             preparedStatement.setString(6, ticket.getSecondName());
             preparedStatement.setString(7, ticket.getDocumentType());
             preparedStatement.setString(8, ticket.getDocumentId());
-            preparedStatement.setBoolean(9,ticket.isWaitingRefund());
-            preparedStatement.setString(10,ticket.getArrivalDatetime());
-            preparedStatement.setString(11,ticket.getDepartureDatetime());
-            preparedStatement.setInt(12,ticket.getSeatNumber());
-            preparedStatement.setInt(13,ticket.getWagonNumber());
+            preparedStatement.setBoolean(9, ticket.isWaitingRefund());
+            preparedStatement.setString(10, ticket.getArrivalDatetime());
+            preparedStatement.setString(11, ticket.getDepartureDatetime());
+            preparedStatement.setInt(12, ticket.getSeatNumber());
+            preparedStatement.setInt(13, ticket.getWagonNumber());
             preparedStatement.executeUpdate();
             preparedStatementId = connection.prepareStatement(GET_MAX_TICKET_ID);
             resultSet = preparedStatementId.executeQuery();
@@ -505,7 +457,7 @@ public class CrudDaoImpl implements CrudDao {
         } catch (SQLException e) {
             e.printStackTrace();
             throw new DaoException("Couldn't create ticket");
-        }finally {
+        } finally {
             try {
                 if (resultSet != null) {
                     resultSet.close();
@@ -607,15 +559,15 @@ public class CrudDaoImpl implements CrudDao {
     }
 
     @Override
-    public void createSeatInstances(int trainId, String date) throws DaoException{
+    public void createSeatInstances(int trainId, String date) throws DaoException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         PreparedStatement preparedStatementHelper = null;
         ResultSet resultSet = null;
-        try{
+        try {
             connection = ConnectionPool.INSTANCE.getConnection();
             preparedStatementHelper = connection.prepareStatement(READ_SEAT_INFO);
-            preparedStatementHelper.setInt(1,trainId);
+            preparedStatementHelper.setInt(1, trainId);
             resultSet = preparedStatementHelper.executeQuery();
             resultSet.next();
             int wagonNumber = resultSet.getInt("wagon_amount");
@@ -623,14 +575,14 @@ public class CrudDaoImpl implements CrudDao {
             int order = resultSet.getInt("order");
             //-------------------------------------------------------------
             preparedStatement = connection.prepareStatement(CREATE_SEAT_INSTANCE);
-            preparedStatement.setString(1,date);
-            preparedStatement.setInt(5,trainId);
-            for (int i = 1; i <=order; i++) {
-                for (int j = 1; j <=wagonNumber; j++) {
-                    for (int k = 1; k <=wagonCapacity; k++) {
-                        preparedStatement.setInt(2,k);
-                        preparedStatement.setInt(3,j);
-                        preparedStatement.setInt(4,i);
+            preparedStatement.setString(1, date);
+            preparedStatement.setInt(5, trainId);
+            for (int i = 1; i <= order; i++) {
+                for (int j = 1; j <= wagonNumber; j++) {
+                    for (int k = 1; k <= wagonCapacity; k++) {
+                        preparedStatement.setInt(2, k);
+                        preparedStatement.setInt(3, j);
+                        preparedStatement.setInt(4, i);
                         preparedStatement.execute();
                     }
                 }
@@ -682,91 +634,4 @@ public class CrudDaoImpl implements CrudDao {
         return null;
     }
 
-
-    public void readPdfFile() {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        try {
-            connection = ConnectionPool.INSTANCE.getConnection();
-            preparedStatement = connection.prepareStatement(READ_PDF_FILE);
-            resultSet = preparedStatement.executeQuery();
-            File file = new File("ticketRead.pdf");
-            FileOutputStream output = new FileOutputStream(file);
-            resultSet.next();
-            InputStream input = resultSet.getBinaryStream("pdf_file");
-            byte[] buffer = new byte[1024];
-            while (input.read(buffer) > 0) {
-                output.write(buffer);
-            }
-        } catch (SQLException | FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (resultSet != null) {
-                    resultSet.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            close(preparedStatement);
-            close(connection);
-        }
-    }
-
-    public void createPdfFile(Ticket ticket) {
-        String destination = "C:/Users/Askhat/Desktop/Railway_Station_Management/ticket.pdf";
-        try {
-            PdfWriter writer = new PdfWriter(destination);
-            PdfDocument pdf = new PdfDocument(writer);
-            Document document = new Document(pdf);
-            //adding image
-            String imFile = "C:/Users/Askhat/Desktop/Railway_Station_Management/logo.png";
-            ImageData data = ImageDataFactory.create(imFile);
-            Image image = new Image(data);
-            image.setFixedPosition(25, 725);
-            image.setWidth(100);
-            image.setHeight(100);
-            document.add(image);
-            //adding company name
-            Text companyName = new Text("The Train Station Inc.");
-            companyName.setFont(PdfFontFactory.createFont(FontConstants.COURIER_BOLD));
-            companyName.setFontColor(Color.ORANGE);
-            Paragraph paragraph = new Paragraph();
-            paragraph.add(companyName);
-            paragraph.setFixedPosition(150, 775, 200);
-            document.add(paragraph);
-            //adding ticket id
-            Text orderNumber = new Text("Order Number: " + ticket.getTicketId());
-            orderNumber.setFont(PdfFontFactory.createFont(FontConstants.TIMES_BOLD));
-            orderNumber.setFontColor(Color.BLACK);
-            paragraph = new Paragraph();
-            paragraph.add(orderNumber);
-            paragraph.setFixedPosition(350, 775, 200);
-            document.add(paragraph);
-            //adding table one
-            Table table = new Table(new float[]{250, 250});
-            table.addCell(new Cell().add("Electronic Travel Document\n" + java.util.Calendar.getInstance().getTime()));
-            table.addCell(new Cell().add(ticket.getFirstName() + " " + ticket.getSecondName() + "\n"
-                    + ticket.getDocumentType() + " " + ticket.getDocumentId()));
-            table.addCell(new Cell().add("Departure Time: \tDeparture Station Name: \nDeparture Time: \tDeparture Station City: "));
-            table.addCell(new Cell().add("Arrival Time: \tArrival Station Name: \nArrival Time: \tArrival Station City: "));
-            table.setFixedPosition(25, 600, 500);
-            document.add(table);
-            //add train image
-            imFile = "C:/Users/Askhat/Desktop/Railway_Station_Management/train.png";
-            data = ImageDataFactory.create(imFile);
-            image = new Image(data);
-            image.setFixedPosition(5, 20);
-            image.setWidth(575);
-            image.setHeight(150);
-            document.add(image);
-            //-------------------------
-            document.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }

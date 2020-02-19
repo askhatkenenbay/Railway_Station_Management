@@ -1,7 +1,8 @@
 package railway_system.dao;
 
-public class DaoException extends Exception{
-    public DaoException() {}
+public class DaoException extends Exception {
+    public DaoException() {
+    }
 
     public DaoException(String message) {
         super(message);
